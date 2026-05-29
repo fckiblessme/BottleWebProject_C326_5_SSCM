@@ -56,6 +56,17 @@ def home():
 def about():
     return dict(title='О проекте', message='Описание проекта', year=datetime.now().year)
 
+@route('/vertex_cover')
+def vertex_cover():
+    return template('vertex_cover',
+                    title='Минимальное вершинное покрытие',
+                    year=datetime.now().year,
+                    n_left=None, 
+                    n_right=None,
+                    n='', w_max='', weights='', values='', edges='',
+                    result=None, error=None,
+                    max_value=None, selected_vertices=None, total_weight=None,
+                    tree_html=None)
 
 @route('/knapsack_tree')
 def knapsack_tree():
