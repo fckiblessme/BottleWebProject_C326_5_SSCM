@@ -1,29 +1,37 @@
-% rebase('layout.tpl', title='Home Page', year=year)
+% rebase('layout.tpl', title='Главная', year=year)
 
-<div class="jumbotron">
-    <h1>Bottle</h1>
-    <p class="lead">Bottle is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://bottlepy.org/docs/dev/index.html" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+<div class="hero">
+    <h1>Исследование NP-трудных задач на графах</h1>
+    <p class="hero-text">
+        Данный программный комплекс предназначен для ознакомления, тестирования и анализа эффективных методов решения комбинаторных задач высокой сложности, возникающих при проектировании сетей, логистике и оптимизации структур данных.
+    </p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            Bottle gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://bottlepy.org/docs/dev/index.html">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>The Python Package Index is a repository of software for the Python programming language.</p>
-        <p><a class="btn btn-default" href="https://pypi.python.org/pypi">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Microsoft Azure</h2>
-        <p>You can easily publish to Microsoft Azure using Visual Studio. Find out how you can host your application using a free trial today.</p>
-        <p><a class="btn btn-default" href="http://azure.microsoft.com">Learn more &raquo;</a></p>
+<div class="section">
+    <h2>Доступные методы и алгоритмы</h2>
+    
+    <div class="disciplines-grid">
+        
+        <a href="/tsp_form" class="discipline-card">
+            <div class="card-icon">🚗</div>
+            <h3>Задача коммивояжёра</h3>
+            <p>Поиск кратчайшего гамильтонова цикла в полном графе. Реализация точного решения методами перебора и оптимизации маршрутов.</p>
+            <span class="card-link">Перейти к решению &rarr;</span>
+        </a>
+
+        <a href="/vertex_cover" class="discipline-card">
+            <div class="card-icon">🕸️</div>
+            <h3>Вершинное покрытие</h3>
+            <p>Поиск минимального множества вершин, подменяющего все ребра графа. Метод ветвей и границ для поиска точного подмножества.</p>
+            <span class="card-link">Перейти к решению &rarr;</span>
+        </a>
+
+        <a href="/knapsack_tree" class="discipline-card">
+            <div class="card-icon">🌳</div>
+            <h3>Рюкзак на дереве</h3>
+            <p>Оптимизация выбора связанных элементов с древовидной зависимостью. Динамическое программирование на иерархических структурах.</p>
+            <span class="card-link">Перейти к решению &rarr;</span>
+        </a>
+
     </div>
 </div>
