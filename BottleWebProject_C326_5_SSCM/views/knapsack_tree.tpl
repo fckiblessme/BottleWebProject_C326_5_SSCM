@@ -2,377 +2,86 @@
 % rebase('layout.tpl', title='Задача о рюкзаке на дереве')
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #dfd8c8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 
-    body {
-        background: #dfd8c8;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 14px;
-    }
+    .header { background: #52575d; border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: center; color: #dfd8c8; }
+    .header h1 { font-size: 22px; color: #cabfab; margin-bottom: 6px; }
+    .header p { font-size: 13px; }
 
-    .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 20px;
-    }
+    .theory { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 25px; border-left: 5px solid #cabfab; }
+    .theory h2 { font-size: 18px; margin-bottom: 12px; color: #41444b; }
+    .theory h3 { font-size: 16px; margin: 12px 0 8px; color: #41444b; }
+    .theory p, .theory li { line-height: 1.5; color: #52575d; font-size: 14px; }
+    .theory ul, .theory ol { margin-left: 20px; margin-bottom: 12px; }
+    .anchor-link { display: inline-block; margin-top: 12px; color: #cabfab; text-decoration: none; font-weight: 600; font-size: 13px; }
+    .anchor-link:hover { color: #41444b; }
 
-    /* Хедер */
-    .header {
-        background: #52575d;
-        border-radius: 20px;
-        padding: 25px;
-        margin-bottom: 25px;
-        text-align: center;
-        color: #dfd8c8;
-    }
+    .example { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 25px; border: 2px solid #cabfab; }
+    .example h2 { font-size: 18px; margin-bottom: 12px; color: #41444b; }
+    .example-tree { background: #faf9f6; padding: 12px; border-radius: 12px; font-family: monospace; font-size: 12px; }
 
-    .header h1 {
-        font-size: 22px;
-        color: #cabfab;
-        margin-bottom: 8px;
-    }
+    .form-card { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 25px; border-top: 4px solid #cabfab; scroll-margin-top: 70px; }
+    .form-card h2 { font-size: 18px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dfd8c8; color: #41444b; }
 
-    /* Теория */
-    .theory {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 25px;
-        border-left: 5px solid #cabfab;
-    }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 600; color: #41444b; margin-bottom: 6px; font-size: 13px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 8px 10px; border: 2px solid #dfd8c8; border-radius: 10px; font-size: 14px; font-family: 'Courier New', monospace; background: #faf9f6; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #cabfab; background: #ffffff; }
+    .small-text { font-size: 11px; color: #888; margin-top: 4px; display: block; }
 
-    .theory h2 {
-        color: #41444b;
-        margin-bottom: 12px;
-        font-size: 18px;
-    }
+    .btn-group { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .btn-solve { flex: 2; padding: 10px; background: #41444b; color: #dfd8c8; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .btn-solve:hover { background: #52575d; }
+    .btn-reset { flex: 1; padding: 10px; background: #dfd8c8; color: #41444b; border: 2px solid #cabfab; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .btn-reset:hover { background: #cabfab; }
 
-    .theory h3 {
-        color: #41444b;
-        margin: 12px 0 8px;
-        font-size: 16px;
-    }
+    .file-buttons { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn-file { flex: 1; padding: 8px; background: #faf9f6; color: #41444b; border: 2px solid #cabfab; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-file:hover { background: #cabfab; }
+    .btn-generate { width: 100%; margin-top: 12px; padding: 10px; background: #cabfab; color: #41444b; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .btn-generate:hover { background: #b8a98e; }
 
-    .theory p {
-        line-height: 1.5;
-        color: #52575d;
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
+    .result-card { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 20px; border-top: 4px solid #52575d; }
+    .result-card h2 { font-size: 18px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dfd8c8; color: #41444b; }
+    .result-box { background: #faf9f6; border-radius: 12px; padding: 15px; border-left: 4px solid #52575d; }
+    .max-value { font-size: 32px; font-weight: bold; color: #41444b; }
+    .selected-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .tag { background: #cabfab; color: #41444b; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+    .error-msg { background: #ffebee; border-left: 4px solid #c62828; padding: 12px; border-radius: 8px; color: #c62828; font-size: 14px; }
 
-    .theory ul, .theory ol {
-        margin-left: 20px;
-        margin-bottom: 12px;
-        color: #52575d;
-        font-size: 14px;
-    }
+    .tree-container { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 12px; overflow-x: auto; }
+    .tree-container pre { margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; }
+    .tree-legend { margin-top: 10px; font-size: 11px; color: #888; }
 
-    .anchor-link {
-        display: inline-block;
-        margin-top: 15px;
-        color: #cabfab;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .anchor-link:hover {
-        color: #41444b;
-    }
-
-    /* Пример */
-    .example {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 25px;
-        border: 2px solid #cabfab;
-    }
-
-    .example h2 {
-        color: #41444b;
-        margin-bottom: 12px;
-        font-size: 18px;
-    }
-
-    .example-tree {
-        background: #faf9f6;
-        padding: 12px;
-        border-radius: 12px;
-        font-family: monospace;
-        margin: 10px 0;
-        font-size: 13px;
-    }
-
-    .example-result {
-        background: #e8f5e9;
-        padding: 12px;
-        border-radius: 12px;
-        margin-top: 10px;
-        font-size: 14px;
-    }
-
-    /* Форма */
-    .form-card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 25px;
-        border-top: 4px solid #cabfab;
-        scroll-margin-top: 20px;
-    }
-
-    .form-card h2 {
-        color: #41444b;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #dfd8c8;
-        font-size: 18px;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        color: #41444b;
-        margin-bottom: 6px;
-        font-size: 13px;
-    }
-
-    .form-group input,
-    .form-group textarea {
-        width: 100%;
-        padding: 8px 10px;
-        border: 2px solid #dfd8c8;
-        border-radius: 10px;
-        font-size: 14px;
-        font-family: 'Courier New', monospace;
-        background: #faf9f6;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #cabfab;
-        background: #ffffff;
-    }
-
-    .small-text {
-        font-size: 12px;
-        color: #888;
-        margin-top: 4px;
-        display: block;
-    }
-
-    .btn-group {
-        display: flex;
-        gap: 12px;
-        margin-top: 20px;
-        flex-wrap: wrap;
-    }
-
-    .btn-solve {
-        flex: 2;
-        padding: 10px;
-        background: #41444b;
-        color: #dfd8c8;
-        border: none;
-        border-radius: 30px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    .btn-solve:hover {
-        background: #52575d;
-    }
-
-    .btn-reset {
-        flex: 1;
-        padding: 10px;
-        background: #dfd8c8;
-        color: #41444b;
-        border: 2px solid #cabfab;
-        border-radius: 30px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    .btn-reset:hover {
-        background: #cabfab;
-    }
-
-    .btn-generate {
-        width: 100%;
-        margin-top: 12px;
-        padding: 10px;
-        background: #cabfab;
-        color: #41444b;
-        border: none;
-        border-radius: 30px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    .btn-generate:hover {
-        background: #b8a98e;
-    }
-
-    .btn-file {
-        width: 48%;
-        padding: 8px;
-        background: #faf9f6;
-        color: #41444b;
-        border: 2px solid #cabfab;
-        border-radius: 30px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 13px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-    }
-
-    .btn-file:hover {
-        background: #cabfab;
-    }
-
-    .file-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    /* Результат */
-    .result-card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 20px;
-        border-top: 4px solid #52575d;
-    }
-
-    .result-card h2 {
-        color: #41444b;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #dfd8c8;
-        font-size: 18px;
-    }
-
-    .result-box {
-        background: #faf9f6;
-        border-radius: 12px;
-        padding: 15px;
-        border-left: 4px solid #52575d;
-    }
-
-    .max-value {
-        font-size: 32px;
-        font-weight: bold;
-        color: #41444b;
-    }
-
-    .selected-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 12px 0;
-    }
-
-    .tag {
-        background: #cabfab;
-        color: #41444b;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 13px;
-    }
-
-    .error-msg {
-        background: #ffebee;
-        border-left: 4px solid #c62828;
-        padding: 12px;
-        border-radius: 8px;
-        color: #c62828;
-        font-size: 14px;
-    }
-
-    .nav-links {
-        margin-top: 25px;
-        padding-top: 15px;
-        border-top: 1px solid #cabfab;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .nav-btn {
-        color: #52575d;
-        text-decoration: none;
-        padding: 8px 20px;
-        border-radius: 30px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.3s;
-        background: #faf9f6;
-        border: 1px solid #cabfab;
-        cursor: pointer;
-        font-size: 13px;
-    }
-
-    .nav-btn:hover {
-        background: #cabfab;
-        color: #41444b;
-    }
+    .nav-links { margin-top: 25px; padding-top: 15px; border-top: 1px solid #cabfab; text-align: center; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .nav-btn { color: #52575d; text-decoration: none; padding: 8px 20px; border-radius: 30px; display: inline-flex; align-items: center; gap: 6px; background: #faf9f6; border: 1px solid #cabfab; cursor: pointer; font-size: 13px; }
+    .nav-btn:hover { background: #cabfab; color: #41444b; }
 
     @media (max-width: 768px) {
-        .container {
-            padding: 10px;
-        }
-        .btn-group {
-            flex-direction: column;
-        }
-        .file-buttons {
-            flex-direction: column;
-        }
-        .btn-file {
-            width: 100%;
-        }
+        .container { padding: 10px; }
+        .btn-group { flex-direction: column; }
+        .file-buttons { flex-direction: column; }
     }
 </style>
 
 <div class="container">
-    <!-- ХЕДЕР -->
     <div class="header">
         <h1>Задача о рюкзаке на дереве</h1>
         <p>Динамическое программирование на деревьях | Сложность O(N²·W²)</p>
     </div>
 
-    <!-- ТЕОРИЯ -->
+    <!-- ТЕОРИЯ с якорем -->
     <div class="theory">
         <h2>📖 Теория метода</h2>
         <p><strong>Суть алгоритма:</strong> Задача о рюкзаке на дереве — обобщение классической задачи о рюкзаке на древовидные структуры. Каждая вершина имеет вес и ценность.</p>
-
         <h3>📋 Условия задачи</h3>
-        <p>Необходимо выбрать подмножество вершин так, чтобы:</p>
         <ul>
             <li>Суммарный вес выбранных вершин не превышал заданный лимит <strong>W</strong></li>
             <li>Если вершина выбрана, то её родительская вершина также выбрана</li>
             <li>Максимизировать суммарную ценность выбранных вершин</li>
         </ul>
-
         <h3>⚙️ Как работает алгоритм</h3>
         <ol>
             <li>Выбирается корень дерева (обычно вершина 1)</li>
@@ -380,10 +89,8 @@
             <li>Для каждой вершины вычисляется DP[вес] = максимальная ценность в её поддереве</li>
             <li>При слиянии результатов детей используется классическая задача о рюкзаке</li>
         </ol>
-
         <h3>📐 Сложность</h3>
-        <p><strong>O(N²·W²)</strong>, где N — количество вершин (≤ 50), W — максимальный вес (≤ 100).</p>
-
+        <p><strong>O(N²·W²)</strong>, где N ≤ 50, W ≤ 100.</p>
         <!-- ЯКОРЬ НА ФОРМУ -->
         <a href="#inputForm" class="anchor-link">📝 Перейти к форме ввода →</a>
     </div>
@@ -393,24 +100,20 @@
         <h2>💡 Пример</h2>
         <div class="example-tree">
             <strong>Дерево:</strong><br>
-            1 (вес=2, ценность=10)<br>
-            ├── 2 (вес=3, ценность=20)<br>
-            │   └── 4 (вес=2, ценность=5)<br>
-            └── 3 (вес=1, ценность=5)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;└── 5 (вес=1, ценность=100)
-        </div>
-        <div class="example-result">
-            <strong>Параметры:</strong> N=5, W=7<br>
-            <strong>Решение:</strong> вершины 1, 2, 3, 5<br>
-            <strong>Вес:</strong> 7 | <strong>Ценность:</strong> 135
+            1 (2,10)<br>
+            ├── 2 (3,20)<br>
+            │   └── 4 (2,5)<br>
+            └── 3 (1,5)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── 5 (1,100)<br>
+            <strong>W=7 → Решение:</strong> вершины 1,2,3,5 → Ценность: 135
         </div>
     </div>
 
-    <!-- ФОРМА (с якорем) -->
+    <!-- ФОРМА с якорем -->
     <div class="form-card" id="inputForm">
         <h2>📝 Ввод данных</h2>
 
-        <!-- Кнопки работы с файлами -->
+        <!-- КНОПКИ ДЛЯ РАБОТЫ С ФАЙЛАМИ -->
         <div class="file-buttons">
             <button class="btn-file" onclick="saveToJSON()">💾 Сохранить в JSON</button>
             <label class="btn-file" style="cursor: pointer;">📂 Загрузить из JSON
@@ -464,29 +167,30 @@
     <div class="result-card">
         <h2>📊 Результат</h2>
 
-        % if result is not None:
-            % if not error:
-                <div class="result-box">
-                    <div class="max-value">{{max_value}}</div>
-                    <div style="margin-bottom: 12px;">максимальная ценность</div>
+        % if result is not None and not error:
+            <div class="result-box">
+                <div class="max-value">{{max_value}}</div>
+                <div style="margin-bottom: 12px;">максимальная ценность</div>
 
-                    <div><strong>✅ Выбранные вершины:</strong></div>
-                    <div class="selected-list">
-                        % selected_list = selected_vertices.split() if selected_vertices else []
-                        % for v in selected_list:
+                <div><strong>✅ Выбранные вершины:</strong></div>
+                <div class="selected-list">
+                    % if selected_vertices:
+                        % for v in selected_vertices.split():
                             <span class="tag">Вершина {{v}}</span>
                         % end
-                    </div>
+                    % else:
+                        <span class="tag">Нет</span>
+                    % end
+                </div>
 
-                    <div style="margin-top: 10px;">
-                        <strong>⚖️ Общий вес:</strong> {{total_weight}} / {{w_max}}
-                    </div>
+                <div style="margin-top: 10px;">
+                    <strong>⚖️ Общий вес:</strong> {{total_weight}} / {{w_max}}
                 </div>
-            % else:
-                <div class="error-msg">
-                    <strong>⚠️ Ошибка:</strong> {{error}}
-                </div>
-            % end
+            </div>
+        % elif error:
+            <div class="error-msg">
+                <strong>⚠️ Ошибка:</strong> {{error}}
+            </div>
         % else:
             <div style="text-align:center; padding: 30px; color: #888;">
                 <div style="font-size: 40px;">🎒</div>
@@ -494,6 +198,19 @@
             </div>
         % end
     </div>
+
+    <!-- ТЕКСТОВОЕ ДЕРЕВО -->
+    % if result is not None and not error and tree_html:
+    <div class="result-card">
+        <h2>🌳 Структура дерева</h2>
+        <div class="tree-container">
+            <pre>{{!tree_html}}</pre>
+        </div>
+        <div class="tree-legend">
+            ✅ - вершина входит в оптимальное решение
+        </div>
+    </div>
+    % end
 
     <!-- НАВИГАЦИЯ -->
     <div class="nav-links">
@@ -514,7 +231,7 @@ function generateExample() {
     document.getElementById('mainForm').submit();
 }
 
-// Сохранение в JSON файл
+// Сохранение в JSON
 function saveToJSON() {
     const data = {
         n: parseInt(document.getElementById('inputN').value),
@@ -539,7 +256,7 @@ function saveToJSON() {
     URL.revokeObjectURL(url);
 }
 
-// Загрузка из JSON файла
+// Загрузка из JSON
 function loadFromJSON(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -561,7 +278,7 @@ function loadFromJSON(event) {
             document.getElementById('inputEdges').value = edgesStr;
 
         } catch (error) {
-            alert('Ошибка при загрузке JSON файла: ' + error.message);
+            alert('Ошибка при загрузке JSON: ' + error.message);
         }
     };
     reader.readAsText(file);
