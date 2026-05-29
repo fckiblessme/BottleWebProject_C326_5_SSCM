@@ -1,4 +1,4 @@
-% # knapsack_tree.tpl - Задача о рюкзаке на дереве
+% # knapsack_tree.tpl - Задача о рюкзаке на дереве.
 % rebase('layout.tpl', title='Задача о рюкзаке на дереве')
 
 <style>
