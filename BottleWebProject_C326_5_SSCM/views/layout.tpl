@@ -32,10 +32,8 @@
         <div class="body-content">
             {{!base}}
         </div>
-
-        <hr style="border: 0; border-top: 1px solid var(--accent); margin: 30px 0 15px;" />
         
-        <footer>
+        <footer class="footer">
             <p>&copy; {{ year }} - My Bottle Application</p>
         </footer>
     </div>
@@ -43,25 +41,6 @@
     <script src="/static/scripts/jquery-1.10.2.js"></script>
     <script src="/static/scripts/bootstrap.js"></script>
     <script src="/static/scripts/respond.js"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const currentPath = window.location.pathname;
-           
-            document.querySelectorAll('.nav a').forEach(el => el.classList.remove('active'));
-
-            if (currentPath.includes('tsp_form')) {
-                document.getElementById('nav-tsp')?.classList.add('active');
-            } else if (currentPath.includes('vertex_cover')) {
-                document.getElementById('nav-vc')?.classList.add('active');
-            } else if (currentPath.includes('knapsack_tree')) {
-                document.getElementById('nav-ks')?.classList.add('active');
-            } else if (currentPath.includes('about')) {
-                document.getElementById('nav-about')?.classList.add('active');
-            } else if (currentPath === '/' || currentPath.includes('home')) {
-                document.getElementById('nav-home')?.classList.add('active');
-            }
-        });
-    </script>
+    <script src="/static/scripts/navigation.js"></script>
 </body>
 </html>
