@@ -20,6 +20,7 @@
                 <nav class="nav">
                     <ul>
                         <li><a href="/home" id="nav-home">Главная</a></li>
+                        <li><a href="/tsp_form" id="nav-tsp">Задача коммивояжёра</a></li>
                         <li><a href="/vertex_cover" id="nav-vc">Вершинное покрытие</a></li>
                         <li><a href="/knapsack_tree" id="nav-ks">Рюкзак на дереве</a></li>
                         <li><a href="/about" id="nav-about">О программе</a></li>
@@ -46,14 +47,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const currentPath = window.location.pathname;
-            if (currentPath.includes('vertex_cover')) {
+           
+            document.querySelectorAll('.nav a').forEach(el => el.classList.remove('active'));
+
+            if (currentPath.includes('tsp_form')) {
+                document.getElementById('nav-tsp')?.classList.add('active');
+            } else if (currentPath.includes('vertex_cover')) {
                 document.getElementById('nav-vc')?.classList.add('active');
             } else if (currentPath.includes('knapsack_tree')) {
                 document.getElementById('nav-ks')?.classList.add('active');
             } else if (currentPath.includes('about')) {
                 document.getElementById('nav-about')?.classList.add('active');
-            } else if (currentPath.includes('contact')) {
-                document.getElementById('nav-contact')?.classList.add('active');
             } else if (currentPath === '/' || currentPath.includes('home')) {
                 document.getElementById('nav-home')?.classList.add('active');
             }
