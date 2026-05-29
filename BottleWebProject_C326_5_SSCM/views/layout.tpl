@@ -3,44 +3,45 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - My Bottle Application</title>
-    <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
-    <script src="/static/scripts/modernizr-2.6.2.js"></script>
+    <title>{{ title }} - Математическое моделирование</title>
+    <!-- Подключаем только свой style.css -->
+    <link rel="stylesheet" type="text/css" href="/static/content/style.css" />
 </head>
 
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <header class="header">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="/" class="navbar-brand">Application name</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="/home">Home</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/"><h1>Математическое моделирование</h1></a>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/" class="{{'active' if title == 'Главная' else ''}}">Главная</a></li>
+                        <li><a href="/tsp">Задача коммивояжёра</a></li>
+                        <li><a href="/vertex_cover">Вершинное покрытие</a></li>
+                        <li><a href="/kos">Компоненты связности</a></li>
+                        <li><a href="/tree_knapsack">Рюкзак на дереве</a></li>
+                        <li><a href="/about" {{'class=active' if title=='О нас' else ''}}>О нас</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
-    </div>
+    </header>
 
-    <div class="container body-content">
+    <main class="container body-content">
         {{!base}}
-        <hr />
-        <footer>
-            <p>&copy; {{ year }} - My Bottle Application</p>
-        </footer>
-    </div>
+    </main>
 
-    <script src="/static/scripts/jquery-1.10.2.js"></script>
-    <script src="/static/scripts/bootstrap.js"></script>
-    <script src="/static/scripts/respond.js"></script>
-
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ year or 2026 }} - Математическое моделирование</p>
+            <div class="footer-links">
+                <a href="https://bottlepy.org" target="_blank">Bottle</a> |
+                <a href="https://docs.python.org/3/" target="_blank">Python Docs</a> |
+                <a href="https://github.com" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
