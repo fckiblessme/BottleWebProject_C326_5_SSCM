@@ -1,13 +1,13 @@
 % rebase('layout.tpl', title='Разработчики', year=year)
 
 <div class="container">
-    <!-- Заголовок как на страницах задач -->
+
     <div class="header">
         <h1>Разработчики</h1>
         <p>Команда, работавшая над проектом</p>
     </div>
 
-    <!-- Секция с командой -->
+
     <div class="section">
         <h2>Над сайтом работали</h2>
         
@@ -17,7 +17,7 @@
                 <div class="team-info">
                     <h3>Скрыпникова Дарья</h3>
                     <p class="team-role">ФСПО ГУАП</p>
-                    <p class="team-text">Разработка страниц: задача коммивояжёра, страница о разработчиках</p>
+                    <p class="team-text">Разработка страниц: задача коммивояжёра, о разработчиках</p>
                     <a href="https://vk.com/d_skry" target="_blank" class="team-link">ВКонтакте →</a>
                 </div>
             </div>
@@ -48,13 +48,13 @@
                     <h3>Мироненко Георгий</h3>
                     <p class="team-role">ФСПО ГУАП</p>
                     <p class="team-text">Разработка страниц: задача о рюкзаке на дереве</p>
-                    <a href="https://vk.com/d_skry" target="_blank" class="team-link">ВКонтакте →</a>
+                    <a href="https://vk.com/id797429177" target="_blank" class="team-link">ВКонтакте →</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Секция с палитрой -->
+
     <div class="section">
         <h2>Оформление сайта</h2>
         <p class="about-intro">При разработке дизайна мы стремились к чистому и современному виду, который не отвлекает от содержания.</p>
