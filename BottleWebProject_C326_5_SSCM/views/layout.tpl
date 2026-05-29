@@ -22,6 +22,7 @@
                         <li><a href="/home" id="nav-home">Главная</a></li>
                         <li><a href="/tsp_form" id="nav-tsp">Задача коммивояжёра</a></li>
                         <li><a href="/vertex_cover" id="nav-vc">Вершинное покрытие</a></li>
+                        <li><a href="/kos" id="nav-kos">Компоненты связности</a></li>
                         <li><a href="/knapsack_tree" id="nav-ks">Рюкзак на дереве</a></li>
                         <li><a href="/about" id="nav-about">О программе</a></li>
                     </ul>

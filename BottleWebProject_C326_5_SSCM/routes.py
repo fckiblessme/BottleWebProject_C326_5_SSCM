@@ -1,3 +1,10 @@
+
+from bottle import route, template
+
+@route('/')
+def index():
+    return template('index.tpl', title='Главная', year=2026)
+
 from bottle import route, view, template, request
 from datetime import datetime
 import json
@@ -64,9 +71,12 @@ def home():
 
 
 @route('/about')
-@view('about')
 def about():
-    return dict(title='О проекте', message='Описание проекта', year=datetime.now().year)
+    return template('about.tpl', title='О нас', year=2026)
+
+@route('/kos')
+def kos():
+    return template('kos_form.tpl', title='Компоненты связности', year=2026)
 
 
 # --- ЗАДАЧА КОММИВОЯЖЁРА (Новый роут, чтобы ссылка из меню работала) ---
