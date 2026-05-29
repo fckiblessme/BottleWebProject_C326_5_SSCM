@@ -1,13 +1,11 @@
 % rebase('layout.tpl', title='Компоненты сильной связности')
 
-<div class="task-hero">
-    <h1>Компоненты сильной связности</h1>
-    <p class="task-subtitle">Разбиение ориентированного графа на компоненты с использованием алгоритма Косарайю</p>
-</div>
-
-<div class="task-container">
+<div class="container">
+    <div class="header">
+        <h1>Компоненты сильной связности</h1>
+        <p>Разбиение ориентированного графа на компоненты с использованием алгоритма Косарайю</p>
+    </div>
     
-    <!-- Блок 1: Условие задачи -->
     <div class="task-section">
         <h2>Условие задачи</h2>
         <div class="task-description">
@@ -17,27 +15,20 @@
         
         <div class="task-details">
             <div class="detail-item">
-                <div>
-                    <h4>Формат ввода</h4>
-                    <p>Количество вершин и список рёбер (u → v).</p>
-                </div>
+                <h4>Формат ввода</h4>
+                <p>Количество вершин и список рёбер (u → v).</p>
             </div>
             <div class="detail-item">
-                <div>
-                    <h4>Алгоритм</h4>
-                    <p>Алгоритм Косарайю: первый обход DFS для заполнения стека, второй обход на транспонированном графе.</p>
-                </div>
+                <h4>Алгоритм</h4>
+                <p>Алгоритм Косарайю: первый обход DFS для заполнения стека, второй обход на транспонированном графе.</p>
             </div>
             <div class="detail-item">
-                <div>
-                    <h4>Формат вывода</h4>
-                    <p>Количество компонент и список вершин для каждой компоненты.</p>
-                </div>
+                <h4>Формат вывода</h4>
+                <p>Количество компонент и список вершин для каждой компоненты.</p>
             </div>
         </div>
     </div>
 
-    <!-- Блок 2: Теоретическая информация -->
     <div class="task-section">
         <h2>Теоретическая информация</h2>
         
@@ -57,7 +48,6 @@
         </div>
     </div>
 
-    <!-- Блок 3: Ввод данных -->
     <div class="task-section" id="inputForm">
         <h2>Ввод данных</h2>
         
@@ -104,31 +94,31 @@
         </div>
     </div>
 
-    <!-- Блок 4: Сообщение -->
     <div class="task-section" id="message-section" style="display: none;">
-        <div class="message-block error" id="error-message">
+        <div class="message-block error" id="error-message" style="display: none;">
+            <span class="message-icon">❌</span>
             <span id="error-text">Ошибка</span>
             <button class="btn-close-message" onclick="closeMessage()">✕</button>
         </div>
         <div class="message-block success" id="success-message" style="display: none;">
+            <span class="message-icon">✓</span>
             <span id="success-text">Успешно</span>
             <button class="btn-close-message" onclick="closeMessage()">✕</button>
         </div>
     </div>
 
-    <!-- Блок 5: Результат -->
     <div class="task-section">
         <h2>Результат</h2>
         
         <div class="result-block">
             <div id="result-content" class="result-placeholder">
+                <span class="result-icon">ℹ</span>
                 <p>Здесь появится результат после нажатия кнопки «Решить задачу»</p>
             </div>
             <button id="btn-save-result" class="btn-save" style="display: none;">Сохранить результат</button>
         </div>
     </div>
 
-    <!-- Блок 6: Пример работы -->
     <div class="task-section">
         <h2>Пример работы</h2>
         
@@ -157,256 +147,12 @@
             </div>
         </div>
     </div>
+
+    <div class="nav-links">
+        <a href="/" class="nav-btn">Домой</a>
+        <button onclick="window.print();" class="nav-btn">Печать</button>
+        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">Назад</a>
+    </div>
 </div>
 
-<script>
-    // Элементы DOM
-    const edgesContainer = document.getElementById('edges-list');
-    const addEdgeBtn = document.getElementById('add-edge');
-    const vertexCountInput = document.getElementById('vertex-count');
-    const solveBtn = document.getElementById('btn-solve');
-    const clearBtn = document.getElementById('btn-clear');
-    const generateBtn = document.getElementById('btn-generate');
-    const fileInput = document.getElementById('file-input');
-    const saveResultBtn = document.getElementById('btn-save-result');
-    const resultContent = document.getElementById('result-content');
-    const messageSection = document.getElementById('message-section');
-    const errorMessage = document.getElementById('error-message');
-    const successMessage = document.getElementById('success-message');
-    const errorText = document.getElementById('error-text');
-    const successText = document.getElementById('success-text');
-
-    let currentResult = null;
-
-    // Добавление строки ребра
-    function addEdgeRow(from = '', to = '') {
-        const row = document.createElement('div');
-        row.className = 'edge-row';
-        row.innerHTML = `
-            <input type="number" class="edge-from" placeholder="От" min="1" value="${from}">
-            <span>→</span>
-            <input type="number" class="edge-to" placeholder="До" min="1" value="${to}">
-            <button class="btn-remove-edge">✕</button>
-        `;
-        edgesContainer.appendChild(row);
-        updateRemoveButtons();
-    }
-
-    // Обновление кнопок удаления
-    function updateRemoveButtons() {
-        const rows = document.querySelectorAll('.edge-row');
-        rows.forEach((row, index) => {
-            const btn = row.querySelector('.btn-remove-edge');
-            if (index === 0) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-                btn.onclick = () => row.remove();
-            }
-        });
-    }
-
-    // Получение всех рёбер
-    function getEdges() {
-        const edges = [];
-        const rows = document.querySelectorAll('.edge-row');
-        for (const row of rows) {
-            const from = parseInt(row.querySelector('.edge-from').value);
-            const to = parseInt(row.querySelector('.edge-to').value);
-            if (from && to && !isNaN(from) && !isNaN(to) && from !== to) {
-                edges.push([from, to]);
-            }
-        }
-        return edges;
-    }
-
-    // Установка рёбер
-    function setEdges(edges) {
-        while (edgesContainer.children.length > 1) {
-            edgesContainer.removeChild(edgesContainer.lastChild);
-        }
-        if (edges.length > 0) {
-            const firstRow = edgesContainer.children[0];
-            firstRow.querySelector('.edge-from').value = edges[0][0];
-            firstRow.querySelector('.edge-to').value = edges[0][1];
-        }
-        for (let i = 1; i < edges.length; i++) {
-            addEdgeRow(edges[i][0], edges[i][1]);
-        }
-    }
-
-    // Показать сообщение
-    function showMessage(type, text) {
-        messageSection.style.display = 'block';
-        if (type === 'error') {
-            errorMessage.style.display = 'flex';
-            successMessage.style.display = 'none';
-            errorText.textContent = text;
-        } else {
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'flex';
-            successText.textContent = text;
-        }
-        setTimeout(() => {
-            messageSection.style.display = 'none';
-        }, 4000);
-    }
-
-    function closeMessage() {
-        messageSection.style.display = 'none';
-    }
-
-    // Генерация случайного графа
-    generateBtn.onclick = async () => {
-        const n = parseInt(vertexCountInput.value);
-        if (isNaN(n) || n < 1 || n > 50) {
-            showMessage('error', 'Введите корректное количество вершин (1-50)');
-            return;
-        }
-        
-        try {
-            const response = await fetch('/api/kos/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ n: n })
-            });
-            const data = await response.json();
-            if (data.error) {
-                showMessage('error', data.error);
-            } else {
-                setEdges(data.edges);
-                showMessage('success', 'Сгенерирован случайный граф');
-            }
-        } catch(e) {
-            showMessage('error', 'Ошибка генерации');
-        }
-    };
-
-    // Загрузка из файла
-    fileInput.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        try {
-            const response = await fetch('/api/kos/upload', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            if (data.error) {
-                showMessage('error', data.error);
-            } else {
-                vertexCountInput.value = data.n;
-                setEdges(data.edges);
-                showMessage('success', 'Данные загружены');
-            }
-        } catch(e) {
-            showMessage('error', 'Ошибка загрузки файла');
-        }
-        fileInput.value = '';
-    };
-
-    // Очистка формы
-    clearBtn.onclick = () => {
-        vertexCountInput.value = '6';
-        while (edgesContainer.children.length > 1) {
-            edgesContainer.removeChild(edgesContainer.lastChild);
-        }
-        const firstRow = edgesContainer.children[0];
-        firstRow.querySelector('.edge-from').value = '1';
-        firstRow.querySelector('.edge-to').value = '2';
-        resultContent.innerHTML = `
-            <p>Здесь появится результат»</p>
-        `;
-        saveResultBtn.style.display = 'none';
-        currentResult = null;
-        showMessage('success', 'Форма очищена');
-    };
-
-    // Решение задачи (алгоритм Косарайю)
-    solveBtn.onclick = async () => {
-        const n = parseInt(vertexCountInput.value);
-        const edges = getEdges();
-        
-        if (isNaN(n) || n < 1 || n > 50) {
-            showMessage('error', 'Введите корректное количество вершин (1-50)');
-            return;
-        }
-        
-        if (edges.length === 0) {
-            showMessage('error', 'Добавьте хотя бы одно ребро');
-            return;
-        }
-        
-        
-        try {
-            const response = await fetch('/api/kos/solve', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ n: n, edges: edges })
-            });
-            const data = await response.json();
-            
-            if (data.error) {
-                resultContent.innerHTML = `
-                    <span class="result-icon">❌</span>
-                    <p>Ошибка: ${data.error}</p>
-                `;
-                showMessage('error', data.error);
-            } else {
-                let componentsHtml = '';
-                data.components.forEach((comp, idx) => {
-                    const size = comp.length;
-                    const vertexList = comp.sort((a,b) => a-b).join(', ');
-                    componentsHtml += `<p><strong>Компонента ${idx + 1} (${size} вершины):</strong> ${vertexList}</p>`;
-                });
-                
-                resultContent.innerHTML = `
-                    <div class="result-success">
-                        <p><strong>Найдено компонент сильной связности: ${data.count}</strong></p>
-                        ${componentsHtml}
-                    </div>
-                `;
-                currentResult = data;
-                saveResultBtn.style.display = 'inline-block';
-                showMessage('success', 'Задача решена');
-            }
-        } catch(e) {
-            resultContent.innerHTML = `
-                <span class="result-icon">❌</span>
-                <p>Ошибка сервера</p>
-            `;
-            showMessage('error', 'Ошибка сервера');
-        }
-    };
-
-    // Сохранение результата
-    saveResultBtn.onclick = async () => {
-        if (!currentResult) return;
-        
-        try {
-            const response = await fetch('/api/kos/save', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentResult)
-            });
-            const data = await response.json();
-            if (data.error) {
-                showMessage('error', data.error);
-            } else {
-                showMessage('success', 'Результат сохранён');
-            }
-        } catch(e) {
-            showMessage('error', 'Ошибка сохранения');
-        }
-    };
-
-    // Добавление ребра
-    addEdgeBtn.onclick = () => addEdgeRow();
-    
-    // Инициализация
-    updateRemoveButtons();
-</script>
+<script src="/static/js/kosaraju.js"></script>
