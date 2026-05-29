@@ -1,70 +1,7 @@
 % # knapsack_tree.tpl - Задача о рюкзаке на дереве
 % rebase('layout.tpl', title='Задача о рюкзаке на дереве')
 
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #dfd8c8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; }
-    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 
-    .header { background: #52575d; border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: center; color: #dfd8c8; }
-    .header h1 { font-size: 22px; color: #cabfab; margin-bottom: 6px; }
-    .header p { font-size: 13px; }
-
-    .theory { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 25px; border-left: 5px solid #cabfab; }
-    .theory h2 { font-size: 18px; margin-bottom: 12px; color: #41444b; }
-    .theory h3 { font-size: 16px; margin: 12px 0 8px; color: #41444b; }
-    .theory p, .theory li { line-height: 1.5; color: #52575d; font-size: 14px; }
-    .theory ul, .theory ol { margin-left: 20px; margin-bottom: 12px; }
-    .anchor-link { display: inline-block; margin-top: 12px; color: #cabfab; text-decoration: none; font-weight: 600; font-size: 13px; }
-    .anchor-link:hover { color: #41444b; }
-
-    .example { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 25px; border: 2px solid #cabfab; }
-    .example h2 { font-size: 18px; margin-bottom: 12px; color: #41444b; }
-    .example-tree { background: #faf9f6; padding: 12px; border-radius: 12px; font-family: monospace; font-size: 12px; }
-
-    .form-card { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 25px; border-top: 4px solid #cabfab; scroll-margin-top: 70px; }
-    .form-card h2 { font-size: 18px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dfd8c8; color: #41444b; }
-
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; font-weight: 600; color: #41444b; margin-bottom: 6px; font-size: 13px; }
-    .form-group input, .form-group textarea { width: 100%; padding: 8px 10px; border: 2px solid #dfd8c8; border-radius: 10px; font-size: 14px; font-family: 'Courier New', monospace; background: #faf9f6; }
-    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #cabfab; background: #ffffff; }
-    .small-text { font-size: 11px; color: #888; margin-top: 4px; display: block; }
-
-    .btn-group { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-    .btn-solve { flex: 2; padding: 10px; background: #41444b; color: #dfd8c8; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 14px; }
-    .btn-solve:hover { background: #52575d; }
-    .btn-reset { flex: 1; padding: 10px; background: #dfd8c8; color: #41444b; border: 2px solid #cabfab; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 14px; }
-    .btn-reset:hover { background: #cabfab; }
-
-    .file-buttons { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-    .btn-file { flex: 1; padding: 8px; background: #faf9f6; color: #41444b; border: 2px solid #cabfab; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-    .btn-file:hover { background: #cabfab; }
-    .btn-generate { width: 100%; margin-top: 12px; padding: 10px; background: #cabfab; color: #41444b; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 14px; }
-    .btn-generate:hover { background: #b8a98e; }
-
-    .result-card { background: #ffffff; border-radius: 20px; padding: 20px; margin-bottom: 20px; border-top: 4px solid #52575d; }
-    .result-card h2 { font-size: 18px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dfd8c8; color: #41444b; }
-    .result-box { background: #faf9f6; border-radius: 12px; padding: 15px; border-left: 4px solid #52575d; }
-    .max-value { font-size: 32px; font-weight: bold; color: #41444b; }
-    .selected-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-    .tag { background: #cabfab; color: #41444b; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; }
-    .error-msg { background: #ffebee; border-left: 4px solid #c62828; padding: 12px; border-radius: 8px; color: #c62828; font-size: 14px; }
-
-    .tree-container { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 12px; overflow-x: auto; }
-    .tree-container pre { margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; }
-    .tree-legend { margin-top: 10px; font-size: 11px; color: #888; }
-
-    .nav-links { margin-top: 25px; padding-top: 15px; border-top: 1px solid #cabfab; text-align: center; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-    .nav-btn { color: #52575d; text-decoration: none; padding: 8px 20px; border-radius: 30px; display: inline-flex; align-items: center; gap: 6px; background: #faf9f6; border: 1px solid #cabfab; cursor: pointer; font-size: 13px; }
-    .nav-btn:hover { background: #cabfab; color: #41444b; }
-
-    @media (max-width: 768px) {
-        .container { padding: 10px; }
-        .btn-group { flex-direction: column; }
-        .file-buttons { flex-direction: column; }
-    }
-</style>
 
 <div class="container">
     <div class="header">
