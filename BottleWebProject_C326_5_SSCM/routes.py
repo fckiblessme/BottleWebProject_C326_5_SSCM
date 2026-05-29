@@ -1,9 +1,47 @@
 from bottle import route, view, template, request
 from datetime import datetime
 import json
-
-# Импорт решателя
 from knapsack_solver import solve_knapsack_tree
+
+
+def build_tree_string(weights_str, values_str, edges_str, selected_str):
+    """Строит текстовое представление дерева с подсветкой выбранных вершин."""
+    try:
+        weights = [int(x) for x in weights_str.split()]
+        values = [int(x) for x in values_str.split()]
+        selected = set(int(x) for x in selected_str.split()) if selected_str else set()
+
+        n = len(weights)
+
+        # Строим список смежности
+        adj = {i + 1: [] for i in range(n)}
+        edge_nums = [int(x) for x in edges_str.split()]
+        for i in range(0, len(edge_nums) - 1, 2):
+            u, v = edge_nums[i], edge_nums[i + 1]
+            adj[u].append(v)
+            adj[v].append(u)
+
+        # Рекурсивный обход
+        lines = []
+
+        def dfs(node, parent, prefix=""):
+            w = weights[node - 1]
+            v = values[node - 1]
+            mark = "✅" if node in selected else "  "
+            lines.append(f"{prefix}├── {mark} {node} (w={w}, v={v})")
+
+            children = [c for c in adj[node] if c != parent]
+            for i, child in enumerate(children):
+                if i == len(children) - 1:
+                    dfs(child, node, prefix + "    ")
+                else:
+                    dfs(child, node, prefix + "│   ")
+
+        dfs(1, -1, "")
+        return "<br>".join(lines) if lines else "Дерево пустое"
+
+    except Exception as e:
+        return f"Ошибка: {str(e)}"
 
 
 @route('/')
@@ -16,28 +54,22 @@ def home():
 @route('/about')
 @view('about')
 def about():
-    return dict(
-        title='О проекте',
-        message='Описание проекта',
-        year=datetime.now().year
-    )
+    return dict(title='О проекте', message='Описание проекта', year=datetime.now().year)
 
 
 @route('/knapsack_tree')
 def knapsack_tree():
-    """Страница с формой ввода данных."""
     return template('knapsack_tree',
                     title='Задача о рюкзаке на дереве',
                     year=datetime.now().year,
                     n='', w_max='', weights='', values='', edges='',
-                    result=None, error=None, max_value=None,
-                    selected_vertices=None, total_weight=None,
-                    edges_json='[]', weights_json='{}', values_json='{}', selected_json='[]')
+                    result=None, error=None,
+                    max_value=None, selected_vertices=None, total_weight=None,
+                    tree_html=None)
 
 
 @route('/knapsack_tree/solve', method='POST')
 def knapsack_tree_solve():
-    """Обрабатывает форму и возвращает результат."""
     n_str = request.forms.get('n', '')
     w_max_str = request.forms.get('w_max', '')
     weights_str = request.forms.get('weights', '')
@@ -47,31 +79,35 @@ def knapsack_tree_solve():
     try:
         n = int(n_str)
         w_max = int(w_max_str)
-        weights_list = [0] + list(map(int, weights_str.split()))  # сдвиг индекса
-        values_list = [0] + list(map(int, values_str.split()))    # сдвиг индекса
-        
+
+        weights_list_0 = list(map(int, weights_str.split()))
+        values_list_0 = list(map(int, values_str.split()))
+        weights = [0] + weights_list_0
+        values = [0] + values_list_0
+
         edges = []
         for line in edges_str.strip().split('\n'):
             if line.strip():
                 u, v = map(int, line.strip().split())
                 edges.append((u, v))
 
-        # Валидация
         if n < 1 or n > 50:
             raise ValueError("N должно быть от 1 до 50")
         if w_max < 1 or w_max > 100:
             raise ValueError("W должно быть от 1 до 100")
-        if len(weights_list) - 1 != n:
-            raise ValueError(f"Ожидалось {n} весов, получено {len(weights_list)-1}")
-        if len(values_list) - 1 != n:
-            raise ValueError(f"Ожидалось {n} ценностей, получено {len(values_list)-1}")
+        if len(weights_list_0) != n:
+            raise ValueError(f"Ожидалось {n} весов, получено {len(weights_list_0)}")
+        if len(values_list_0) != n:
+            raise ValueError(f"Ожидалось {n} ценностей, получено {len(values_list_0)}")
         if len(edges) != n - 1:
-            raise ValueError(f"Ожидалось {n-1} рёбер, получено {len(edges)}")
+            raise ValueError(f"Ожидалось {n - 1} рёбер, получено {len(edges)}")
 
-        # Решение
-        max_value, selected_set = solve_knapsack_tree(edges, weights_list, values_list, n, w_max)
-        total_weight = sum(weights_list[v] for v in selected_set)
-        selected_vertices = sorted(selected_set)
+        max_value, selected_set = solve_knapsack_tree(edges, weights, values, n, w_max)
+        total_weight = sum(weights[v] for v in selected_set)
+        selected_vertices_str = ' '.join(str(v) for v in sorted(selected_set))
+
+        # Генерируем текстовое дерево
+        tree_html = build_tree_string(weights_str, values_str, edges_str, selected_vertices_str)
 
         return template('knapsack_tree',
                         title='Задача о рюкзаке на дереве',
@@ -80,12 +116,9 @@ def knapsack_tree_solve():
                         weights=weights_str, values=values_str, edges=edges_str,
                         result=True, error=None,
                         max_value=max_value,
-                        selected_vertices=' '.join(str(v) for v in selected_vertices),
+                        selected_vertices=selected_vertices_str,
                         total_weight=total_weight,
-                        edges_json=json.dumps(edges),
-                        weights_json=json.dumps({i: weights_list[i] for i in range(1, n+1)}),
-                        values_json=json.dumps({i: values_list[i] for i in range(1, n+1)}),
-                        selected_json=json.dumps(selected_vertices))
+                        tree_html=tree_html)
 
     except Exception as e:
         return template('knapsack_tree',
@@ -95,4 +128,4 @@ def knapsack_tree_solve():
                         weights=weights_str, values=values_str, edges=edges_str,
                         result=True, error=str(e),
                         max_value=None, selected_vertices=None, total_weight=None,
-                        edges_json='[]', weights_json='{}', values_json='{}', selected_json='[]')
+                        tree_html=None)
