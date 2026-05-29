@@ -11,7 +11,7 @@
     --error-bg: #ffebee;
 }
 
-/*  Общие стили  */
+/* Общие стили */
 * {
     margin: 0;
     padding: 0;
@@ -38,9 +38,7 @@ body {
     color: var(--bg-light);
     padding: 1.5rem 30px;
     box-shadow: 0 4px 15px var(--shadow);
-    position: sticky;
-    top: 15px;
-    z-index: 1000;
+    position: relative;
     border-radius: 20px;
     margin-top: 15px;
     margin-bottom: 30px;
@@ -52,6 +50,7 @@ body {
     align-items: center;
     gap: 20px;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .logo h1 {
@@ -71,43 +70,47 @@ body {
         opacity: 0.9;
     }
 
-.nav ul {
-    list-style: none;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin: 0;
-    padding: 0;
+.nav {
+    display: block;
 }
 
-.nav a {
-    color: var(--bg-light);
-    text-decoration: none;
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.25s ease;
-    white-space: nowrap;
-}
-
-    .nav a:hover {
-        background: var(--medium-bg);
-        color: var(--white);
-        border-color: var(--accent);
-        transform: translateY(-1px);
+    .nav ul {
+        list-style: none;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 0;
+        padding: 5px 0;
     }
 
-    .nav a.active {
-        background: var(--accent);
-        color: var(--text-darker);
-        border-color: var(--accent);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    .nav a {
+        color: var(--bg-light);
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.25s ease;
+        white-space: nowrap;
     }
 
-/*Главная страница */
+        .nav a:hover {
+            background: var(--medium-bg);
+            color: var(--white);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .nav a.active {
+            background: var(--accent);
+            color: var(--text-darker);
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+/* Главная страница */
 .hero {
     text-align: center;
     padding: 4rem 2rem;
@@ -151,7 +154,7 @@ body {
     opacity: 0.9;
 }
 
-/*Секции, Теория и Пример */
+/* Секции, Теория и Пример */
 .section, .theory, .example, .form-card, .result-card {
     background: var(--white);
     padding: 25px;
@@ -224,10 +227,9 @@ body {
     font-size: 14px;
 }
 
-/* Формы и Поля ввода*/
+/* Формы и Поля ввода */
 .form-card {
     border-top: 5px solid var(--accent);
-    scroll-margin-top: 100px;
 }
 
     .form-card h2, .result-card h2 {
@@ -850,8 +852,7 @@ body {
         background: var(--bg-light);
     }
 
-
-  // Нижняя навигация и Подвал
+/* Нижняя навигация и Подвал */
 .nav-links {
     margin-top: 30px;
     padding-top: 20px;
@@ -892,7 +893,14 @@ body {
     border-radius: 20px 20px 0 0;
 }
 
-@media (max-width: 850px) {
+
+.discipline-hero, .form-card, .section, .theory, .example, .result-card {
+    scroll-margin-top: 0px;
+}
+
+/* Адаптивность и горизонтальная прокрутка ленты вкладок */
+
+@media (max-width: 992px) {
     .header {
         top: 0;
         margin-top: 0;
@@ -901,25 +909,44 @@ body {
     }
 
     .header-content {
-        flex-direction: column; 
-        text-align: center;
+        flex-direction: column;
+        align-items: center;
         gap: 15px;
+        width: 100%;
     }
 
     .nav {
         width: 100%;
+        overflow-x: auto; 
+        white-space: nowrap; 
+        -webkit-overflow-scrolling: touch; 
+        padding-bottom: 8px;
+        margin-bottom: -5px; 
     }
 
+        
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
         .nav ul {
-            flex-direction: row; 
-            flex-wrap: wrap; 
-            justify-content: center;
-            gap: 8px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap; 
+            justify-content: flex-start;
+            gap: 10px;
+            padding: 5px 10px;
+            width: max-content; 
+        }
+
+        .nav li {
+            flex: 0 0 auto; 
         }
 
         .nav a {
-            font-size: 14px; 
-            padding: 8px 14px; 
+            font-size: 14px;
+            padding: 8px 14px;
+            display: block;
         }
 
     .container {
@@ -995,4 +1022,337 @@ body {
     font-size: 32px;
     display: block;
     margin-bottom: 12px;
+}
+/* ============ СТРАНИЦА О НАС ============ */
+
+/* Карточки команды */
+.team-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.team-card {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.team-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px var(--shadow);
+}
+
+.avatar-1 {
+    background: var(--dark-bg);
+}
+
+.avatar-2 {
+    background: var(--medium-bg);
+}
+
+.avatar-3 {
+    background: #7E8491;
+}
+
+.avatar-4 {
+    background: #9BA1AE;
+}
+
+.team-info {
+    flex: 1;
+}
+
+    .team-info h3 {
+        color: var(--text-darker);
+        font-size: 22px;
+        margin: 0 0 5px;
+    }
+
+.team-role {
+    color: var(--text-dark);
+    font-size: 14px;
+    margin: 0 0 12px;
+    font-weight: 600;
+}
+
+.team-text {
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 15px;
+}
+
+.team-link {
+    display: inline-block;
+    background: var(--medium-bg);
+    color: var(--bg-light);
+    padding: 8px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+    .team-link:hover {
+        background: var(--dark-bg);
+        color: var(--white);
+        text-decoration: none;
+    }
+
+/* Палитра цветов */
+.about-intro {
+    color: var(--text-dark);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.palette-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.palette-card {
+    display: flex;
+    gap: 20px;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 12px;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow);
+}
+
+.palette-swatch {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    border: 3px solid var(--white);
+    flex-shrink: 0;
+    box-shadow: 0 2px 5px var(--shadow);
+}
+
+.palette-dark {
+    background: var(--dark-bg);
+}
+
+.palette-dark1 {
+    background: var(--medium-bg);
+}
+
+.palette-light {
+    background: var(--bg-light);
+    border: 3px solid var(--accent);
+}
+
+.palette-accent {
+    background: var(--accent);
+}
+
+.palette-info h4 {
+    color: var(--text-darker);
+    font-size: 18px;
+    margin: 0 0 5px;
+    font-family: 'Courier New', monospace;
+}
+
+.palette-info p {
+    color: var(--text-dark);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .team-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .team-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 26px;
+    }
+
+    .palette-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .palette-swatch {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ============ СТРАНИЦА TSP ============ */
+
+.input-row-flex {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    .input-row-flex input {
+        width: 100px;
+    }
+
+    .input-row-flex .btn-generate {
+        width: auto;
+        margin-top: 0;
+        padding: 10px 25px;
+    }
+
+.matrix-wrapper {
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.matrix-table {
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    margin: 0 auto;
+}
+
+    .matrix-table th,
+    .matrix-table td {
+        border: 1px solid var(--bg-light);
+        padding: 10px 12px;
+        text-align: center;
+    }
+
+    .matrix-table th {
+        background: var(--dark-bg);
+        color: var(--bg-light);
+        font-weight: 600;
+    }
+
+.matrix-label {
+    background: var(--dark-bg);
+    color: var(--bg-light);
+    font-weight: 600;
+}
+
+.matrix-cell {
+    width: 70px;
+    padding: 8px;
+    text-align: center;
+    border: 2px solid var(--bg-light);
+    border-radius: 8px;
+    font-size: 14px;
+    background: #faf9f6;
+}
+
+    .matrix-cell:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+
+    .matrix-cell:disabled {
+        background: var(--bg-light);
+    }
+
+.button-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+    .button-row .btn-file,
+    .button-row .btn-solve {
+        flex: 1;
+    }
+
+.result-placeholder {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+}
+
+/* Стили для  примера */
+.example-paths {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.path-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--white);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
+}
+
+.path-route {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--text-darker);
+}
+
+.path-weight {
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+    .path-weight strong {
+        color: var(--text-darker);
+        font-weight: 700;
+    }
+
+.example-result-detail {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px dashed var(--accent);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.result-badge {
+    background: var(--bg-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-darker);
+}
+
+    .result-badge strong {
+        color: var(--text-darker);
+    }
+
+@media (max-width: 768px) {
+    .path-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+
+    .example-result-detail {
+        flex-direction: column;
+        align-items: center;
+    }
 }
