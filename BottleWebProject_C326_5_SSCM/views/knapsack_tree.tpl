@@ -1,4 +1,4 @@
-% # knapsack_tree.tpl - Задача о рюкзаке на дереве.
+% # knapsack_tree.tpl - Задача о рюкзаке на дереве
 % rebase('layout.tpl', title='Задача о рюкзаке на дереве')
 
 <style>
@@ -11,6 +11,7 @@
     body {
         background: #dfd8c8;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 14px;
     }
 
     .container {
@@ -23,114 +24,131 @@
     .header {
         background: #52575d;
         border-radius: 20px;
-        padding: 30px;
-        margin-bottom: 30px;
+        padding: 25px;
+        margin-bottom: 25px;
         text-align: center;
         color: #dfd8c8;
     }
 
     .header h1 {
-        font-size: 28px;
+        font-size: 22px;
         color: #cabfab;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 
     /* Теория */
     .theory {
         background: #ffffff;
         border-radius: 20px;
-        padding: 25px;
+        padding: 20px;
         margin-bottom: 25px;
         border-left: 5px solid #cabfab;
     }
 
     .theory h2 {
         color: #41444b;
-        margin-bottom: 15px;
-        font-size: 22px;
+        margin-bottom: 12px;
+        font-size: 18px;
     }
 
     .theory h3 {
         color: #41444b;
-        margin: 15px 0 10px;
-        font-size: 18px;
+        margin: 12px 0 8px;
+        font-size: 16px;
     }
 
     .theory p {
-        line-height: 1.6;
+        line-height: 1.5;
         color: #52575d;
         margin-bottom: 10px;
+        font-size: 14px;
     }
 
     .theory ul, .theory ol {
-        margin-left: 25px;
-        margin-bottom: 15px;
+        margin-left: 20px;
+        margin-bottom: 12px;
         color: #52575d;
+        font-size: 14px;
+    }
+
+    .anchor-link {
+        display: inline-block;
+        margin-top: 15px;
+        color: #cabfab;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .anchor-link:hover {
+        color: #41444b;
     }
 
     /* Пример */
     .example {
         background: #ffffff;
         border-radius: 20px;
-        padding: 25px;
+        padding: 20px;
         margin-bottom: 25px;
         border: 2px solid #cabfab;
     }
 
     .example h2 {
         color: #41444b;
-        margin-bottom: 15px;
-        font-size: 22px;
+        margin-bottom: 12px;
+        font-size: 18px;
     }
 
     .example-tree {
         background: #faf9f6;
-        padding: 15px;
+        padding: 12px;
         border-radius: 12px;
         font-family: monospace;
         margin: 10px 0;
+        font-size: 13px;
     }
 
     .example-result {
         background: #e8f5e9;
-        padding: 15px;
+        padding: 12px;
         border-radius: 12px;
         margin-top: 10px;
+        font-size: 14px;
     }
 
     /* Форма */
     .form-card {
         background: #ffffff;
         border-radius: 20px;
-        padding: 25px;
+        padding: 20px;
         margin-bottom: 25px;
         border-top: 4px solid #cabfab;
+        scroll-margin-top: 20px;
     }
 
     .form-card h2 {
         color: #41444b;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
         border-bottom: 2px solid #dfd8c8;
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     .form-group label {
         display: block;
         font-weight: 600;
         color: #41444b;
-        margin-bottom: 8px;
-        font-size: 14px;
+        margin-bottom: 6px;
+        font-size: 13px;
     }
 
     .form-group input,
     .form-group textarea {
         width: 100%;
-        padding: 10px 12px;
+        padding: 8px 10px;
         border: 2px solid #dfd8c8;
         border-radius: 10px;
         font-size: 14px;
@@ -145,22 +163,30 @@
         background: #ffffff;
     }
 
+    .small-text {
+        font-size: 12px;
+        color: #888;
+        margin-top: 4px;
+        display: block;
+    }
+
     .btn-group {
         display: flex;
-        gap: 15px;
+        gap: 12px;
         margin-top: 20px;
+        flex-wrap: wrap;
     }
 
     .btn-solve {
         flex: 2;
-        padding: 12px;
+        padding: 10px;
         background: #41444b;
         color: #dfd8c8;
         border: none;
         border-radius: 30px;
         font-weight: 600;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .btn-solve:hover {
@@ -169,13 +195,14 @@
 
     .btn-reset {
         flex: 1;
-        padding: 12px;
+        padding: 10px;
         background: #dfd8c8;
         color: #41444b;
         border: 2px solid #cabfab;
         border-radius: 30px;
         font-weight: 600;
         cursor: pointer;
+        font-size: 14px;
     }
 
     .btn-reset:hover {
@@ -184,7 +211,7 @@
 
     .btn-generate {
         width: 100%;
-        margin-top: 15px;
+        margin-top: 12px;
         padding: 10px;
         background: #cabfab;
         color: #41444b;
@@ -192,37 +219,64 @@
         border-radius: 30px;
         font-weight: 600;
         cursor: pointer;
+        font-size: 14px;
     }
 
     .btn-generate:hover {
         background: #b8a98e;
     }
 
+    .btn-file {
+        width: 48%;
+        padding: 8px;
+        background: #faf9f6;
+        color: #41444b;
+        border: 2px solid #cabfab;
+        border-radius: 30px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-file:hover {
+        background: #cabfab;
+    }
+
+    .file-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
     /* Результат */
     .result-card {
         background: #ffffff;
         border-radius: 20px;
-        padding: 25px;
+        padding: 20px;
         border-top: 4px solid #52575d;
     }
 
     .result-card h2 {
         color: #41444b;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
         border-bottom: 2px solid #dfd8c8;
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .result-box {
         background: #faf9f6;
         border-radius: 12px;
-        padding: 20px;
+        padding: 15px;
         border-left: 4px solid #52575d;
     }
 
     .max-value {
-        font-size: 48px;
+        font-size: 32px;
         font-weight: bold;
         color: #41444b;
     }
@@ -230,49 +284,52 @@
     .selected-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin: 15px 0;
+        gap: 8px;
+        margin: 12px 0;
     }
 
     .tag {
         background: #cabfab;
         color: #41444b;
-        padding: 5px 15px;
+        padding: 4px 12px;
         border-radius: 20px;
         font-weight: 600;
+        font-size: 13px;
     }
 
     .error-msg {
         background: #ffebee;
         border-left: 4px solid #c62828;
-        padding: 15px;
+        padding: 12px;
         border-radius: 8px;
         color: #c62828;
+        font-size: 14px;
     }
 
     .nav-links {
-        margin-top: 30px;
-        padding-top: 20px;
+        margin-top: 25px;
+        padding-top: 15px;
         border-top: 1px solid #cabfab;
         text-align: center;
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 15px;
         flex-wrap: wrap;
     }
 
     .nav-btn {
         color: #52575d;
         text-decoration: none;
-        padding: 10px 25px;
+        padding: 8px 20px;
         border-radius: 30px;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         transition: all 0.3s;
         background: #faf9f6;
         border: 1px solid #cabfab;
         cursor: pointer;
+        font-size: 13px;
     }
 
     .nav-btn:hover {
@@ -286,6 +343,12 @@
         }
         .btn-group {
             flex-direction: column;
+        }
+        .file-buttons {
+            flex-direction: column;
+        }
+        .btn-file {
+            width: 100%;
         }
     }
 </style>
@@ -316,11 +379,13 @@
             <li>Выполняется обход в глубину (DFS) от корня</li>
             <li>Для каждой вершины вычисляется DP[вес] = максимальная ценность в её поддереве</li>
             <li>При слиянии результатов детей используется классическая задача о рюкзаке</li>
-            <li>Ответом является максимальное значение в корневой вершине</li>
         </ol>
 
-        <h3>Сложность</h3>
+        <h3>📐 Сложность</h3>
         <p><strong>O(N²·W²)</strong>, где N — количество вершин (≤ 50), W — максимальный вес (≤ 100).</p>
+
+        <!-- ЯКОРЬ НА ФОРМУ -->
+        <a href="#inputForm" class="anchor-link">📝 Перейти к форме ввода →</a>
     </div>
 
     <!-- ПРИМЕР -->
@@ -337,46 +402,54 @@
         <div class="example-result">
             <strong>Параметры:</strong> N=5, W=7<br>
             <strong>Решение:</strong> вершины 1, 2, 3, 5<br>
-            <strong>Вес:</strong> 7<br>
-            <strong>Ценность:</strong> 135
+            <strong>Вес:</strong> 7 | <strong>Ценность:</strong> 135
         </div>
     </div>
 
-    <!-- ФОРМА -->
-    <div class="form-card">
+    <!-- ФОРМА (с якорем) -->
+    <div class="form-card" id="inputForm">
         <h2>📝 Ввод данных</h2>
+
+        <!-- Кнопки работы с файлами -->
+        <div class="file-buttons">
+            <button class="btn-file" onclick="saveToJSON()">💾 Сохранить в JSON</button>
+            <label class="btn-file" style="cursor: pointer;">📂 Загрузить из JSON
+                <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="loadFromJSON(event)">
+            </label>
+        </div>
+
         <form action="/knapsack_tree/solve" method="post" id="mainForm">
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div style="flex: 1;">
                     <div class="form-group">
                         <label>🔢 Вершин (N ≤ 50)</label>
-                        <input type="number" name="n" value="{{n or '5'}}" min="1" max="50" required>
+                        <input type="number" name="n" id="inputN" value="{{n or '5'}}" min="1" max="50" required>
                     </div>
                 </div>
                 <div style="flex: 1;">
                     <div class="form-group">
                         <label>⚖️ Макс. вес (W ≤ 100)</label>
-                        <input type="number" name="w_max" value="{{w_max or '7'}}" min="1" max="100" required>
+                        <input type="number" name="w_max" id="inputW" value="{{w_max or '7'}}" min="1" max="100" required>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>🏋️ Веса вершин</label>
-                <input type="text" name="weights" value="{{weights or '2 3 1 2 1'}}" placeholder="2 3 1 2 1">
-                <small style="color:#888">через пробел, количество = N</small>
+                <input type="text" name="weights" id="inputWeights" value="{{weights or '2 3 1 2 1'}}" placeholder="2 3 1 2 1">
+                <span class="small-text">через пробел, количество = N</span>
             </div>
 
             <div class="form-group">
                 <label>💎 Ценности вершин</label>
-                <input type="text" name="values" value="{{values or '10 20 5 5 100'}}" placeholder="10 20 5 5 100">
-                <small style="color:#888">через пробел, количество = N</small>
+                <input type="text" name="values" id="inputValues" value="{{values or '10 20 5 5 100'}}" placeholder="10 20 5 5 100">
+                <span class="small-text">через пробел, количество = N</span>
             </div>
 
             <div class="form-group">
                 <label>🔗 Рёбра дерева</label>
-                <textarea name="edges" rows="4" placeholder="1 2&#10;1 3&#10;2 4">{{edges or '1 2\n1 3\n2 4\n2 5'}}</textarea>
-                <small style="color:#888">формат: родитель потомок (N-1 строк)</small>
+                <textarea name="edges" id="inputEdges" rows="4" placeholder="1 2&#10;1 3&#10;2 4">{{edges or '1 2\n1 3\n2 4\n2 5'}}</textarea>
+                <span class="small-text">формат: родитель потомок (N-1 строк)</span>
             </div>
 
             <div class="btn-group">
@@ -395,7 +468,7 @@
             % if not error:
                 <div class="result-box">
                     <div class="max-value">{{max_value}}</div>
-                    <div style="margin-bottom: 15px;">максимальная ценность</div>
+                    <div style="margin-bottom: 12px;">максимальная ценность</div>
 
                     <div><strong>✅ Выбранные вершины:</strong></div>
                     <div class="selected-list">
@@ -411,12 +484,12 @@
                 </div>
             % else:
                 <div class="error-msg">
-                    <strong>Ошибка:</strong> {{error}}
+                    <strong>⚠️ Ошибка:</strong> {{error}}
                 </div>
             % end
         % else:
-            <div style="text-align:center; padding: 40px; color: #888;">
-                <div style="font-size: 48px;">🎒</div>
+            <div style="text-align:center; padding: 30px; color: #888;">
+                <div style="font-size: 40px;">🎒</div>
                 <p>Введите данные и нажмите «РЕШИТЬ ЗАДАЧУ»</p>
             </div>
         % end
@@ -431,12 +504,66 @@
 </div>
 
 <script>
+// Генерация примера
 function generateExample() {
-    document.querySelector('input[name="n"]').value = '5';
-    document.querySelector('input[name="w_max"]').value = '7';
-    document.querySelector('input[name="weights"]').value = '2 3 1 2 1';
-    document.querySelector('input[name="values"]').value = '10 20 5 5 100';
-    document.querySelector('textarea[name="edges"]').value = '1 2\n1 3\n2 4\n2 5';
+    document.getElementById('inputN').value = '5';
+    document.getElementById('inputW').value = '7';
+    document.getElementById('inputWeights').value = '2 3 1 2 1';
+    document.getElementById('inputValues').value = '10 20 5 5 100';
+    document.getElementById('inputEdges').value = '1 2\n1 3\n2 4\n2 5';
     document.getElementById('mainForm').submit();
+}
+
+// Сохранение в JSON файл
+function saveToJSON() {
+    const data = {
+        n: parseInt(document.getElementById('inputN').value),
+        W: parseInt(document.getElementById('inputW').value),
+        weights: document.getElementById('inputWeights').value.split(' ').map(Number),
+        values: document.getElementById('inputValues').value.split(' ').map(Number),
+        edges: document.getElementById('inputEdges').value.trim().split('\n').map(line => {
+            const parts = line.trim().split(' ');
+            return [parseInt(parts[0]), parseInt(parts[1])];
+        })
+    };
+
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'knapsack_data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Загрузка из JSON файла
+function loadFromJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+
+            document.getElementById('inputN').value = data.n || '';
+            document.getElementById('inputW').value = data.W || '';
+            document.getElementById('inputWeights').value = data.weights ? data.weights.join(' ') : '';
+            document.getElementById('inputValues').value = data.values ? data.values.join(' ') : '';
+
+            let edgesStr = '';
+            if (data.edges && Array.isArray(data.edges)) {
+                edgesStr = data.edges.map(edge => edge[0] + ' ' + edge[1]).join('\n');
+            }
+            document.getElementById('inputEdges').value = edgesStr;
+
+        } catch (error) {
+            alert('Ошибка при загрузке JSON файла: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
 }
 </script>
