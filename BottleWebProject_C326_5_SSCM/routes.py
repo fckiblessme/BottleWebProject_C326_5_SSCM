@@ -1,35 +1,25 @@
-"""
-Routes and views for the bottle application.
-"""
-
-from bottle import route, view
-from datetime import datetime
+from bottle import route, template
 
 @route('/')
-@route('/home')
-@view('index')
-def home():
-    """Renders the home page."""
-    return dict(
-        year=datetime.now().year
-    )
-
-@route('/contact')
-@view('contact')
-def contact():
-    """Renders the contact page."""
-    return dict(
-        title='Contact',
-        message='Your contact page.',
-        year=datetime.now().year
-    )
+def index():
+    return template('index.tpl', title='Главная', year=2026)
 
 @route('/about')
-@view('about')
 def about():
-    """Renders the about page."""
-    return dict(
-        title='About',
-        message='Your application description page.',
-        year=datetime.now().year
-    )
+    return template('about.tpl', title='О нас', year=2026)
+
+@route('/tsp')
+def tsp():
+    return template('tsp_form.tpl', title='Задача коммивояжёра', year=2026)
+
+@route('/vertex_cover')
+def vertex_cover():
+    return template('vertex_cover.tpl', title='Вершинное покрытие', year=2026)
+
+@route('/kos')
+def kos():
+    return template('kos_form.tpl', title='Компоненты сильной связности', year=2026)
+
+@route('/tree_knapsack')
+def tree_knapsack():
+    return template('tree_knapsack.tpl', title='Рюкзак на дереве', year=2026)
