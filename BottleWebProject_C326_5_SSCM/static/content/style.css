@@ -50,6 +50,7 @@ body {
     align-items: center;
     gap: 20px;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .logo h1 {
@@ -646,6 +647,7 @@ body {
 }
 
 /* Адаптивность и горизонтальная прокрутка ленты вкладок */
+
 @media (max-width: 992px) {
     .header {
         top: 0;
@@ -658,29 +660,41 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 15px;
+        width: 100%;
     }
 
     .nav {
         width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 5px;
+        overflow-x: auto; 
+        white-space: nowrap; 
+        -webkit-overflow-scrolling: touch; 
+        padding-bottom: 8px;
+        margin-bottom: -5px; 
     }
 
+        
         .nav::-webkit-scrollbar {
             display: none;
         }
 
         .nav ul {
+            display: flex;
             flex-direction: row;
-            flex-wrap: nowrap;
+            flex-wrap: nowrap; 
             justify-content: flex-start;
+            gap: 10px;
             padding: 5px 10px;
+            width: max-content; 
+        }
+
+        .nav li {
+            flex: 0 0 auto; 
         }
 
         .nav a {
             font-size: 14px;
             padding: 8px 14px;
+            display: block;
         }
 
     .container {
