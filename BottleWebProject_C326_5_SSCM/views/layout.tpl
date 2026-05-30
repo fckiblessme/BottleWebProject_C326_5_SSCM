@@ -26,7 +26,7 @@
                     <div style="flex: 0 0 auto;">
                         <nav class="nav">
                             <ul style="display: flex; list-style: none; margin: 0 !important; padding: 0 !important; gap: 12px;">
-                                <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/home" id="nav-home">Главная</a></li>
+                                <li style="margin-bottom: 0 !important; margin-left: 295px ;margin-right: 0 !important;"><a href="/home" id="nav-home">Главная</a></li>
                                 <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/about" id="nav-about">О нас</a></li>
                             </ul>
                         </nav>
