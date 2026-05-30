@@ -213,17 +213,15 @@
         </form>
     </div>
 
-    <div class="result-card">
-        <h2>📊 Результат</h2>
-        <div class="result-placeholder">
-            <div style="font-size: 40px;">🗺️</div>
-            <p>Результат появится после решения задачи</p>
-        </div>
+   <div class="result-card">
+    <h2>Результат</h2>
+    <div class="result-placeholder">
+        <div style="font-size: 40px;">🗺️</div>
+        <p>Результат появится после решения задачи</p>
     </div>
-
-    <div class="nav-links">
-        <a href="/" class="nav-btn">🏠 Домой</a>
-        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
-        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn-confirm">Сохранить в файл</button>
     </div>
+</div>
+</div>
 </div>
