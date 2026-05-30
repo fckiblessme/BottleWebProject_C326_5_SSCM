@@ -699,7 +699,6 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: background 0.2s;
-    white-space: nowrap;
 }
 
     .btn-reset:hover, .btn-clear:hover {
@@ -1262,47 +1261,136 @@ body {
         background: var(--bg-light);
     }
 
-.button-row {
+/* ============ ПРИМЕР TSP ============ */
+
+.example-layout {
     display: flex;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
-    .button-row .btn-file, .button-row .btn-solve {
-        flex: 1;
+.example-matrix-col {
+    flex: 1.5;
+    min-width: 320px;
+}
+
+.example-paths-col {
+    flex: 2;
+    min-width: 380px;
+}
+
+.example-matrix-wrapper {
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.example-matrix {
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    width: 100%;
+}
+
+    .example-matrix th,
+    .example-matrix td {
+        border: 1px solid var(--bg-light);
+        padding: 12px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 500;
     }
 
+    .example-matrix th {
+        background: var(--dark-bg);
+        color: var(--bg-light);
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+.example-matrix-label {
+    background: var(--dark-bg);
+    color: var(--bg-light);
+    font-weight: 600;
+}
+
 .example-paths {
-    margin: 15px 0;
+    margin: 10px 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .path-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 6px 10px;
     background: var(--white);
-    border-radius: 10px;
+    border-radius: 8px;
     border-left: 3px solid var(--accent);
 }
 
 .path-route {
     font-family: 'Courier New', monospace;
-    font-size: 15px;
+    font-size: 19px;
     color: var(--text-darker);
 }
 
 .path-weight {
-    font-size: 15px;
+    font-size: 19px;
     color: var(--text-dark);
 }
 
     .path-weight strong {
         color: var(--text-darker);
         font-weight: 700;
+    }
+
+.result-line {
+    padding: 5px 0;
+    font-size: 15px;
+    color: var(--text-darker);
+}
+
+    .result-line strong {
+        color: var(--text-darker);
+        font-weight: 700;
+    }
+
+@media (max-width: 768px) {
+    .example-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .path-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+}
+
+.example-result-detail {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px dashed var(--accent);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.result-badge {
+    background: var(--bg-light);
+    padding: 9px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+    color: var(--text-darker);
+}
+
+    .result-badge strong {
+        color: var(--text-darker);
     }
 
 /* Страница О нас */
@@ -1560,27 +1648,6 @@ body {
     .example-result-detail {
         flex-direction: column;
         align-items: center;
-    }
-
-    .edge-row {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-        .edge-row .btn-remove-edge {
-            margin-left: unset;
-            width: 100% !important;
-            border-radius: 8px !important;
-            margin-top: 5px;
-        }
-
-    .example {
-        flex-direction: column;
-    }
-
-    .example-tree,
-    .theory-image {
-        min-width: 100%;
     }
 }
 
