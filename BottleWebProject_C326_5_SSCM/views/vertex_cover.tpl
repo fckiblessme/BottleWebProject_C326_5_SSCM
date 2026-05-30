@@ -24,13 +24,21 @@
     <div class="example">
         <h2>Пример двудольного графа</h2>
         <div class="example-tree">
-            <strong>Доли графа:</strong> Левая (L: 1, 2, 3) → Правая (R: 4, 5)<br>
+            <strong>Доли графа:</strong> Левая (L: 1, 2, 3, 4, 5) → Правая (R: 6, 7, 8, 9)<br>
             <strong>Рёбра:</strong><br>
-            1 — 4<br>
-            1 — 5<br>
-            2 — 4<br>
-            3 — 5<br>
-            <strong>Результат → Минимальное покрытие:</strong> Вершины [4, 5] (Размер: 2, покрывают все рёбра).
+            1 — 6<br>
+            2 — 6, 2 — 7<br>
+            3 — 8, 3 — 9<br>
+            4 — 7<br>
+            5 — 6, 5 — 9<br>
+            <strong>Результат → Минимальное покрытие:</strong> Вершины [3, 6, 7, 9] (Размер: 4, покрывают все рёбра).
+        </div>
+
+        <div class="theory-image" style="text-align: center; margin: 20px 0 10px;">
+            <img src="/static/images/dvydoli.png" alt="Пример вершинного покрытия" style="max-width: 100%; max-height: 250px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 10px var(--shadow); border: 1px solid var(--accent); background-color: #fff;">
+            <div style="font-size: 13px; color: var(--text-dark); margin-top: 8px;">
+                Визуализация текущего примера. Минимальное покрытие составляют вершины <strong>3</strong> (из левой доли) и <strong>6, 7, 9</strong> (из правой доли).
+            </div>
         </div>
     </div>
 
@@ -49,20 +57,20 @@
                 <div style="flex: 1;">
                     <div class="form-group">
                         <label>Вершин в левой доле (L)</label>
-                        <input type="number" name="n_left" id="inputNLeft" value="{{n_left or '3'}}" min="1" max="100" required>
+                        <input type="number" name="n_left" id="inputNLeft" value="{{n_left or '5'}}" min="1" max="100" required>
                     </div>
                 </div>
                 <div style="flex: 1;">
                     <div class="form-group">
                         <label>Вершин в правой доле (R)</label>
-                        <input type="number" name="n_right" id="inputNRight" value="{{n_right or '2'}}" min="1" max="100" required>
+                        <input type="number" name="n_right" id="inputNRight" value="{{n_right or '4'}}" min="1" max="100" required>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Список рёбер графа</label>
-                <textarea name="edges" id="inputEdges" rows="5" style="resize:none" placeholder="1 4&#10;1 5&#10;2 4&#10;3 5" required>{{edges or '1 4\n1 5\n2 4\n3 5'}}</textarea>
+                <textarea name="edges" id="inputEdges" rows="7" style="resize:none" placeholder="1 6&#10;2 6&#10;2 7&#10;3 8&#10;3 9&#10;4 7&#10;5 6&#10;5 9" required>{{edges or '1 6\n2 6\n2 7\n3 8\n3 9\n4 7\n5 6\n5 9'}}</textarea>
                 <span class="small-text">Формат: "вершина_L вершина_R" (по одной паре на строку).</span>
             </div>
 
@@ -94,7 +102,7 @@
                 </div>
 
                 <div style="margin-top: 15px; font-size: 13px; color: var(--text-dark);">
-                    <strong>ℹТеорема Кёнига подтверждена:</strong> Покрытие из {{cover_size}} вершин полностью блокирует все рёбра графа.
+                    <strong>ℹ Теорема Кёнига подтверждена:</strong> Покрытие из {{cover_size}} вершин полностью блокирует все рёбра графа.
                 </div>
             </div>
         % elif error:
@@ -102,8 +110,8 @@
                 <strong>Ошибка:</strong> {{error}}
             </div>
         % else:
-            <div style="text-align:center; padding: 30px; color: #888;">
-                <div style="font-size: 40px;"></div>
+            <div class="result-placeholder">
+                <span class="result-icon">🕸️</span>
                 <p>Введите структуру графа и нажмите «НАЙТИ МИНИМАЛЬНОЕ ПОКРЫТИЕ»</p>
             </div>
         % end

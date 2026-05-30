@@ -18,7 +18,7 @@
             <span class="card-link">Перейти к решению &rarr;</span>
         </a>
 
-        <a href="/vertex_cover" class="discipline-cover">
+        <a href="/vertex_cover" class="discipline-card">
             <div class="card-icon">🕸️</div>
             <h3>Вершинное покрытие</h3>
             <p>Поиск минимального множества вершин, подменяющего все ребра графа. Метод ветвей и границ для поиска точного подмножества.</p>
