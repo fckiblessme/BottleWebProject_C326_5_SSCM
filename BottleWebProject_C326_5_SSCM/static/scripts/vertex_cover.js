@@ -1,4 +1,4 @@
-// Дефолтный демонстрационный пример графа
+// Дефолтный демонстрационный пример графа (соответствует теории в шаблоне)
 const defaultEdges = [
     { from: '1', to: '6' },
     { from: '2', to: '6' },
@@ -17,22 +17,49 @@ function addNewEdgeRow(fromVal = '', toVal = '') {
 
     const row = document.createElement('div');
     row.className = 'edge-row';
+    // Инлайновые стили убираем в пользу классов из style.css, оставляя только флекс-выравнивание
     row.style.display = 'flex';
-    row.style.gap = '10px';
     row.style.alignItems = 'center';
-    row.style.marginBottom = '8px';
+    row.style.gap = '10px';
 
     row.innerHTML = `
-        <span style="font-size: 14px; color: var(--text-dark); width: 60px; font-weight: 600;">Ребро:</span>
-        <input type="number" class="edge-from" placeholder="Доля L" value="${fromVal}" min="1" required style="flex: 1;">
-        <span style="color: var(--text-dark);">⇄</span>
-        <input type="number" class="edge-to" placeholder="Доля R" value="${toVal}" min="1" required style="flex: 1;">
-        <button type="button" class="btn-remove-edge" onclick="this.parentElement.remove()" title="Удалить ребро">×</button>
+        <span class="matrix-label">L:</span>
+        <input type="number" class="edge-from" placeholder="Доля L" value="${fromVal}" min="1" required>
+        <span class="example-arrow" style="font-size: 18px; margin: 0 5px;">→</span>
+        <span class="matrix-label">R:</span>
+        <input type="number" class="edge-to" placeholder="Доля R" value="${toVal}" min="1" required>
+        <button type="button" class="btn-remove-edge" onclick="removeCurrentEdgeRow(this)" title="Удалить ребро">×</button>
     `;
 
     container.appendChild(row);
+
+    // Валидация: если ребро стало больше одного, разблокируем кнопки удаления
+    toggleRemoveButtons();
+
     // Автоскролл контейнера вниз, чтобы новое ребро сразу было видно
     container.parentElement.scrollTop = container.parentElement.scrollHeight;
+}
+
+// Безопасное удаление строки с проверкой на минимальное количество (1 строка)
+function removeCurrentEdgeRow(button) {
+    const container = document.getElementById('edgesTableBody');
+    if (!container) return;
+
+    if (container.querySelectorAll('.edge-row').length > 1) {
+        button.parentElement.remove();
+        toggleRemoveButtons();
+    }
+}
+
+// Вспомогательная функция для блокировки/разблокировки крестиков удаления
+function toggleRemoveButtons() {
+    const rows = document.querySelectorAll('#edgesTableBody .edge-row');
+    rows.forEach(row => {
+        const btn = row.querySelector('.btn-remove-edge');
+        if (btn) {
+            btn.disabled = (rows.length === 1);
+        }
+    });
 }
 
 // Очистка таблицы
@@ -40,11 +67,11 @@ function clearEdgesTable() {
     const container = document.getElementById('edgesTableBody');
     if (container) {
         container.innerHTML = '';
-        addNewEdgeRow('', ''); // Оставляем одну пустую строку
+        addNewEdgeRow('', ''); // Оставляем одну пустую интерактивную строку
     }
 }
 
-// Загрузка дефолтных значений примера
+// Загрузка дефолтных значений примера (5 вершин слева, 4 справа)
 function loadDefaultTableExample() {
     const container = document.getElementById('edgesTableBody');
     if (!container) return;
@@ -68,7 +95,10 @@ function prepareEdgesForSubmit(e) {
         }
     });
 
-    document.getElementById('hiddenEdgesInput').value = edgesString.trim();
+    const hiddenInput = document.getElementById('hiddenEdgesInput');
+    if (hiddenInput) {
+        hiddenInput.value = edgesString.trim();
+    }
 }
 
 // Инициализация обработчиков событий после загрузки DOM
@@ -88,55 +118,61 @@ document.addEventListener("DOMContentLoaded", function () {
         mainForm.addEventListener('submit', prepareEdgesForSubmit);
     }
 
-    // Восстановление состояния: проверяем, прислал ли сервер данные назад
+    // Восстановление состояния: проверяем, прислал ли бэкенд сохраненные данные обратно
     const serverEdgesData = document.getElementById('serverEdgesData');
     let initialEdges = serverEdgesData ? serverEdgesData.getAttribute('data-edges').trim() : '';
 
     if (initialEdges) {
         const pairs = initialEdges.split('\n');
+        let addedAny = false;
+
         pairs.forEach(pair => {
             const parts = pair.trim().split(/\s+/);
             if (parts.length === 2) {
                 addNewEdgeRow(parts[0], parts[1]);
+                addedAny = true;
             }
         });
+
+        if (!addedAny) addNewEdgeRow('', '');
     } else {
         // Если страница открыта впервые, сразу генерируем красивый готовый пример
         loadDefaultTableExample();
     }
 });
-// Генерация примера двудольного графа
-function generateExample() {
-    document.getElementById('inputNLeft').value = '3';
-    document.getElementById('inputNRight').value = '2';
-    document.getElementById('inputEdges').value = '1 4\n1 5\n2 4\n3 5';
-    document.getElementById('mainForm').submit();
-}
 
-// Сохранение графа в JSON
+// Сохранение текущего графа из интерактивной таблицы в JSON-файл
 function saveToJSON() {
+    const rows = document.querySelectorAll('#edgesTableBody .edge-row');
+    const validEdges = [];
+
+    rows.forEach(row => {
+        const from = row.querySelector('.edge-from').value.trim();
+        const to = row.querySelector('.edge-to').value.trim();
+        if (from && to) {
+            validEdges.push([parseInt(from), parseInt(to)]);
+        }
+    });
+
     const data = {
-        n_left: parseInt(document.getElementById('inputNLeft').value),
-        n_right: parseInt(document.getElementById('inputNRight').value),
-        edges: document.getElementById('inputEdges').value.trim().split('\n').map(line => {
-            const parts = line.trim().split(/\s+/);
-            return [parseInt(parts[0]), parseInt(parts[1])];
-        })
+        n_left: parseInt(document.getElementById('inputNLeft').value) || 5,
+        n_right: parseInt(document.getElementById('inputNRight').value) || 4,
+        edges: validEdges
     };
 
-    const jsonStr = JSON.stringify(data, null, 2);
+    const jsonStr = JSON.stringify(data, null, 4);
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'vertex_cover_data.json';
+    a.download = 'vertex_cover_graph.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
 
-// Загрузка графа из JSON
+// Загрузка структуры графа из JSON-файла напрямую в интерактивную таблицу
 function loadFromJSON(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -146,17 +182,36 @@ function loadFromJSON(event) {
         try {
             const data = JSON.parse(e.target.result);
 
-            document.getElementById('inputNLeft').value = data.n_left || '';
-            document.getElementById('inputNRight').value = data.n_right || '';
+            // Заполняем размерности долей
+            document.getElementById('inputNLeft').value = data.n_left || '5';
+            document.getElementById('inputNRight').value = data.n_right || '4';
 
-            let edgesStr = '';
+            // Перестраиваем контейнер рёбер
+            const container = document.getElementById('edgesTableBody');
+            if (!container) return;
+            container.innerHTML = '';
+
             if (data.edges && Array.isArray(data.edges)) {
-                edgesStr = data.edges.map(edge => edge[0] + ' ' + edge[1]).join('\n');
+                data.edges.forEach(edge => {
+                    // Обрабатываем формат массивов [1, 6] или объектов {from, to}
+                    if (Array.isArray(edge) && edge.length === 2) {
+                        addNewEdgeRow(edge[0], edge[1]);
+                    } else if (edge && edge.from && edge.to) {
+                        addNewEdgeRow(edge.from, edge.to);
+                    }
+                });
             }
-            document.getElementById('inputEdges').value = edgesStr;
+
+            // Если импортированный массив оказался пуст, создаём одну чистую строку
+            if (container.querySelectorAll('.edge-row').length === 0) {
+                addNewEdgeRow('', '');
+            }
+
+            // Сбрасываем значение input[type=file], чтобы можно было повторно загружать тот же файл
+            event.target.value = '';
 
         } catch (error) {
-            alert('Ошибка при загрузке JSON графа: ' + error.message);
+            alert('Ошибка при чтении или разборе JSON файла графа: ' + error.message);
         }
     };
     reader.readAsText(file);
