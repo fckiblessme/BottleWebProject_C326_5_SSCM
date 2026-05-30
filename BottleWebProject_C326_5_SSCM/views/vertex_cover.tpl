@@ -6,7 +6,7 @@
     <div class="theory">
         <div class="theory-header">
             <h2>📖 Теория метода и основные определения</h2>
-            <a href="#inputForm" class="anchor-link">Перейти к форму ввода →</a>
+            <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
         </div>
         
         <div class="theory-block">
