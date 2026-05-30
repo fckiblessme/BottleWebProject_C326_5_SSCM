@@ -88,7 +88,7 @@ body {
 
         .nav ul li {
             display: inline-block !important;
-            margin-bottom: 0px !important; /* Убран старый баг с отступом в 15px */
+            margin-bottom: 0px !important;
             margin-right: 0px !important;
         }
 
@@ -1025,41 +1025,85 @@ body {
         background: var(--bg-light);
     }
 
-.button-row {
+/* ============ ПРИМЕР TSP ============ */
+
+.example-layout {
     display: flex;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
-    .button-row .btn-file, .button-row .btn-solve {
-        flex: 1;
+.example-matrix-col {
+    flex: 1.5;
+    min-width: 320px;
+}
+
+.example-paths-col {
+    flex: 2;
+    min-width: 380px;
+}
+
+.example-matrix-wrapper {
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.example-matrix {
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    width: 100%;
+}
+
+    .example-matrix th,
+    .example-matrix td {
+        border: 1px solid var(--bg-light);
+        padding: 12px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 500;
     }
 
+    .example-matrix th {
+        background: var(--dark-bg);
+        color: var(--bg-light);
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+.example-matrix-label {
+    background: var(--dark-bg);
+    color: var(--bg-light);
+    font-weight: 600;
+}
+
 .example-paths {
-    margin: 15px 0;
+    margin: 10px 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .path-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 6px 10px;
     background: var(--white);
-    border-radius: 10px;
+    border-radius: 8px;
     border-left: 3px solid var(--accent);
 }
 
 .path-route {
     font-family: 'Courier New', monospace;
-    font-size: 15px;
+    font-size: 19px;
     color: var(--text-darker);
 }
 
 .path-weight {
-    font-size: 15px;
+    font-size: 19px;
     color: var(--text-dark);
 }
 
@@ -1068,28 +1112,107 @@ body {
         font-weight: 700;
     }
 
-.example-result-detail {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px dashed var(--accent);
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.result-badge {
-    background: var(--bg-light);
-    padding: 9px 18px;
-    border-radius: 20px;
+.result-line {
+    padding: 5px 0;
     font-size: 15px;
     color: var(--text-darker);
 }
 
-    .result-badge strong {
+    .result-line strong {
+        color: var(--text-darker);
+        font-weight: 700;
+    }
+
+@media (max-width: 768px) {
+    .example-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .path-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+}
+
+/* КНОПКИ TSP */
+
+.button-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.btn-random,
+.btn-confirm {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-random {
+    background: var(--bg-light);
+    color: var(--text-darker);
+    border: 2px solid var(--accent);
+}
+
+    .btn-random:hover {
+        background: var(--accent);
         color: var(--text-darker);
     }
 
-/* Страница О нас */
+.btn-confirm {
+    background: var(--medium-bg);
+    color: var(--bg-light);
+}
+
+    .btn-confirm:hover {
+        background: var(--dark-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px var(--shadow);
+    }
+
+/* ============ КАРТИНКА В ПРИМЕРЕ TSP ============ */
+
+.example-image {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.example-graph-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow);
+    background: var(--white);
+    padding: 10px;
+}
+
+.image-caption {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-dark);
+    font-style: italic;
+}
+
+.graph-svg {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* ============ СТРАНИЦА О НАС ============ */
+
 .team-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1331,11 +1454,6 @@ body {
         flex-direction: column;
         text-align: center;
         gap: 5px;
-    }
-
-    .example-result-detail {
-        flex-direction: column;
-        align-items: center;
     }
 }
 
