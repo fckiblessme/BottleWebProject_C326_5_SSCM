@@ -30,7 +30,7 @@
     </div>
 
     <div class="task-section">
-        <h2>Теоретическая информация</h2>
+        <h2>📖 Теоретическая информация</h2>
         
         <div class="theory-block">
             <h3>Компонента сильной связности</h3>
@@ -82,8 +82,8 @@
         </div>
 
         <div class="file-row">
-            <button type="button" id="btn-generate" class="btn-file">Случайный граф</button>
-            <label class="btn-file" style="cursor: pointer;">Загрузить из JSON
+            <button type="button" id="btn-generate" class="btn-file">🎲 Случайный граф</button>
+            <label class="btn-file" style="cursor: pointer;">📂 Загрузить из JSON
                 <input type="file" id="file-input" accept=".json" style="display: none;">
             </label>
         </div>
@@ -108,7 +108,7 @@
     </div>
 
     <div class="task-section">
-        <h2>Результат</h2>
+        <h2>📊 Результат</h2>
         
         <div class="result-block">
             <div id="result-content" class="result-placeholder">
@@ -149,9 +149,9 @@
     </div>
 
     <div class="nav-links">
-        <a href="/" class="nav-btn">Домой</a>
-        <button onclick="window.print();" class="nav-btn">Печать</button>
-        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">Назад</a>
+        <a href="/" class="nav-btn">🏠 Домой</a>
+        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
+        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
     </div>
 </div>
 

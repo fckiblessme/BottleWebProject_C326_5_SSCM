@@ -7,7 +7,7 @@
     </div>
 
     <div class="theory">
-        <h2>Теория метода</h2>
+        <h2>📖 Теория метода</h2>
         <p><strong>Суть задачи:</strong> Найти кратчайший замкнутый маршрут, проходящий через все города ровно по одному разу и возвращающийся в исходный.</p>
         
         <h3>Важные факты и алгоритм</h3>
@@ -123,7 +123,7 @@
                     </table>
                 </div>
                 <div class="button-row">
-                    <button type="submit" name="random" value="1" class="btn-file">Случайные значения</button>
+                    <button type="submit" name="random" value="1" class="btn-file">🎲 Случайные значения</button>
                     <button type="submit" name="submit" value="1" class="btn-solve">Подтвердить ввод</button>
                 </div>
             </div>
@@ -131,7 +131,7 @@
     </div>
 
     <div class="result-card">
-        <h2>Результат</h2>
+        <h2>📊 Результат</h2>
         <div class="result-placeholder">
             <div style="font-size: 40px;">🗺️</div>
             <p>Результат появится после решения задачи</p>
@@ -139,8 +139,8 @@
     </div>
 
     <div class="nav-links">
-        <a href="/" class="nav-btn">Домой</a>
-        <button onclick="window.print();" class="nav-btn">Печать</button>
-        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">Назад</a>
+        <a href="/" class="nav-btn">🏠 Домой</a>
+        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
+        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
     </div>
 </div>

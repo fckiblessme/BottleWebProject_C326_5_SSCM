@@ -11,7 +11,7 @@
 
     <!-- ТЕОРИЯ с якорем -->
     <div class="theory">
-        <h2>Теория метода</h2>
+        <h2>📖 Теория метода</h2>
         <p><strong>Суть алгоритма:</strong> Задача о рюкзаке на дереве — обобщение классической задачи о рюкзаке на древовидные структуры. Каждая вершина имеет вес и ценность.</p>
         <h3>Условия задачи</h3>
         <ul>
@@ -52,8 +52,8 @@
 
         <!-- КНОПКИ ДЛЯ РАБОТЫ С ФАЙЛАМИ -->
         <div class="file-buttons">
-            <button class="btn-file" onclick="saveToJSON()">Сохранить в JSON</button>
-            <label class="btn-file" style="cursor: pointer;">Загрузить из JSON
+            <button class="btn-file" onclick="saveToJSON()">💾 Сохранить в JSON</button>
+            <label class="btn-file" style="cursor: pointer;">📂 Загрузить из JSON
                 <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="loadFromJSON(event)">
             </label>
         </div>
@@ -102,7 +102,7 @@
 
     <!-- РЕЗУЛЬТАТ -->
     <div class="result-card">
-        <h2>Результат</h2>
+        <h2>📊 Результат</h2>
 
         % if result is not None and not error:
             <div class="result-box">
@@ -151,9 +151,9 @@
 
     <!-- НАВИГАЦИЯ -->
     <div class="nav-links">
-        <a href="/" class="nav-btn">Домой</a>
-        <button onclick="window.print();" class="nav-btn">Печать</button>
-        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">Назад</a>
+        <a href="/" class="nav-btn">🏠 Домой</a>
+        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
+        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
     </div>
 </div>
 
