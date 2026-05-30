@@ -97,8 +97,8 @@
     </div>
 
     <div class="nav-links">
-        <a href="/" class="nav-btn">Домой</a>
-        <button onclick="window.print();" class="nav-btn">Печать</button>
-        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">Назад</a>
+        <a href="/" class="nav-btn">🏠 Домой</a>
+        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
+        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
     </div>
 </div>
