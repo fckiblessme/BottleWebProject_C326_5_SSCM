@@ -1344,3 +1344,22 @@ body {
     height: auto !important;
     min-height: max-content !important;
 }
+
+/* Стили для ссылки на сноску в заголовке */
+.footnote-ref {
+    color: var(--accent); 
+    text-decoration: none;
+    font-size: 0.6em;
+    padding: 0 4px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+    .footnote-ref:hover {
+        color: var(--white); 
+        text-decoration: underline;
+    }
+
+html {
+    scroll-behavior: smooth;
+}

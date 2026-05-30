@@ -62,7 +62,7 @@
 
             <div class="form-group">
                 <label>Список рёбер графа</label>
-                <textarea name="edges" id="inputEdges" rows="5" placeholder="1 4&#10;1 5&#10;2 4&#10;3 5" required>{{edges or '1 4\n1 5\n2 4\n3 5'}}</textarea>
+                <textarea name="edges" id="inputEdges" rows="5" style="resize:none" placeholder="1 4&#10;1 5&#10;2 4&#10;3 5" required>{{edges or '1 4\n1 5\n2 4\n3 5'}}</textarea>
                 <span class="small-text">Формат: "вершина_L вершина_R" (по одной паре на строку).</span>
             </div>
 
