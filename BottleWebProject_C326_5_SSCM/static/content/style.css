@@ -17,6 +17,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+.btn-file,
+.btn-solve,
+.btn-reset {
+    flex: 0 0 auto;
+}
 
 body {
     font-family: 'Segoe UI', Roboto, Tahoma, Geneva, Verdana, sans-serif;
@@ -439,7 +444,7 @@ body {
 }
 
 .btn-file {
-    flex: 1;
+
     padding: 14px;
     background: #faf9f6;
     color: var(--text-darker);
@@ -1031,10 +1036,6 @@ body {
     margin-top: 20px;
 }
 
-    .button-row .btn-file, .button-row .btn-solve {
-        flex: 1;
-    }
-
 .example-paths {
     margin: 15px 0;
     display: flex;
@@ -1357,3 +1358,23 @@ body {
 html {
     scroll-behavior: smooth;
 }
+.example-content {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.example-text {
+
+}
+
+.example-image {
+    text-align: right;
+}
+
+    .example-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+    }
+
