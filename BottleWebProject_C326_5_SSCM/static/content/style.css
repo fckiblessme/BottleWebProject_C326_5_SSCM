@@ -20,13 +20,13 @@
 
 body {
     font-family: 'Segoe UI', Roboto, Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    font-size: 15px;
+    line-height: 1.65;
+    font-size: 17px;
     color: var(--text-darker);
     background: var(--bg-light);
 }
 
-.container {
+.container, .task-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -36,12 +36,14 @@ body {
 .header {
     background: var(--dark-bg);
     color: var(--bg-light);
-    padding: 1.5rem 30px;
     box-shadow: 0 4px 15px var(--shadow);
     position: relative;
     border-radius: 20px;
     margin-top: 15px;
     margin-bottom: 30px;
+    padding: 24px 30px !important;
+    height: auto !important;
+    min-height: max-content !important;
 }
 
 .header-content {
@@ -54,7 +56,7 @@ body {
 }
 
 .logo h1 {
-    font-size: 1.8rem;
+    font-size: 2.1rem;
     color: var(--accent);
     margin: 0;
     white-space: nowrap;
@@ -77,18 +79,25 @@ body {
     .nav ul {
         list-style: none;
         display: flex;
-        gap: 12px;
+        gap: 15px 12px;
         align-items: center;
         margin: 0;
-        padding: 5px 0;
+        padding: 0;
+        flex-wrap: wrap;
     }
+
+        .nav ul li {
+            display: inline-block !important;
+            margin-bottom: 0px !important; /* Убран старый баг с отступом в 15px */
+            margin-right: 0px !important;
+        }
 
     .nav a {
         color: var(--bg-light);
         text-decoration: none;
-        padding: 10px 18px;
+        padding: 9px 18px;
         border-radius: 12px;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 600;
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -110,10 +119,10 @@ body {
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
 
-/* Главная страница */
-.hero {
+/* Главная страница и Баннеры задач */
+.hero, .task-hero {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 2.2rem 2rem;
     background: linear-gradient(135deg, var(--dark-bg), var(--medium-bg));
     color: var(--bg-light);
     border-radius: 20px;
@@ -121,22 +130,24 @@ body {
     box-shadow: 0 5px 15px var(--shadow);
 }
 
-    .hero h1 {
-        font-size: 3rem;
-        margin-bottom: 1rem;
+    .hero h1, .task-hero h1 {
+        font-size: 1.85rem;
+        margin-bottom: 0.7rem;
         color: var(--accent);
+        line-height: 1.3;
     }
 
-.hero-text {
-    font-size: 1.3rem;
-    max-width: 800px;
-    margin: 0 auto 2rem;
+.hero-text, .task-subtitle {
+    font-size: 1.15rem;
+    max-width: 750px;
+    margin: 0 auto;
+    opacity: 0.9;
 }
 
 .discipline-hero {
     background: linear-gradient(135deg, var(--dark-bg), var(--medium-bg));
     color: var(--bg-light);
-    padding: 3rem;
+    padding: 3.5rem;
     border-radius: 20px;
     margin: 2rem 0;
     text-align: center;
@@ -144,35 +155,67 @@ body {
 }
 
     .discipline-hero h1 {
-        font-size: 3rem;
+        font-size: 3.3rem;
         margin-bottom: 1rem;
         color: var(--accent);
     }
 
 .discipline-subtitle {
-    font-size: 1.3rem;
+    font-size: 1.45rem;
     opacity: 0.9;
 }
 
-/* Секции, Теория и Пример */
-.section, .theory, .example, .form-card, .result-card {
+/* Секции, Теория, Карточки задач */
+.section, .theory, .example, .form-card, .result-card, .task-section {
     background: var(--white);
-    padding: 25px;
+    padding: 30px;
     border-radius: 20px;
     margin: 25px 0;
     box-shadow: 0 4px 12px var(--shadow);
 }
 
-.section {
+.section, .task-section {
     border-left: 5px solid var(--accent);
 }
 
-    .section h2 {
+    .section h2, .task-section h2 {
         color: var(--text-darker);
         border-bottom: 3px solid var(--accent);
-        padding-bottom: 0.5rem;
-        margin-bottom: 1.5rem;
-        font-size: 22px;
+        padding-bottom: 0.6rem;
+        margin-bottom: 1.6rem;
+        font-size: 25px;
+    }
+
+.task-description p {
+    margin-bottom: 12px;
+    font-size: 17px;
+    color: var(--text-darker);
+}
+
+/* Сетка деталей условия */
+.task-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.detail-item {
+    background: #faf9f6;
+    padding: 18px;
+    border-radius: 12px;
+    border-top: 3px solid var(--medium-bg);
+}
+
+    .detail-item h4 {
+        color: var(--text-darker);
+        margin-bottom: 6px;
+        font-size: 18px;
+    }
+
+    .detail-item p {
+        font-size: 15px;
+        color: var(--text-dark);
     }
 
 .theory {
@@ -180,25 +223,25 @@ body {
 }
 
     .theory h2, .example h2 {
-        font-size: 22px;
+        font-size: 25px;
         margin-bottom: 16px;
         color: var(--text-darker);
     }
 
     .theory h3 {
-        font-size: 18px;
-        margin: 18px 0 10px;
+        font-size: 20px;
+        margin: 20px 0 12px;
         color: var(--text-darker);
     }
 
     .theory p, .theory li {
-        line-height: 1.6;
+        line-height: 1.65;
         color: var(--text-dark);
-        font-size: 15px;
+        font-size: 17px;
     }
 
     .theory ul, .theory ol {
-        margin-left: 25px;
+        margin-left: 28px;
         margin-bottom: 16px;
     }
 
@@ -208,7 +251,7 @@ body {
     color: var(--text-darker);
     text-decoration: underline;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 17px;
 }
 
     .anchor-link:hover {
@@ -224,7 +267,7 @@ body {
     padding: 15px;
     border-radius: 12px;
     font-family: monospace;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 /* Формы и Поля ввода */
@@ -233,7 +276,7 @@ body {
 }
 
     .form-card h2, .result-card h2 {
-        font-size: 22px;
+        font-size: 25px;
         margin-bottom: 20px;
         padding-bottom: 10px;
         border-bottom: 2px solid var(--bg-light);
@@ -257,16 +300,16 @@ body {
         font-weight: 600;
         color: var(--text-darker);
         margin-bottom: 8px;
-        font-size: 15px;
+        font-size: 17px;
     }
 
     .form-group input, .form-group textarea {
         width: 100%;
         max-width: 100%;
-        padding: 10px 14px;
+        padding: 12px 16px;
         border: 2px solid var(--bg-light);
         border-radius: 10px;
-        font-size: 15px;
+        font-size: 16px;
         font-family: 'Courier New', monospace;
         background: #faf9f6;
         transition: border-color 0.3s, background-color 0.3s;
@@ -288,21 +331,21 @@ body {
 }
 
 .small-text {
-    font-size: 12px;
+    font-size: 13px;
     color: #777;
     margin-top: 6px;
     display: block;
 }
 
-/* Кнопки разного назначения */
+/* Кнопки */
 .btn {
     display: inline-block;
     background: var(--medium-bg);
     color: var(--bg-light);
-    padding: 1rem 2.5rem;
+    padding: 1.1rem 2.8rem;
     text-decoration: none;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 17px;
     transition: background 0.3s;
     border: none;
     cursor: pointer;
@@ -329,10 +372,10 @@ body {
 }
 
 .btn-submit {
-    padding: 14px 35px;
+    padding: 15px 38px;
     border: none;
     border-radius: 50px;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
     background: var(--medium-bg);
@@ -355,34 +398,36 @@ body {
 
 .btn-solve {
     flex: 2;
-    padding: 14px;
+    padding: 15px;
     background: var(--text-darker);
     color: var(--bg-light);
     border: none;
     border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
     letter-spacing: 0.5px;
+    transition: background 0.2s;
 }
 
     .btn-solve:hover {
         background: var(--text-dark);
     }
 
-.btn-reset {
+.btn-reset, .btn-clear {
     flex: 1;
-    padding: 14px;
+    padding: 15px;
     background: var(--bg-light);
     color: var(--text-darker);
     border: 2px solid var(--accent);
     border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
+    transition: background 0.2s;
 }
 
-    .btn-reset:hover {
+    .btn-reset:hover, .btn-clear:hover {
         background: var(--accent);
     }
 
@@ -395,14 +440,14 @@ body {
 
 .btn-file {
     flex: 1;
-    padding: 12px;
+    padding: 14px;
     background: #faf9f6;
     color: var(--text-darker);
     border: 2px solid var(--accent);
     border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -416,14 +461,14 @@ body {
 .btn-generate {
     width: 100%;
     margin-top: 15px;
-    padding: 12px;
+    padding: 14px;
     background: var(--accent);
     color: var(--text-darker);
     border: none;
     border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
 }
 
     .btn-generate:hover {
@@ -433,14 +478,14 @@ body {
 /* Информационные блоки, Ошибки и Результаты */
 .info-block {
     background: var(--bg-light);
-    padding: 1.5rem;
+    padding: 1.6rem;
     border-radius: 12px;
     margin-bottom: 1.5rem;
     border-left: 5px solid var(--medium-bg);
 }
 
 .info-text {
-    font-size: 1.2rem;
+    font-size: 1.35rem;
     line-height: 1.7;
     color: var(--text-darker);
 }
@@ -448,25 +493,25 @@ body {
 .error-msg {
     background: var(--error-bg);
     border-left: 5px solid var(--error-red);
-    padding: 15px;
+    padding: 16px;
     border-radius: 12px;
     color: var(--error-red);
-    font-size: 15px;
+    font-size: 16px;
 }
 
-.result-card {
+.result-card, .result-block {
     border-top: 5px solid var(--medium-bg);
 }
 
 .result-box {
     background: #faf9f6;
     border-radius: 12px;
-    padding: 20px;
+    padding: 22px;
     border-left: 5px solid var(--medium-bg);
 }
 
 .max-value {
-    font-size: 38px;
+    font-size: 42px;
     font-weight: bold;
     color: var(--text-darker);
 }
@@ -481,33 +526,33 @@ body {
 .tag {
     background: var(--accent);
     color: var(--text-darker);
-    padding: 6px 16px;
+    padding: 7px 18px;
     border-radius: 20px;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 14px;
 }
 
-/* Текстовые деревья / Консольный вывод */
+/* Консольный вывод */
 .tree-container {
     background: #1e1e1e;
     color: #d4d4d4;
-    padding: 18px;
+    padding: 20px;
     border-radius: 12px;
     font-family: 'Courier New', monospace;
-    font-size: 14px;
+    font-size: 15px;
     overflow-x: auto;
 }
 
 .tree-legend {
     margin-top: 10px;
-    font-size: 11px;
+    font-size: 12px;
     color: #888;
 }
 
-/* Сетки, Карточки дисциплин и Таблицы */
+/* Сетки и таблицы */
 .technique-phases {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     margin: 1.5rem 0;
 }
@@ -526,7 +571,7 @@ body {
 
 .disciplines-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     margin: 2rem 0;
 }
@@ -540,6 +585,10 @@ body {
     box-shadow: 0 3px 10px var(--shadow);
     transition: transform 0.3s, box-shadow 0.3s;
     border-bottom: 4px solid transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
     .discipline-card:hover {
@@ -549,7 +598,7 @@ body {
     }
 
 .card-icon {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     margin-bottom: 1rem;
     text-align: center;
     padding-top: 1.5rem;
@@ -557,21 +606,22 @@ body {
 
 .discipline-card h3 {
     color: var(--text-darker);
-    margin: 0.5rem 1rem;
-    font-size: 1.3rem;
+    margin: 0.5rem 1.2rem;
+    font-size: 1.45rem;
 }
 
 .discipline-card p {
     color: var(--text-dark);
-    margin: 0 1rem 1rem;
-    font-size: 0.95rem;
+    margin: 0 1.2rem 1.2rem;
+    font-size: 1.05rem;
 }
 
 .card-link {
     color: var(--medium-bg);
     font-weight: 600;
-    margin: 0 1rem 1rem;
+    margin: 0 1.2rem 1.2rem;
     display: inline-block;
+    font-size: 16px;
 }
 
 .records-table {
@@ -584,86 +634,48 @@ body {
     box-shadow: 0 2px 8px var(--shadow);
 }
 
-
-    .example-matrix pre {
-        margin: 0;
-        color: #2D2F35;
-        font-size: 15px;
-        font-family: 'Courier New', monospace;
-        line-height: 1.6;
-    }
+.example-matrix pre {
+    margin: 0;
+    color: #2D2F35;
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+}
 
 .example-arrow {
     text-align: center;
-    font-size: 28px;
+    font-size: 32px;
     color: #8B7B60;
     margin: 10px 0;
 }
 
 .example-result {
     background: #FFFFFF;
-    padding: 15px 20px;
+    padding: 18px 22px;
     border-radius: 8px;
     border-left: 4px solid #8B7B60;
 }
 
     .example-result p {
         color: #41444B;
-        margin: 5px 0;
-        font-size: 16px;
+        margin: 6px 0;
+        font-size: 17px;
     }
 
     .example-result strong {
         color: #8B7B60;
     }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .task-section {
-        padding: 20px;
-    }
-
-    .task-hero h1 {
-        font-size: 28px;
-    }
-
-    .input-row {
-        flex-wrap: wrap;
-    }
-
-    .button-block {
-        flex-direction: column;
-    }
-
-    .btn-solve, .btn-clear {
-        width: 100%;
-    }
-
-    .matrix-cell {
-        width: 55px;
-        padding: 8px;
-        font-size: 13px;
-    }
-
-    .matrix-table th {
-        padding: 8px 10px;
-        font-size: 12px;
-    }
-}
-
-
-/* ============ КОМПОНЕНТЫ СИЛЬНОЙ СВЯЗНОСТИ ============ */
-
 .theory-block {
     background: #FAF7F0;
-    padding: 20px;
+    padding: 22px;
     border-radius: 12px;
 }
 
     .theory-block h3 {
         color: #8B7B60;
-        margin: 20px 0 10px;
-        font-size: 18px;
+        margin: 22px 0 12px;
+        font-size: 20px;
     }
 
         .theory-block h3:first-child {
@@ -672,12 +684,12 @@ body {
 
     .theory-block p {
         color: #41444B;
-        line-height: 1.6;
+        line-height: 1.65;
         margin-bottom: 15px;
     }
 
 .theory-list {
-    margin: 10px 0 15px 20px;
+    margin: 10px 0 15px 22px;
     color: #41444B;
 }
 
@@ -687,7 +699,7 @@ body {
 
 .edges-container {
     background: #FAF7F0;
-    padding: 20px;
+    padding: 22px;
     border-radius: 12px;
 }
 
@@ -709,23 +721,24 @@ body {
 }
 
 .edge-from, .edge-to {
-    width: 70px;
-    padding: 8px;
+    width: 80px;
+    padding: 9px;
     border: 2px solid #DFD8C8;
     border-radius: 6px;
     text-align: center;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .btn-remove-edge {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     background: #FF8A80;
     color: white;
     border: none;
     border-radius: 50%;
     cursor: pointer;
     font-weight: bold;
+    font-size: 15px;
 }
 
     .btn-remove-edge:disabled {
@@ -736,11 +749,12 @@ body {
 .btn-add-edge {
     background: #8B7B60;
     color: white;
-    padding: 8px 20px;
+    padding: 10px 22px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 15px;
 }
 
     .btn-add-edge:hover {
@@ -754,30 +768,15 @@ body {
     flex-wrap: wrap;
 }
 
-.btn-file {
-    background: #FAF7F0;
-    color: #41444B;
-    padding: 8px 20px;
-    border: 2px solid #CABFAB;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-}
-
-    .btn-file:hover {
-        background: #CABFAB;
-    }
-
 .btn-save {
     background: #8B7B60;
     color: white;
-    padding: 10px 20px;
+    padding: 11px 22px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 16px;
     margin-top: 15px;
 }
 
@@ -788,7 +787,7 @@ body {
 .loading {
     text-align: center;
     padding: 30px;
-    font-size: 16px;
+    font-size: 18px;
     color: #8B7B60;
 }
 
@@ -808,9 +807,10 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 15px 20px;
+    padding: 16px 22px;
     border-radius: 10px;
     margin-bottom: 15px;
+    font-size: 16px;
 }
 
     .message-block.error {
@@ -826,35 +826,37 @@ body {
     }
 
 .message-icon {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .btn-close-message {
     margin-left: auto;
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
+}
 
-    .records-table th {
-        background: var(--dark-bg);
-        color: var(--bg-light);
-        padding: 1rem;
-        text-align: left;
-    }
+.records-table th {
+    background: var(--dark-bg);
+    color: var(--bg-light);
+    padding: 1.1rem;
+    text-align: left;
+    font-size: 16px;
+}
 
-    .records-table td {
-        padding: 0.8rem 1rem;
-        border-bottom: 1px solid var(--bg-light);
-    }
+.records-table td {
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--bg-light);
+    font-size: 16px;
+}
 
-    .records-table tr:hover {
-        background: var(--bg-light);
-    }
+.records-table tr:hover {
+    background: var(--bg-light);
+}
 
-/* Нижняя навигация и Подвал */
 .nav-links {
-    margin-top: 30px;
+    margin-top: 35px;
     padding-top: 20px;
     border-top: 1px solid var(--accent);
     text-align: center;
@@ -867,7 +869,7 @@ body {
 .nav-btn {
     color: var(--text-dark);
     text-decoration: none;
-    padding: 10px 24px;
+    padding: 11px 26px;
     border-radius: 30px;
     display: inline-flex;
     align-items: center;
@@ -875,7 +877,7 @@ body {
     background: #faf9f6;
     border: 1px solid var(--accent);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     transition: background 0.3s, color 0.3s;
 }
 
@@ -888,99 +890,28 @@ body {
     background: var(--dark-bg);
     color: var(--bg-light);
     text-align: center;
-    padding: 2rem 20px;
+    padding: 2.5rem 20px;
     margin-top: 35px;
     border-radius: 20px 20px 0 0;
+    font-size: 16px;
 }
 
-
-.discipline-hero, .form-card, .section, .theory, .example, .result-card {
+.discipline-hero, .form-card, .section, .theory, .example, .result-card, .task-section {
     scroll-margin-top: 0px;
 }
-
-/* Адаптивность и горизонтальная прокрутка ленты вкладок */
-
-@media (max-width: 992px) {
-    .header {
-        top: 0;
-        margin-top: 0;
-        border-radius: 0 0 20px 20px;
-        padding: 1.2rem 15px;
-    }
-
-    .header-content {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        width: 100%;
-    }
-
-    .nav {
-        width: 100%;
-        overflow-x: auto; 
-        white-space: nowrap; 
-        -webkit-overflow-scrolling: touch; 
-        padding-bottom: 8px;
-        margin-bottom: -5px; 
-    }
-
-        
-        .nav::-webkit-scrollbar {
-            display: none;
-        }
-
-        .nav ul {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap; 
-            justify-content: flex-start;
-            gap: 10px;
-            padding: 5px 10px;
-            width: max-content; 
-        }
-
-        .nav li {
-            flex: 0 0 auto; 
-        }
-
-        .nav a {
-            font-size: 14px;
-            padding: 8px 14px;
-            display: block;
-        }
-
-    .container {
-        padding: 0 10px;
-    }
-
-    .btn-group, .file-buttons, .form-actions {
-        flex-direction: column;
-    }
-
-    .btn, .btn-solve, .btn-reset, .btn-file {
-        width: 100%;
-    }
-
-    .form-row {
-        flex-direction: column;
-        gap: 0;
-    }
-
-}
-/* ============ ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ KOS.TPL ============ */
 
 .input-block {
     margin-bottom: 25px;
 }
 
 .input-header h3 {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 8px;
     color: var(--text-darker);
 }
 
 .input-hint {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-dark);
     margin-bottom: 12px;
 }
@@ -994,11 +925,11 @@ body {
 .input-label {
     font-weight: 600;
     color: var(--text-darker);
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .input-small {
-    width: 80px;
+    width: 90px;
     text-align: center;
 }
 
@@ -1011,42 +942,187 @@ body {
 
 .result-placeholder {
     text-align: center;
-    padding: 40px;
+    padding: 45px;
     background: #FAF7F0;
     border-radius: 12px;
     border: 2px dashed var(--accent);
     color: var(--text-dark);
+    font-size: 16px;
 }
 
 .result-icon {
-    font-size: 32px;
+    font-size: 36px;
     display: block;
     margin-bottom: 12px;
 }
-/* ============ СТРАНИЦА О НАС ============ */
 
-/* Карточки команды */
-.team-grid {
+.input-row-flex {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    .input-row-flex input {
+        width: 110px;
+    }
+
+    .input-row-flex .btn-generate {
+        width: auto;
+        margin-top: 0;
+        padding: 11px 28px;
+    }
+
+.matrix-wrapper {
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.matrix-table {
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    margin: 0 auto;
+}
+
+    .matrix-table th, .matrix-table td {
+        border: 1px solid var(--bg-light);
+        padding: 11px 14px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .matrix-table th {
+        background: var(--dark-bg);
+        color: var(--bg-light);
+        font-weight: 600;
+    }
+
+.matrix-label {
+    background: var(--dark-bg);
+    color: var(--bg-light);
+    font-weight: 600;
+}
+
+.matrix-cell {
+    width: 75px;
+    padding: 9px;
+    text-align: center;
+    border: 2px solid var(--bg-light);
+    border-radius: 8px;
+    font-size: 15px;
+    background: #faf9f6;
+}
+
+    .matrix-cell:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+
+    .matrix-cell:disabled {
+        background: var(--bg-light);
+    }
+
+.button-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+    .button-row .btn-file, .button-row .btn-solve {
+        flex: 1;
+    }
+
+.example-paths {
+    margin: 15px 0;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 8px;
+}
+
+.path-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--white);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
+}
+
+.path-route {
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    color: var(--text-darker);
+}
+
+.path-weight {
+    font-size: 15px;
+    color: var(--text-dark);
+}
+
+    .path-weight strong {
+        color: var(--text-darker);
+        font-weight: 700;
+    }
+
+.example-result-detail {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px dashed var(--accent);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.result-badge {
+    background: var(--bg-light);
+    padding: 9px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+    color: var(--text-darker);
+}
+
+    .result-badge strong {
+        color: var(--text-darker);
+    }
+
+/* Страница О нас */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
     margin-top: 20px;
 }
 
 .team-card {
     display: flex;
-    gap: 30px;
+    gap: 25px;
     align-items: flex-start;
+    background: var(--white);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px var(--shadow);
+    border-bottom: 4px solid transparent;
+    transition: transform 0.3s, box-shadow 0.3s, border-bottom-color 0.3s;
 }
 
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px var(--shadow);
+        border-bottom-color: var(--medium-bg);
+    }
+
 .team-avatar {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 700;
     color: var(--white);
     flex-shrink: 0;
@@ -1075,20 +1151,20 @@ body {
 
     .team-info h3 {
         color: var(--text-darker);
-        font-size: 22px;
+        font-size: 25px;
         margin: 0 0 5px;
     }
 
 .team-role {
     color: var(--text-dark);
-    font-size: 14px;
+    font-size: 15px;
     margin: 0 0 12px;
     font-weight: 600;
 }
 
 .team-text {
     color: var(--text-dark);
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.6;
     margin: 0 0 15px;
 }
@@ -1097,27 +1173,18 @@ body {
     display: inline-block;
     background: var(--medium-bg);
     color: var(--bg-light);
-    padding: 8px 20px;
+    padding: 9px 22px;
     border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     transition: background 0.2s;
 }
 
     .team-link:hover {
         background: var(--dark-bg);
         color: var(--white);
-        text-decoration: none;
     }
-
-/* Палитра цветов */
-.about-intro {
-    color: var(--text-dark);
-    font-size: 16px;
-    line-height: 1.7;
-    margin-bottom: 20px;
-}
 
 .palette-grid {
     display: flex;
@@ -1164,187 +1231,102 @@ body {
 
 .palette-info h4 {
     color: var(--text-darker);
-    font-size: 18px;
+    font-size: 20px;
     margin: 0 0 5px;
     font-family: 'Courier New', monospace;
 }
 
-.palette-info p {
-    color: var(--text-dark);
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.4;
+/* Адаптивность */
+@media (max-width: 992px) {
+    .header {
+        top: 0;
+        margin-top: 0;
+        border-radius: 0 0 20px 20px;
+        padding: 1.4rem 15px;
+    }
+
+    .nav {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+        margin-bottom: -5px;
+    }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav ul {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            gap: 10px;
+            padding: 5px 10px;
+            width: max-content;
+        }
+
+        .nav li {
+            flex: 0 0 auto;
+        }
+
+        .nav a {
+            font-size: 15px;
+            padding: 9px 16px;
+            display: block;
+        }
+
+    .container, .task-container {
+        padding: 0 10px;
+    }
+
+    .btn-group, .file-buttons, .form-actions, .button-block {
+        flex-direction: column;
+    }
+
+    .btn, .btn-solve, .btn-reset, .btn-file, .btn-clear {
+        width: 100%;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
-    .team-card {
+    .disciplines-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .task-hero h1, .hero h1 {
+        font-size: 24px;
+    }
+
+    .matrix-cell {
+        width: 60px;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .matrix-table th, .matrix-table td {
+        padding: 9px 11px;
+        font-size: 13px;
+    }
+
+    .team-card, .palette-card {
         flex-direction: column;
-        align-items: center;
         text-align: center;
     }
 
     .team-avatar {
-        width: 80px;
-        height: 80px;
-        font-size: 26px;
+        width: 90px;
+        height: 90px;
+        font-size: 28px;
     }
 
-    .palette-card {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .palette-swatch {
-        width: 60px;
-        height: 60px;
-    }
-}
-
-/* ============ СТРАНИЦА TSP ============ */
-
-.input-row-flex {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-    .input-row-flex input {
-        width: 100px;
-    }
-
-    .input-row-flex .btn-generate {
-        width: auto;
-        margin-top: 0;
-        padding: 10px 25px;
-    }
-
-.matrix-wrapper {
-    overflow-x: auto;
-    margin: 15px 0;
-}
-
-.matrix-table {
-    border-collapse: collapse;
-    background: var(--white);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px var(--shadow);
-    margin: 0 auto;
-}
-
-    .matrix-table th,
-    .matrix-table td {
-        border: 1px solid var(--bg-light);
-        padding: 10px 12px;
-        text-align: center;
-    }
-
-    .matrix-table th {
-        background: var(--dark-bg);
-        color: var(--bg-light);
-        font-weight: 600;
-    }
-
-.matrix-label {
-    background: var(--dark-bg);
-    color: var(--bg-light);
-    font-weight: 600;
-}
-
-.matrix-cell {
-    width: 70px;
-    padding: 8px;
-    text-align: center;
-    border: 2px solid var(--bg-light);
-    border-radius: 8px;
-    font-size: 14px;
-    background: #faf9f6;
-}
-
-    .matrix-cell:focus {
-        outline: none;
-        border-color: var(--accent);
-    }
-
-    .matrix-cell:disabled {
-        background: var(--bg-light);
-    }
-
-.button-row {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-    .button-row .btn-file,
-    .button-row .btn-solve {
-        flex: 1;
-    }
-
-.result-placeholder {
-    text-align: center;
-    padding: 30px;
-    color: #888;
-}
-
-/* Стили для  примера */
-.example-paths {
-    margin: 15px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.path-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    background: var(--white);
-    border-radius: 10px;
-    border-left: 3px solid var(--accent);
-}
-
-.path-route {
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    color: var(--text-darker);
-}
-
-.path-weight {
-    font-size: 14px;
-    color: var(--text-dark);
-}
-
-    .path-weight strong {
-        color: var(--text-darker);
-        font-weight: 700;
-    }
-
-.example-result-detail {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px dashed var(--accent);
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.result-badge {
-    background: var(--bg-light);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    color: var(--text-darker);
-}
-
-    .result-badge strong {
-        color: var(--text-darker);
-    }
-
-@media (max-width: 768px) {
     .path-item {
         flex-direction: column;
         text-align: center;
@@ -1355,4 +1337,23 @@ body {
         flex-direction: column;
         align-items: center;
     }
+}
+
+/* Сноски */
+.footnote-ref {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.6em;
+    padding: 0 4px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+    .footnote-ref:hover {
+        color: var(--white);
+        text-decoration: underline;
+    }
+
+html {
+    scroll-behavior: smooth;
 }
