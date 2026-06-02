@@ -81,8 +81,7 @@ def tsp_form():
     return template('tsp_form.tpl', title='Задача коммивояжёра', year=datetime.now().year, error=None, result=None)
 
 
-# --- МИНИМАЛЬНОЕ ВЕРШИННОЕ ПОКРЫТИЕ (КУН-КЁНИГ) ---
-
+# --- МИНИМАЛЬНОЕ ВЕРШИННОЕ ПОКРЫТИЕ ---
 
 @route('/vertex_cover')
 def vertex_cover_page():
@@ -141,7 +140,7 @@ def solve_vertex_cover():
                 except ValueError:
                     raise ValueError(f"Строка {line_idx}: Вершины должны быть целыми числами.")
 
-                # Валидация по границам долей, чтобы избежать хаоса в индексах
+                # Валидация по границам долей
                 if u_val < 1 or u_val > n_left:
                     raise ValueError(f"Вершина левой доли {u_val} выходит за рамки размера доли L (1..{n_left}).")
                 if v_val <= n_left or v_val > (n_left + n_right):
@@ -151,7 +150,7 @@ def solve_vertex_cover():
                 U_set.add(u_val)
                 V_set.add(v_val)
 
-        # Формируем полные списки вершин обеих долей (включая изолированные, если рёбер к ним нет)
+        # Формируем полные списки вершин обеих долей 
         U = sorted(list(U_set.union(set(range(1, n_left + 1)))))
         V = sorted(list(V_set.union(set(range(n_left + 1, n_left + n_right + 1)))))
         
