@@ -1,4 +1,4 @@
-// Дефолтный демонстрационный пример графа (соответствует теории в шаблоне)
+// Дефолтный демонстрационный пример графа 
 const defaultEdges = [
     { from: '1', to: '6' },
     { from: '2', to: '6' },
@@ -90,7 +90,7 @@ function exportGraphToJSON() {
     downloadAnchor.remove();
 }
 
-// Импорт структуры из JSON-файла с валидацией формата данных
+// Импорт структуры из JSON-файла 
 function importGraphFromJSON(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -100,7 +100,7 @@ function importGraphFromJSON(event) {
         try {
             const data = JSON.parse(e.target.result);
 
-            // --- Валидация структуры пришедшего JSON ---
+            // Проверка структуры пришедшего JSON
             if (!data || typeof data !== 'object') {
                 throw new Error('Файл должен содержать валидный JSON-объект.');
             }
@@ -110,51 +110,91 @@ function importGraphFromJSON(event) {
             if (!data.edges || !Array.isArray(data.edges)) {
                 throw new Error('Поле "edges" отсутствует или не является массивом.');
             }
-            // -------------------------------------------
 
-            document.getElementById('inputNLeft').value = data.n_left || '5';
-            document.getElementById('inputNRight').value = data.n_right || '4';
+            // Валидация мощностей долей 
+            const nLeft = Number(data.n_left);
+            const nRight = Number(data.n_right);
+
+            if (!Number.isInteger(nLeft) || nLeft <= 0 || !Number.isInteger(nRight) || nRight <= 0) {
+                throw new Error('Параметры n_left и n_right должны быть целыми положительными цифрами больше 0.');
+            }
+
+            if (nLeft > 20 || nRight > 20) {
+                throw new Error('Максимальное количество вершин в одной доле не должно превышать 20.');
+            }
+
+            document.getElementById('inputNLeft').value = nLeft;
+            document.getElementById('inputNRight').value = nRight;
 
             const container = document.getElementById('edgesTableBody');
             if (!container) return;
             container.innerHTML = '';
 
             let rawEdgesText = '';
-            data.edges.forEach(edge => {
+            const maxVertexIdx = nLeft + nRight;
+
+            // Валидация каждого ребра из файла
+            data.edges.forEach((edge, index) => {
+                let fromVal, toVal;
+
+                // Разбор формата ребра
                 if (Array.isArray(edge) && edge.length === 2) {
-                    addNewEdgeRow(edge[0], edge[1]);
-                    rawEdgesText += `${edge[0]} ${edge[1]}\n`;
+                    fromVal = edge[0];
+                    toVal = edge[1];
                 } else if (edge && edge.from !== undefined && edge.to !== undefined) {
-                    addNewEdgeRow(edge.from, edge.to);
-                    rawEdgesText += `${edge.from} ${edge.to}\n`;
+                    fromVal = edge.from;
+                    toVal = edge.to;
                 } else {
-                    throw new Error('Неверный формат ребра в массиве "edges". Ожидается [from, to] или {from, to}.');
+                    throw new Error(`Неверный формат ребра на позиции ${index + 1}. Ожидается [from, to] или {from, to}.`);
                 }
+
+                // Проверка, что типы данных строго цифры
+                if (typeof fromVal !== 'number' || typeof toVal !== 'number' || !Number.isInteger(fromVal) || !Number.isInteger(toVal)) {
+                    throw new Error(`Ошибка в ребре №${index + 1}: Номера вершин должны быть строго целыми числами.`);
+                }
+
+                const u = fromVal;
+                const v = toVal;
+
+                // Проверка границ левой доли L (от 1 до nLeft)
+                if (u < 1 || u > nLeft) {
+                    throw new Error(`Ошибка в ребре №${index + 1}: Вершина левой доли L (${u}) должна быть в диапазоне от 1 до ${nLeft}.`);
+                }
+
+                // Проверка границ правой доли R (от nLeft + 1 до общего максимума)
+                if (v <= nLeft || v > maxVertexIdx) {
+                    throw new Error(`Ошибка в ребре №${index + 1}: Вершина правой доли R (${v}) должна быть в диапазоне от ${nLeft + 1} до ${maxVertexIdx}.`);
+                }
+
+                // Проверка на петли
+                if (u === v) {
+                    throw new Error(`Ошибка в ребре №${index + 1}: Обнаружена петля (${u} → ${v}). В двудольном графе петли запрещены.`);
+                }
+
+                addNewEdgeRow(u, v);
+                rawEdgesText += `${u} ${v}\n`;
             });
 
             if (container.querySelectorAll('.edge-row').length === 0) {
                 addNewEdgeRow('', '');
             }
-            
-            // Сразу отображаем импортированный граф
-            drawGraph(parseInt(data.n_left) || 5, rawEdgesText, '');
+      
+            drawGraph(nLeft, rawEdgesText, '');
 
         } catch (error) {
-            alert('Ошибка при чтении или разборе JSON файла графа: ' + error.message);
+            alert('Ошибка при импорте JSON файла графа:\n' + error.message);
         } finally {
-            // Гарантированно сбрасываем инпут в конце, чтобы change срабатывал всегда
             event.target.value = '';
         }
     };
     reader.readAsText(file);
 }
 
-// Вынесенная функция отрисовки интерактива через Vis.js
+// Функция отрисовки графа через Vis.js
 function drawGraph(nLeftMax, edgesRaw, coverRaw) {
     const graphContainer = document.getElementById('network-graph');
     if (!graphContainer) return;
 
-    // Превращаем вершины покрытия в сет для быстрой проверки
     const coverSet = new Set(String(coverRaw).split(/\s+/).filter(x => x).map(Number));
 
     if (!edgesRaw || !edgesRaw.trim()) {
@@ -198,7 +238,7 @@ function drawGraph(nLeftMax, edgesRaw, coverRaw) {
                     border: '#dc3545'
                 }
             },
-            borderWidth: inCover ? 4 : 1, // Выделяем обводку вершин покрытия жирным красным
+            borderWidth: inCover ? 4 : 1, 
             shape: 'circle',
             font: { size: 14, color: '#000', face: 'monospace', bold: true }
         };
@@ -224,7 +264,7 @@ function drawGraph(nLeftMax, edgesRaw, coverRaw) {
     networkInstance = new vis.Network(graphContainer, data, options);
 }
 
-// ИНИЦИАЛИЗАЦИЯ И СБОР ДАННЫХ ПРИ ОТПРАВКЕ ФОРМЫ
+// Сбор данных при отправке формы
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('graphForm');
     
@@ -232,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener('submit', function (e) {
             e.preventDefault(); 
 
-            // Считываем текущую конфигурацию мощностей долей
+            // Считываем текущую мощностей долей
             const nLeft = parseInt(document.getElementById('inputNLeft').value) || 0;
             const nRight = parseInt(document.getElementById('inputNRight').value) || 0;
             const maxVertexIdx = nLeft + nRight;
@@ -244,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let validEdgesCount = 0;
             const uniqueEdgesCheck = new Set();
 
-            // Интегрированная валидация структуры двудольного графа
+            // Валидация структуры двудольного графа перед отправкой
             for (let i = 0; i < fromInputs.length; i++) {
                 const fromValRaw = fromInputs[i].value.trim();
                 const toValRaw = toInputs[i].value.trim();
@@ -253,19 +293,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     const fromVal = parseInt(fromValRaw);
                     const toVal = parseInt(toValRaw);
 
-                    // 1. Проверка на выход левой вершины за границы L-доли
+                    // Проверка на выход левой вершины за границы L-доли
                     if (fromVal < 1 || fromVal > nLeft) {
                         alert(`Ошибка в строке ${i + 1}: Вершина левой доли L (${fromVal}) должна быть в диапазоне от 1 до ${nLeft}.`);
                         return;
                     }
 
-                    // 2. Проверка на выход правой вершины за границы R-доли
+                    // Проверка на выход правой вершины за границы R-доли
                     if (toVal <= nLeft || toVal > maxVertexIdx) {
                         alert(`Ошибка в строке ${i + 1}: Вершина правой доли R (${toVal}) должна быть в диапазоне от ${nLeft + 1} до ${maxVertexIdx}.`);
                         return;
                     }
 
-                    // 3. Проверка на петли (на всякий случай, если диапазоны пересеклись)
+                    // Проверка на петли
                     if (fromVal === toVal) {
                         alert(`Ошибка в строке ${i + 1}: Обнаружена петля (${fromVal} → ${toVal}). В двудольном графе петли невозможны.`);
                         return;
@@ -284,17 +324,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
             
-            // 4. Защита от пустого списка рёбер
+            // Защита от пустого списка рёбер
             if (validEdgesCount === 0) {
                 alert("Ошибка расчета: Список рёбер графа пуст! Пожалуйста, добавьте хотя бы одно корректное связь-ребро.");
                 return;
             }
 
-            // Перенос очищенной и проверенной строки в скрытое поле формы
             const edgesInput = document.getElementById('edgesInput');
             if (edgesInput) edgesInput.value = edgesText;
 
-            // Отправка AJAX-запроса на бэкенд
             const formData = new FormData(form);
             
             fetch('/vertex_cover/solve', {
@@ -341,12 +379,11 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => {
                 console.error("Ошибка AJAX запроса:", err);
-                alert("Не удалось получить ответ от сервера. Проверьте консоль браузера.");
+                alert("Не удалось получить ответ от сервера.");
             });
         });
     }
 
-    // Первоначальное восстановление данных (при первой загрузке страницы с сервера)
     const serverDataEl = document.getElementById('serverEdgesData');
     if (serverDataEl) {
         const initialEdgesRaw = serverDataEl.getAttribute('data-edges') || '';
