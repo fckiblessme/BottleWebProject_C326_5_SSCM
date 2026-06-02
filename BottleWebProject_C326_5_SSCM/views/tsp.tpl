@@ -255,7 +255,7 @@
 % if result and result != 'created':
 <div style="display: flex; justify-content: flex-end; margin-top: 20px; align-items: center; gap: 15px;">
     <div id="saveSuccessMsg" style="display: none; background: #d4edda; color: #155724; padding: 8px 15px; border-radius: 5px; font-size: 14px;">
-        Результат успешно сохранён!
+        Результат успешно сохранён
     </div>
     <form onsubmit="event.preventDefault(); saveResultToFile();" style="margin: 0;" accept-charset="UTF-8">
     <input type="hidden" name="matrix_data" value="{{matrix_data}}">
