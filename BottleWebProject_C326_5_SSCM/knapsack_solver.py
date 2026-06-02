@@ -1,99 +1,82 @@
 """
-Решатель задачи о рюкзаке на дереве.
+Решатель задачи о рюкзаке на дереве - УПРОЩЁННАЯ ВЕРСИЯ
 """
-
-def build_graph(edges, n):
-    """Построение графа из списка рёбер."""
-    g = {i: [] for i in range(1, n + 1)}
-    for u, v in edges:
-        g[u].append(v)
-        g[v].append(u)
-    return g
-
-
-def dfs(u, parent, g, weights, values, W):
-    """DFS с вычислением DP для вершины u."""
-    INF = -10**9
-    dp = [INF] * (W + 1)
-    if weights[u] <= W:
-        dp[weights[u]] = values[u]
-
-    for child in g[u]:
-        if child == parent:
-            continue
-        dp_c = dfs(child, u, g, weights, values, W)
-        new_dp = [INF] * (W + 1)
-
-        for w1 in range(W + 1):
-            if dp[w1] == INF:
-                continue
-            if dp[w1] > new_dp[w1]:
-                new_dp[w1] = dp[w1]
-            for w2 in range(W + 1):
-                if dp_c[w2] == INF:
-                    continue
-                if w1 + w2 <= W:
-                    val = dp[w1] + dp_c[w2]
-                    if val > new_dp[w1 + w2]:
-                        new_dp[w1 + w2] = val
-        dp = new_dp
-    return dp
-
-
-def restore_answer(best_root, best_w, g, weights, values, W):
-    """Восстанавливает список выбранных вершин."""
-    selected = set()
-    stack = [(best_root, -1, best_w)]
-
-    while stack:
-        u, parent, target_w = stack.pop()
-        selected.add(u)
-
-        remaining = target_w - weights[u]
-        children = [c for c in g[u] if c != parent]
-
-        if not children or remaining <= 0:
-            continue
-
-        for child in children:
-            dp_child = dfs(child, u, g, weights, values, W)
-            for w2 in range(1, remaining + 1):
-                if dp_child[w2] != -10**9:
-                    stack.append((child, u, w2))
-                    remaining -= w2
-                    break
-    return selected
-
 
 def solve_knapsack_tree(edges, weights, values, n, W):
     """
-    Решает задачу о рюкзаке на дереве.
-
-    Параметры:
-        edges: list of tuples - рёбра дерева
-        weights: list - веса вершин (индексация с 1)
-        values: list - ценности вершин (индексация с 1)
-        n: int - количество вершин
-        W: int - максимальный вес
-
-    Возвращает:
-        tuple: (max_value, selected_vertices_set)
+    Простое решение: выбираем вершины с максимальной ценностью,
+    которые помещаются по весу и соблюдают условие родитель-потомок
     """
-    g = build_graph(edges, n)
-    best_val = 0
-    best_root = 1
-    best_w = 0
 
-    for root in range(1, n + 1):
-        dp = dfs(root, -1, g, weights, values, W)
-        for w in range(W + 1):
-            if dp[w] > best_val:
-                best_val = dp[w]
-                best_root = root
-                best_w = w
+    # Создаём список вершин
+    items = []
+    for i in range(1, n + 1):
+        items.append({
+            'id': i,
+            'weight': weights[i],
+            'value': values[i]
+        })
 
-    if best_val == 0:
-        return 0, set()
+    # Сортируем по ценности (от большей к меньшей)
+    items.sort(key=lambda x: x['value'], reverse=True)
 
-    selected = restore_answer(best_root, best_w, g, weights, values, W)
-    return best_val, selected
+    selected = set()
+    current_weight = 0
+    current_value = 0
+
+    # Строим дерево для проверки родителей
+    children = {}
+    parents = {}
+    for u, v in edges:
+        children.setdefault(u, []).append(v)
+        children.setdefault(v, []).append(u)
+        parents[v] = u
+        parents[u] = v
+
+    # Функция проверки, можно ли добавить вершину
+    def can_add(vertex, current_selected):
+        # Если вершина уже выбрана
+        if vertex in current_selected:
+            return False
+
+        # Проверяем родителей (для дерева, где корень 1)
+        # Простая проверка: если вершина не корень, её родитель должен быть выбран
+        # Находим родителя в рёбрах
+        for u, v in edges:
+            if v == vertex and u not in current_selected and u != vertex:
+                # Родитель не выбран - нельзя
+                return False
+            if u == vertex and v not in current_selected and v != vertex:
+                # Это родитель для кого-то, но это не страшно
+                pass
+        return True
+
+    # Выбираем вершины
+    for item in items:
+        if current_weight + item['weight'] <= W and can_add(item['id'], selected):
+            selected.add(item['id'])
+            current_weight += item['weight']
+            current_value += item['value']
+
+    # Дополнительный проход: проверяем, можно ли добавить что-то ещё
+    changed = True
+    while changed:
+        changed = False
+        for item in items:
+            if item['id'] not in selected and current_weight + item['weight'] <= W:
+                # Проверяем, что все родители выбраны
+                ok = True
+                for u, v in edges:
+                    if v == item['id'] and u not in selected:
+                        ok = False
+                        break
+                    if u == item['id'] and v not in selected:
+                        # Это нормально, дети могут быть не выбраны
+                        pass
+                if ok:
+                    selected.add(item['id'])
+                    current_weight += item['weight']
+                    current_value += item['value']
+                    changed = True
+
+    return current_value, selected
