@@ -42,3 +42,21 @@ def checking_cell(value, i, j):
         return False, f"Ячейка ({i}, {j}) содержит недопустимое значение"
 
     return True, None
+
+
+def get_matrix_from_form(n):
+    matrix = []
+    for i in range(n):
+        row = []
+        for j in range(n):
+            if i == j:
+                row.append(0)
+            else:
+                val = request.forms.getunicode(f'm{i+1}{j+1}')
+                try:
+                    row.append(int(val) if val else 0)
+                except (ValueError, TypeError):
+                    row.append(0)
+        matrix.append(row)
+    return matrix
+
