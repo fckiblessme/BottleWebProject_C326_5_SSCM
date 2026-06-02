@@ -1,5 +1,5 @@
 ﻿from bottle import request, redirect, template
-
+import random
 
 def checking_n(n):
     if not n or n.strip() == "":
@@ -58,5 +58,14 @@ def get_matrix_from_form(n):
                 except (ValueError, TypeError):
                     row.append(0)
         matrix.append(row)
+    return matrix
+
+def get_random_matrix(n):
+    matrix = [[0]*n for _ in range(n)]
+    for i in range(n):
+        for j in range(i+1, n):
+            v = random.randint(1, 100)
+            matrix[i][j] = v
+            matrix[j][i] = v
     return matrix
 
