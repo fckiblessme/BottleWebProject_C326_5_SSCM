@@ -1,69 +1,152 @@
 % rebase('layout.tpl', title='Задача коммивояжёра')
 
-<div class="container">
-    <div class="header">
-        <h1>Задача коммивояжёра</h1>
-        <p>Поиск гамильтонова цикла минимального веса | Метод полного перебора | Сложность O(N!)</p>
-    </div>
 
-    <div class="theory">
-        <h2>📖 Теория метода</h2>
-        <p><strong>Суть задачи:</strong> Найти кратчайший замкнутый маршрут, проходящий через все города ровно по одному разу и возвращающийся в исходный.</p>
+
+<div class="theory">
+    <h2>📖 Теория метода и основные определения</h2>
+    
+    <div class="theory-block" style="margin-bottom: 20px;">
+        <p><strong>Гамильтонов цикл</strong> — это замкнутый маршрут, проходящий через каждую вершину графа ровно один раз и возвращающийся в исходную вершину.</p>
         
-        <h3>Важные факты и алгоритм</h3>
-        <ul>
-            <li><strong>Гамильтонов цикл:</strong> Цикл, проходящий через каждую вершину графа ровно один раз.</li>
-            <li><strong>Метод решения:</strong> Полный перебор всех возможных перестановок вершин (кроме фиксированной первой) для поиска цикла минимального веса.</li>
-            <li><strong>Сложность:</strong> O(N!), где N ≤ 12.</li>
-        </ul>
- 
-        <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
+        <p><strong>Задача коммивояжёра (TSP)</strong> — задача поиска гамильтонова цикла минимального веса в полном взвешенном графе. Коммивояжёр должен посетить все города по одному разу и вернуться в исходный, затратив минимальное расстояние.</p>
+        
+        <p><strong>Вес цикла</strong> — сумма весов всех рёбер, входящих в гамильтонов цикл.</p>
+        
+        <p><strong>Полный перебор</strong> — метод решения, при котором перебираются все возможные перестановки вершин (с фиксацией первой вершины для уменьшения количества вариантов) и выбирается перестановка с минимальным суммарным весом.</p>
     </div>
+    
+    <h3>💡 Метод решения</h3>
+    <p style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
+        Для графа из <strong>N</strong> вершин количество возможных гамильтоновых циклов равно <strong>(N-1)! / 2</strong> (с учётом симметрии и фиксации начальной вершины). 
+        <br>Алгоритм перебирает все перестановки вершин (кроме первой), вычисляет вес каждого цикла и запоминает минимальный.
+    </p>
 
-    <div class="example">
-        <h2>Подробный пример (N=4)</h2>
-        <div class="example-tree">
+    <h3>🎛️ Пошаговый алгоритм решения</h3>
+    <ol class="theory-list" style="margin-bottom: 20px; padding-left: 20px;">
+        <li><strong>Фиксация начальной вершины:</strong>
+            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+                <li>Фиксируем первую вершину (обычно вершину 1), чтобы избежать дублирования циклов, отличающихся только точкой отсчёта.</li>
+            </ul>
+        </li>
+        <li><strong>Генерация всех перестановок:</strong>
+            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+                <li>Для оставшихся N-1 вершин генерируем все возможные перестановки.</li>
+                <li>Для N=4 это 3! = 6 перестановок.</li>
+            </ul>
+        </li>
+        <li><strong>Вычисление веса цикла:</strong>
+            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+                <li>Для каждой перестановки вычисляем сумму весов рёбер: от первой вершины ко второй, от второй к третьей, ... и от последней обратно к первой.</li>
+                <li>Вес берётся из матрицы расстояний.</li>
+            </ul>
+        </li>
+        <li><strong>Выбор оптимального маршрута:</strong>
+            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+                <li>Сравниваем вес текущего цикла с лучшим найденным.</li>
+                <li>Если вес меньше — запоминаем новый маршрут и его вес.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>📐 Сложность алгоритма</h3>
+    <p style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
+        <strong>O(N!)</strong> — факториальная сложность. При N=12 количество перестановок составляет около 39 916 800, что является пределом для полного перебора.
+    </p>
+
+    <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
+</div>
+
+<div class="example">
+    <h2>Подробный пример (N=4)</h2>
+    <div class="example-layout">
+        <div class="example-matrix-col">
             <strong>Матрица расстояний:</strong>
-            <pre>   1   2   3   4
-1  0  10  15  20
-2 10   0  35  25
-3 15  35   0  30
-4 20  25  30   0</pre>
-            
-            <strong>Все возможные маршруты (фиксируем начало в вершине 1):</strong>
+            <div class="example-matrix-wrapper">
+                <table class="example-matrix">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="example-matrix-label">1</td>
+                            <td>0</td>
+                            <td>10</td>
+                            <td>15</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td class="example-matrix-label">2</td>
+                            <td>10</td>
+                            <td>0</td>
+                            <td>35</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td class="example-matrix-label">3</td>
+                            <td>15</td>
+                            <td>35</td>
+                            <td>0</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td class="example-matrix-label">4</td>
+                            <td>20</td>
+                            <td>25</td>
+                            <td>30</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="example-image">
+                <img src="/static/images/tsp_graph.png" alt="Граф для задачи коммивояжёра" class="example-graph-img">
+            </div>
+        </div>
+
+
+        <div class="example-paths-col">
+            <strong>Все возможные маршруты:</strong>
             <div class="example-paths">
                 <div class="path-item">
                     <span class="path-route">1 → 2 → 3 → 4 → 1</span>
-                    <span class="path-weight">= 10 + 35 + 30 + 20 = <strong>95</strong></span>
+                    <span class="path-weight">10 + 35 + 30 + 20 = <strong>95</strong></span>
                 </div>
                 <div class="path-item">
                     <span class="path-route">1 → 2 → 4 → 3 → 1</span>
-                    <span class="path-weight">= 10 + 25 + 30 + 15 = <strong>80</strong></span>
+                    <span class="path-weight">10 + 25 + 30 + 15 = <strong>80</strong></span>
                 </div>
                 <div class="path-item">
                     <span class="path-route">1 → 3 → 2 → 4 → 1</span>
-                    <span class="path-weight">= 15 + 35 + 25 + 20 = <strong>95</strong></span>
+                    <span class="path-weight">15 + 35 + 25 + 20 = <strong>95</strong></span>
                 </div>
                 <div class="path-item">
                     <span class="path-route">1 → 3 → 4 → 2 → 1</span>
-                    <span class="path-weight">= 15 + 30 + 25 + 10 = <strong>80</strong></span>
+                    <span class="path-weight">15 + 30 + 25 + 10 = <strong>80</strong></span>
                 </div>
                 <div class="path-item">
                     <span class="path-route">1 → 4 → 2 → 3 → 1</span>
-                    <span class="path-weight">= 20 + 25 + 35 + 15 = <strong>95</strong></span>
+                    <span class="path-weight">20 + 25 + 35 + 15 = <strong>95</strong></span>
                 </div>
                 <div class="path-item">
                     <span class="path-route">1 → 4 → 3 → 2 → 1</span>
-                    <span class="path-weight">= 20 + 30 + 35 + 10 = <strong>95</strong></span>
+                    <span class="path-weight">20 + 30 + 35 + 10 = <strong>95</strong></span>
                 </div>
             </div>
             
-            <div class="example-result-detail">
-                <span class="result-badge">✅ Минимальный вес: <strong>80</strong></span>
-                <span class="result-badge">📌 Оптимальные маршруты: 1 → 2 → 4 → 3 → 1  и  1 → 3 → 4 → 2 → 1</span>
+            <div style="margin-top: 15px; padding-top: 12px; border-top: 2px dashed var(--accent);">
+                <div style="padding: 3px 0; font-size: 18px; color: var(--text-darker);">Минимальный вес: <strong>80</strong></div>
+                <div style="padding: 3px 0; font-size: 18px; color: var(--text-darker);">Оптимальные маршруты: 1 → 2 → 4 → 3 → 1  и  1 → 3 → 4 → 2 → 1</div>
             </div>
         </div>
     </div>
+</div>
 
     <div class="form-card" id="inputForm">
         <h2>Ввод данных графа</h2>
@@ -122,25 +205,23 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="button-row">
-                    <button type="submit" name="random" value="1" class="btn-file">🎲 Случайные значения</button>
-                    <button type="submit" name="submit" value="1" class="btn-solve">Подтвердить ввод</button>
-                </div>
+                    <div class="button-row">
+                        <button type="submit" name="random" value="1" class="btn-random">Случайные значения</button>
+                        <button type="submit" name="submit" value="1" class="btn-confirm">Подтвердить ввод</button>
+                    </div>
             </div>
         </form>
     </div>
 
-    <div class="result-card">
-        <h2>📊 Результат</h2>
-        <div class="result-placeholder">
-            <div style="font-size: 40px;">🗺️</div>
-            <p>Результат появится после решения задачи</p>
-        </div>
+   <div class="result-card">
+    <h2>Результат</h2>
+    <div class="result-placeholder">
+        <div style="font-size: 40px;">🗺️</div>
+        <p>Результат появится после решения задачи</p>
     </div>
-
-    <div class="nav-links">
-        <a href="/" class="nav-btn">🏠 Домой</a>
-        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
-        <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn-confirm">Сохранить в файл</button>
     </div>
+</div>
+</div>
 </div>
