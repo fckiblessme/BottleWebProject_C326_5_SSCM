@@ -1,8 +1,3 @@
-"""
-Модульные тесты для задачи о рюкзаке на дереве.
-Проверяют корректность алгоритма и валидацию данных.
-"""
-
 import unittest
 import sys
 import os
@@ -44,6 +39,20 @@ class TestKnapsackTreeSolver(unittest.TestCase):
 
         self.assertEqual(max_value, 30)
         self.assertEqual(selected, {1, 2})
+
+
+    def test_simple_tree_2(self):
+        """Тест: дерево, которое разобранное учителем"""
+        edges = [(1, 2), (1, 3), (1, 4), (1, 5)]
+        weights = [0, 5, 10, 4, 6, 7]
+        values = [0, 8, 4, 6, 2, 3]
+        n = 5
+        W = 15
+
+        max_value, selected = solve_knapsack_tree(edges, weights, values, n, W)
+
+        self.assertEqual(max_value, 16)
+        self.assertEqual(selected, {1, 3, 4})
 
     # ТЕСТ 3: Одна вершина (N=1)
     def test_single_vertex(self):
