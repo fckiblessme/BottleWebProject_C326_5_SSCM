@@ -182,3 +182,113 @@ def save_tsp_result(matrix, best_route, best_distance):
         print(f"Ошибка при записи файла tsp_results.json: {e}")
         return False
 
+def handle_post():
+
+    if request.forms.get('save'):
+        matrix_str = request.forms.get('matrix_data')
+        route_str = request.forms.get('route_data')
+        best_distance_str = request.forms.get('best_distance_data')
+
+        try:
+            matrix = json.loads(matrix_str)
+            route = json.loads(route_str)
+            best_distance = int(best_distance_str)
+
+            success = save_tsp_result(matrix, route, best_distance)
+
+            if success:
+                return json.dumps({"success": True})
+            else:
+                return json.dumps({"success": False, "error": "Ошибка записи в файл"})
+        except Exception as e:
+            return json.dumps({"success": False, "error": str(e)})
+
+    n = request.forms.get('n')
+
+    ok, error = checking_n(n)
+
+    if not ok:
+        return template('tsp',
+            year=datetime.now().year,
+            n=None,
+            matrix=None,
+            error=error,
+            result=None,
+            route=None,
+            best_distance=None,
+            best_calc=None,
+            best_route_str=None
+        )
+
+    n = int(n)
+
+    if request.forms.get('create'):
+        return redirect(f'/tsp?n={n}#inputForm')
+
+    if request.forms.get('random'):
+        matrix = get_random_matrix(n)
+        result, route, best_distance, best_calc = solve_tsp(matrix)
+        best_route_str = " → ".join(str(v) for v in route)
+
+        return template('tsp',
+            year=datetime.now().year,
+            n=n,
+            matrix=matrix,
+            error=None,
+            result=result,
+            route=str(route),
+            best_distance=best_distance,
+            best_calc=best_calc,
+            best_route_str=best_route_str,
+            matrix_data=json.dumps(matrix)
+        )
+
+    if request.forms.get('submit'):
+
+        for i in range(1, n+1):
+            for j in range(1, n+1):
+                if i != j:
+                    val = request.forms.getunicode(f'm{i}{j}')
+                    ok, error = checking_cell(val, i, j)
+                    if not ok:
+                        matrix = []
+                        for ii in range(n):
+                            row = []
+                            for jj in range(n):
+                                if ii == jj:
+                                    row.append(0)
+                                else:
+                                    raw_val = request.forms.getunicode(f'm{ii+1}{jj+1}')
+                                    row.append(raw_val if raw_val else 0)
+                            matrix.append(row)
+
+                        return template('tsp',
+                            year=datetime.now().year,
+                            n=n,
+                            matrix=matrix,
+                            error=error,
+                            result=None,
+                            route=None,
+                            best_distance=None,
+                            best_calc=None,
+                            best_route_str=None
+                        )
+
+        matrix = get_matrix_from_form(n)
+        result, route, best_distance, best_calc = solve_tsp(matrix)
+        best_route_str = " → ".join(str(v) for v in route)
+
+        return template('tsp',
+            year=datetime.now().year,
+            n=n,
+            matrix=matrix,
+            error=error,
+            result=result,
+            route=str(route),
+            best_distance=best_distance,
+            best_calc=best_calc,
+            best_route_str=best_route_str,
+            matrix_data=json.dumps(matrix)
+        )
+
+    return redirect(f'/tsp?n={n}#inputForm')
