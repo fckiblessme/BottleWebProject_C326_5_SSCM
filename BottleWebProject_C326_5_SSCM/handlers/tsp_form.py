@@ -1,9 +1,11 @@
 ﻿from bottle import request, redirect, template
+from datetime import datetime
 import random
 import itertools
+import json
+import os
 
 
-max_display_paths = 50
 
 def checking_n(n):
     if not n or n.strip() == "":
@@ -73,6 +75,7 @@ def get_random_matrix(n):
             matrix[j][i] = v
     return matrix
 
+max_display_paths = 50
 
 def solve_tsp(matrix):
     n = len(matrix)
@@ -137,4 +140,45 @@ def solve_tsp(matrix):
         result_html += '</div>'
 
     return result_html, best_route, best_distance, best_calc
+
+tsp_result_file = 'static/content/data/tsp_results.json'
+
+def load_tsp_results():
+    """Загрузка всех сохранённых результатов TSP"""
+    if os.path.exists(tsp_result_file):
+        try:
+            f = open(tsp_result_file, 'r', encoding='utf-8')
+            results = json.load(f)
+            f.close()
+            return results
+        except:
+            return []
+    else:
+        return []
+
+
+def save_tsp_result(matrix, best_route, best_distance):
+    folder = os.path.dirname(tsp_result_file)
+    if not os.path.exists(folder):
+        os.makedirs(folder, exist_ok=True)
+
+    results = load_tsp_results()
+
+    new_result = {
+        "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "matrix": matrix,
+        "best_route": best_route,
+        "best_distance": best_distance
+    }
+
+    results.insert(0, new_result)
+
+    try:
+        f = open(tsp_result_file, 'w', encoding='utf-8')
+        json.dump(results, f, ensure_ascii=False, indent=4)
+        f.close()
+        return True
+    except Exception as e:
+        print(f"Ошибка при записи файла tsp_results.json: {e}")
+        return False
 
