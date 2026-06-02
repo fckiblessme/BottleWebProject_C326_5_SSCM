@@ -87,24 +87,30 @@
         <h2>📝 Ввод данных</h2>
 
         <div class="file-row">
-            <button class="btn-file" onclick="saveToJSON()">💾 Сохранить в JSON</button>
+            <button type="button" class="btn-file" id="saveJsonBtn">💾 Сохранить в JSON</button>
             <label class="btn-file" style="cursor:pointer;">📂 Загрузить из JSON
-                <input type="file" id="jsonFileInput" accept=".json" style="display:none;" onchange="loadFromJSON(event)">
+                <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
             </label>
+        </div>
+
+        <div id="errorMessage" style="display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #c62828; font-size: 13px;">
+            ⚠️ ОШИБКА: Максимальное количество вершин - 20. Пожалуйста, уменьшите N.
         </div>
 
         <form action="/knapsack_tree/solve" method="post" id="mainForm">
             <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
                 <div style="flex:1; min-width: 150px;">
                     <div class="form-group">
-                        <label>🔢 Вершин (N ≤ 50)</label>
-                        <input type="number" name="n" id="inputN" class="input-field input-small" value="{{n or '5'}}" min="1" max="50" required>
+                        <label>🔢 Вершин (N ≤ 20)</label>
+                        <input type="number" name="n" id="inputN" class="input-field input-small"
+                               value="{{n or '5'}}" min="1" max="20" required>
                     </div>
                 </div>
                 <div style="flex:1; min-width: 150px;">
                     <div class="form-group">
                         <label>⚖️ Макс. вес (W ≤ 100)</label>
-                        <input type="number" name="w_max" id="inputW" class="input-field input-small" value="{{w_max or '7'}}" min="1" max="100" required>
+                        <input type="number" name="w_max" id="inputW" class="input-field input-small"
+                               value="{{w_max or '7'}}" min="1" max="100" required>
                     </div>
                 </div>
             </div>
@@ -126,11 +132,10 @@
             </table>
 
             <div class="button-row">
-                <button type="button" class="btn-add" onclick="addEdgeRow()">➕ Добавить ребро</button>
                 <div class="btn-group">
                     <button type="submit" class="btn-solve">РЕШИТЬ</button>
-                    <button type="reset" class="btn-reset">Очистить</button>
-                    <button type="button" class="btn-generate" onclick="generateExample()">Загрузить пример</button>
+                    <button type="button" class="btn-reset" id="resetBtn">Очистить</button>
+                    <button type="button" class="btn-generate" id="generateExampleBtn">Загрузить пример</button>
                 </div>
             </div>
 
@@ -159,9 +164,18 @@
                         </div>
                         <div><strong>⚖️ Общий вес:</strong> {{total_weight}} / {{w_max}}</div>
                     </div>
-                    <div class="result-image-side">
+
+                    <div class="result-image-side" style="flex: 0 0 700px; text-align: center;">
                         <h3 style="font-size: 14px; margin-bottom: 10px;">🌳 Ваше дерево</h3>
-                        <img src="/static/content/tree_simple.png" alt="Результат">
+                        % if tree_image:
+                            <img src="{{tree_image}}" alt="Граф дерева"
+                                 style="width: 100%; border-radius: 12px; border: 2px solid #cabfab; background: #faf9f6;">
+                        % else:
+                            <div style="width: 100%; height: 400px; background: #faf9f6; border-radius: 12px; border: 2px solid #cabfab; display: flex; align-items: center; justify-content: center; color: #888;">
+                                ⚠️ Изображение не загрузилось
+                            </div>
+                        % end
+                        <p style="font-size: 11px; color: #888; margin-top: 8px;">*Тёмные вершины — оптимальное решение</p>
                     </div>
                 </div>
             % elif error:
@@ -184,6 +198,9 @@
 </div>
 
 <script>
+// ============================================================
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// ============================================================
 let currentN = 5;
 
 function getVertexOptions() {
@@ -195,8 +212,78 @@ function getVertexOptions() {
     return options;
 }
 
+function renumberEdges() {
+    const rows = document.querySelectorAll('#edgesBody tr');
+    rows.forEach((row, index) => {
+        const newNum = index + 1;
+        row.cells[0].innerHTML = `<strong>${newNum}</strong>`;
+        const selectU = row.cells[1].querySelector('select');
+        const selectV = row.cells[2].querySelector('select');
+        if (selectU) {
+            selectU.id = `edge_u_${newNum}`;
+            selectU.name = `edge_u_${newNum}`;
+        }
+        if (selectV) {
+            selectV.id = `edge_v_${newNum}`;
+            selectV.name = `edge_v_${newNum}`;
+        }
+    });
+}
+
+function deleteEdge(btn) {
+    const row = btn.parentElement.parentElement;
+    const idx = row.cells[0].innerText;
+    if (confirm(`Удалить ребро №${idx}?`)) {
+        row.remove();
+        renumberEdges();
+        updateTables();
+    }
+}
+
+function addNewEdge() {
+    const options = getVertexOptions();
+    const edgesBody = document.getElementById('edgesBody');
+    const newId = edgesBody.children.length + 1;
+    const row = edgesBody.insertRow();
+    row.insertCell(0).innerHTML = `<strong>${newId}</strong>`;
+    row.insertCell(1).innerHTML = `<select id="edge_u_${newId}" name="edge_u_${newId}" style="width:80px">${options}</select>`;
+    row.insertCell(2).innerHTML = `<select id="edge_v_${newId}" name="edge_v_${newId}" style="width:80px">${options}</select>`;
+    row.insertCell(3).innerHTML = `<button type="button" class="remove-edge-btn" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
+
+    const delBtn = row.cells[3].querySelector('button');
+    delBtn.onclick = function() { deleteEdge(this); };
+    renumberEdges();
+}
+
+function addEdgeRowWithValues(u, v) {
+    const options = getVertexOptions();
+    const edgesBody = document.getElementById('edgesBody');
+    const newId = edgesBody.children.length + 1;
+    const row = edgesBody.insertRow();
+    row.insertCell(0).innerHTML = `<strong>${newId}</strong>`;
+    row.insertCell(1).innerHTML = `<select id="edge_u_${newId}" name="edge_u_${newId}" style="width:80px">${options}</select>`;
+    row.insertCell(2).innerHTML = `<select id="edge_v_${newId}" name="edge_v_${newId}" style="width:80px">${options}</select>`;
+    row.insertCell(3).innerHTML = `<button type="button" class="remove-edge-btn" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
+
+    document.getElementById(`edge_u_${newId}`).value = u;
+    document.getElementById(`edge_v_${newId}`).value = v;
+
+    const delBtn = row.cells[3].querySelector('button');
+    delBtn.onclick = function() { deleteEdge(this); };
+    renumberEdges();
+}
+
 function updateTables() {
     const n = parseInt(document.getElementById('inputN').value) || 5;
+    if (n > 20) {
+        document.getElementById('inputN').value = 20;
+        document.getElementById('errorMessage').style.display = 'block';
+        alert("Максимальное количество вершин - 20!");
+        return;
+    } else {
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+    if (n < 1) return;
     currentN = n;
 
     const tbody = document.getElementById('weightsValuesBody');
@@ -214,7 +301,14 @@ function updateTables() {
 
     if (currentRows < n - 1) {
         for (let i = currentRows + 1; i <= n - 1; i++) {
-            addEdgeRowWithOptions(options);
+            const newId = edgesBody.children.length + 1;
+            const row = edgesBody.insertRow();
+            row.insertCell(0).innerHTML = `<strong>${newId}</strong>`;
+            row.insertCell(1).innerHTML = `<select id="edge_u_${newId}" name="edge_u_${newId}" style="width:80px">${options}</select>`;
+            row.insertCell(2).innerHTML = `<select id="edge_v_${newId}" name="edge_v_${newId}" style="width:80px">${options}</select>`;
+            row.insertCell(3).innerHTML = `<button type="button" class="remove-edge-btn" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
+            const delBtn = row.cells[3].querySelector('button');
+            delBtn.onclick = function() { deleteEdge(this); };
         }
     } else if (currentRows > n - 1) {
         while (edgesBody.children.length > n - 1) {
@@ -224,25 +318,11 @@ function updateTables() {
         for (let i = 1; i <= edgesBody.children.length; i++) {
             const selectU = document.getElementById(`edge_u_${i}`);
             const selectV = document.getElementById(`edge_v_${i}`);
-            if (selectU) selectU.innerHTML = options;
-            if (selectV) selectV.innerHTML = options;
+            if (selectU && selectU.innerHTML !== options) selectU.innerHTML = options;
+            if (selectV && selectV.innerHTML !== options) selectV.innerHTML = options;
         }
     }
-}
-
-function addEdgeRow() {
-    const options = getVertexOptions();
-    addEdgeRowWithOptions(options);
-}
-
-function addEdgeRowWithOptions(options) {
-    const tbody = document.getElementById('edgesBody');
-    const idx = tbody.children.length + 1;
-    const row = tbody.insertRow();
-    row.insertCell(0).innerHTML = `<strong>${idx}</strong>`;
-    row.insertCell(1).innerHTML = `<select id="edge_u_${idx}" style="width:80px">${options}</select>`;
-    row.insertCell(2).innerHTML = `<select id="edge_v_${idx}" style="width:80px">${options}</select>`;
-    row.insertCell(3).innerHTML = `<button type="button" onclick="this.parentElement.parentElement.remove(); updateTables()" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
+    renumberEdges();
 }
 
 function collectData() {
@@ -265,12 +345,36 @@ function collectData() {
     document.getElementById('hiddenEdges').value = edges.join('\n');
 }
 
-document.getElementById('inputN').addEventListener('change', updateTables);
-document.getElementById('mainForm').addEventListener('submit', function(e) {
-    collectData();
-});
+function resetForm() {
+    document.getElementById('inputN').value = '5';
+    document.getElementById('inputW').value = '7';
+    document.getElementById('errorMessage').style.display = 'none';
 
-function generateExample() {
+    const n = 5;
+    for (let i = 1; i <= n; i++) {
+        const wInput = document.getElementById(`w_${i}`);
+        const vInput = document.getElementById(`v_${i}`);
+        if (wInput) wInput.value = '1';
+        if (vInput) vInput.value = '1';
+    }
+
+    const edgesBody = document.getElementById('edgesBody');
+    edgesBody.innerHTML = '';
+    const options = getVertexOptions();
+    for (let i = 1; i <= 4; i++) {
+        const row = edgesBody.insertRow();
+        row.insertCell(0).innerHTML = `<strong>${i}</strong>`;
+        row.insertCell(1).innerHTML = `<select id="edge_u_${i}" name="edge_u_${i}" style="width:80px">${options}</select>`;
+        row.insertCell(2).innerHTML = `<select id="edge_v_${i}" name="edge_v_${i}" style="width:80px">${options}</select>`;
+        row.insertCell(3).innerHTML = `<button type="button" class="remove-edge-btn" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
+        const delBtn = row.cells[3].querySelector('button');
+        delBtn.onclick = function() { deleteEdge(this); };
+    }
+    renumberEdges();
+    collectData();
+}
+
+function fillExample() {
     document.getElementById('inputN').value = '5';
     document.getElementById('inputW').value = '7';
     updateTables();
@@ -288,15 +392,16 @@ function generateExample() {
     exampleEdges.forEach((e, idx) => {
         const row = edgesBody.insertRow();
         row.insertCell(0).innerHTML = `<strong>${idx+1}</strong>`;
-        row.insertCell(1).innerHTML = `<select id="edge_u_${idx+1}" style="width:80px">${options}</select>`;
-        row.insertCell(2).innerHTML = `<select id="edge_v_${idx+1}" style="width:80px">${options}</select>`;
-        row.insertCell(3).innerHTML = `<button type="button" onclick="this.parentElement.parentElement.remove(); updateTables()" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
+        row.insertCell(1).innerHTML = `<select id="edge_u_${idx+1}" name="edge_u_${idx+1}" style="width:80px">${options}</select>`;
+        row.insertCell(2).innerHTML = `<select id="edge_v_${idx+1}" name="edge_v_${idx+1}" style="width:80px">${options}</select>`;
+        row.insertCell(3).innerHTML = `<button type="button" class="remove-edge-btn" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
         document.getElementById(`edge_u_${idx+1}`).value = e[0];
         document.getElementById(`edge_v_${idx+1}`).value = e[1];
+        const delBtn = row.cells[3].querySelector('button');
+        delBtn.onclick = function() { deleteEdge(this); };
     });
-
+    renumberEdges();
     collectData();
-    document.getElementById('mainForm').submit();
 }
 
 function saveToJSON() {
@@ -323,6 +428,10 @@ function loadFromJSON(event) {
     reader.onload = function(e) {
         try {
             const data = JSON.parse(e.target.result);
+            if (data.n > 20) {
+                alert("Ошибка: в файле N > 20, что недопустимо!");
+                return;
+            }
             document.getElementById('inputN').value = data.n || 5;
             document.getElementById('inputW').value = data.W || 7;
             updateTables();
@@ -332,23 +441,89 @@ function loadFromJSON(event) {
             }
             const edgesBody = document.getElementById('edgesBody');
             edgesBody.innerHTML = '';
-            const options = getVertexOptions();
             if (data.edges) {
                 data.edges.forEach((e, idx) => {
-                    const row = edgesBody.insertRow();
-                    row.insertCell(0).innerHTML = `<strong>${idx+1}</strong>`;
-                    row.insertCell(1).innerHTML = `<select id="edge_u_${idx+1}" style="width:80px">${options}</select>`;
-                    row.insertCell(2).innerHTML = `<select id="edge_v_${idx+1}" style="width:80px">${options}</select>`;
-                    row.insertCell(3).innerHTML = `<button type="button" onclick="this.parentElement.parentElement.remove(); updateTables()" style="background:none;border:none;cursor:pointer;font-size:16px;">🗑️</button>`;
-                    document.getElementById(`edge_u_${idx+1}`).value = e[0];
-                    document.getElementById(`edge_v_${idx+1}`).value = e[1];
+                    addEdgeRowWithValues(e[0], e[1]);
                 });
             }
+            renumberEdges();
             collectData();
         } catch(err) { alert('Ошибка JSON: ' + err.message); }
     };
     reader.readAsText(file);
 }
 
-updateTables();
+// ============================================================
+// ЗАГРУЗКА СОХРАНЁННЫХ ДАННЫХ ИЗ PYTHON (ПОСЛЕ РАСЧЁТА)
+// ============================================================
+function loadSavedData() {
+    const savedN = "{{n}}";
+    const savedW = "{{w_max}}";
+    const savedWeights = "{{weights}}";
+    const savedValues = "{{values}}";
+    const savedEdges = `{{edges}}`;
+
+    if (savedN && savedN !== '' && savedN !== '5') {
+        document.getElementById('inputN').value = savedN;
+        document.getElementById('inputW').value = savedW;
+
+        // Обновляем таблицы под новое N
+        updateTables();
+
+        // Заполняем веса и ценности
+        if (savedWeights && savedWeights !== '') {
+            const weightsArr = savedWeights.split(' ');
+            const valuesArr = savedValues.split(' ');
+            for (let i = 1; i <= weightsArr.length; i++) {
+                if (document.getElementById(`w_${i}`)) {
+                    document.getElementById(`w_${i}`).value = weightsArr[i-1];
+                    document.getElementById(`v_${i}`).value = valuesArr[i-1];
+                }
+            }
+        }
+
+        // Заполняем рёбра
+        if (savedEdges && savedEdges.trim() !== '') {
+            const edgesLines = savedEdges.trim().split('\n');
+            const edgesBody = document.getElementById('edgesBody');
+            edgesBody.innerHTML = '';
+            edgesLines.forEach((line) => {
+                const parts = line.trim().split(' ');
+                if (parts.length === 2) {
+                    addEdgeRowWithValues(parseInt(parts[0]), parseInt(parts[1]));
+                }
+            });
+            renumberEdges();
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('resetBtn').addEventListener('click', resetForm);
+    document.getElementById('generateExampleBtn').addEventListener('click', fillExample);
+    document.getElementById('saveJsonBtn').addEventListener('click', saveToJSON);
+    document.getElementById('jsonFileInput').addEventListener('change', loadFromJSON);
+
+    document.getElementById('inputN').addEventListener('change', function() {
+        let val = parseInt(this.value);
+        if (val > 20) {
+            this.value = 20;
+            document.getElementById('errorMessage').style.display = 'block';
+            alert("Максимальное количество вершин - 20!");
+        } else {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        if (val < 1) this.value = 1;
+        updateTables();
+    });
+
+    document.getElementById('mainForm').addEventListener('submit', function(e) {
+        collectData();
+    });
+
+    updateTables();
+
+    // Загружаем сохранённые данные после инициализации таблиц
+    setTimeout(loadSavedData, 50);
+});
 </script>
