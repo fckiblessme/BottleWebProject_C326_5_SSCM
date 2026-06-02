@@ -185,4 +185,39 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+function saveResultToFile() {
+    var matrixData = document.querySelector('input[name="matrix_data"]');
+    var routeData = document.querySelector('input[name="route_data"]');
+    var bestDistanceData = document.querySelector('input[name="best_distance_data"]');
 
+    if (!matrixData || !routeData || !bestDistanceData) {
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append('save', '1');
+    formData.append('matrix_data', matrixData.value);
+    formData.append('route_data', routeData.value);
+    formData.append('best_distance_data', bestDistanceData.value);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/tsp', true);
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+
+            if (response.success) {
+                var saveMsg = document.getElementById('saveSuccessMsg');
+                if (saveMsg) {
+                    saveMsg.style.display = 'block';
+                    setTimeout(function () {
+                        saveMsg.style.display = 'none';
+                    }, 3000);
+                }
+            }
+        }
+    };
+
+    xhr.send(formData);
+}
