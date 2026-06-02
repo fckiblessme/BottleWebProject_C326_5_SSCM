@@ -122,7 +122,6 @@ DATA_FILE = 'data/calculations.json'
 
 
 def save_calculation(data):
-    """Сохраняет данные о вычислении в JSON файл с датой и временем"""
     # Создаём папку data если её нет
     os.makedirs('data', exist_ok=True)
 
@@ -342,8 +341,6 @@ def knapsack_tree_solve():
     values_str = request.forms.get('values', '').strip()
     edges_str = request.forms.get('edges', '').strip()
 
-    tree_image = None
-
     try:
         n = int(n_str)
         w_max = int(w_max_str)
@@ -371,11 +368,9 @@ def knapsack_tree_solve():
             'edges': edges_str
         })
 
-        # 1. Проверка количества рёбер
         if len(edges) != n - 1:
             raise ValueError(f"Количество рёбер должно быть {n - 1}, получено {len(edges)}")
 
-        # 2. Проверка на петли и дубликаты
         edge_set = set()
         for u, v in edges:
             if u == v:
@@ -388,7 +383,6 @@ def knapsack_tree_solve():
                 raise ValueError(f"Обнаружено дублирующееся ребро: ({u}, {v})")
             edge_set.add(edge_tuple)
 
-        # 3. Проверка связности (из любой вершины есть путь к 1)
         from collections import deque
         adj = {i: [] for i in range(1, n + 1)}
         for u, v in edges:
@@ -400,7 +394,6 @@ def knapsack_tree_solve():
             if len(adj[i]) == 0 and n > 1:
                 raise ValueError(f"Вершина {i} изолирована (нет ни одного ребра). Дерево должно быть связным.")
 
-        # BFS от вершины 1
         visited = set()
         queue = deque([1])
         visited.add(1)
@@ -416,7 +409,6 @@ def knapsack_tree_solve():
             missing = sorted(set(range(1, n + 1)) - visited)
             raise ValueError(f"Граф не связный! Вершины {missing} недостижимы из корня 1")
 
-        # Дальше идёт валидация весов/ценностей и вызов алгоритма
         if n < 1 or n > 20:
             raise ValueError("N должно быть от 1 до 20")
         if w_max < 1 or w_max > 100:
@@ -426,16 +418,13 @@ def knapsack_tree_solve():
         if len(values_list_0) != n:
             raise ValueError(f"Ожидалось {n} ценностей, получено {len(values_list_0)}")
 
-        # Вызов алгоритма
         max_value, selected_set = solve_knapsack_tree(edges, weights, values, n, w_max)
         total_weight = sum(weights[v] for v in selected_set)
         selected_vertices_str = ' '.join(str(v) for v in sorted(selected_set))
 
-        # Генерация изображения
         image_id = str(uuid.uuid4())[:8]
         tree_image = generate_tree_image(edges, weights, values, selected_set, f'tree_{image_id}')
 
-        # Очистка старых изображений
         clean_old_images(10)
 
         return template('knapsack_tree',
