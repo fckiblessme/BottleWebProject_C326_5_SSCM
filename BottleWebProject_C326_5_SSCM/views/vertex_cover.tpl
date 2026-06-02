@@ -1,6 +1,8 @@
 % # vertex_cover.tpl - Минимальное вершинное покрытие в двудольном графе
 % rebase('layout.tpl', title='Минимальное вершинное покрытие')
 
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
 <div class="container">
 
     <div class="theory">
@@ -8,22 +10,19 @@
             <h2>📖 Теория метода и основные определения</h2>
             <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
         </div>
-        
+
         <div class="theory-block">
             <p><strong>Двудольный граф</strong> — это граф, множество вершин которого можно разбить на две доли L (левая) и R (правая) так, что любое ребро графа соединяет вершину из левой доли с вершиной из правой доли. Внутри одной доли рёбер нет.</p>
-            
             <p><strong>Вершинное покрытие</strong> — это подмножество вершин графа, такое, что для каждого ребра графа хотя бы один из его концов входит в это подмножество. Ребро считается <em>покрытым</em>, если покрыта хотя бы одна его оконечная вершина.</p>
-            
             <p><strong>Минимальное вершинное покрытие</strong> — это вершинное покрытие, содержащее <em>наименьшее возможное</em> количество вершин для данного графа.</p>
-            
             <p><strong>Паросочетание</strong> — это набор попарно несмежных рёбер графа (никакие два ребра из набора не имеют общих вершин). Паросочетание называется <strong>максимальным</strong>, если оно содержит максимально возможное число рёбер.</p>
         </div>
-        
+
         <h3>💡 Теорема Кёнига</h3>
         <div class="theory-block konig-theorem">
-            <p>В любом конечном <strong>двудольном графе</strong> размер минимального вершинного покрытия равен размеру максимального паросочетания: 
-            <br><span class="konig-formula">|Min Vertex Cover| = |Max Matching|</span>
-            Благодаря этой теореме задача поиска покрытия сводится к поиску максимального паросочетания, которая эффективно решается алгоритмом Куна.</p>
+            <p>В любом конечном <strong>двудольном графе</strong> размер минимального вершинного покрытия равен размеру максимального паросочетания:</p>
+            <span class="konig-formula">|Min Vertex Cover| = |Max Matching|</span>
+            <p>Благодаря этой теореме задача поиска покрытия сводится к поиску максимального паросочетания, которая эффективно решается алгоритмом Куна.</p>
         </div>
 
         <h3>🎛️ Пошаговый алгоритм решения</h3>
@@ -53,7 +52,6 @@
     </div>
 
     <div class="example">
-        
         <div class="example-tree">
             <div>
                 <h2>Пример двудольного графа</h2>
@@ -78,31 +76,32 @@
                 Минимальное покрытие составляют вершины <strong>3</strong> (осталась не посещена при DFS разметке) и <strong>6, 7, 9</strong> (посещены алгоритмом при обходе).
             </p>
         </div>
-
     </div>
 
     <div class="form-card" id="inputForm">
         <h2>Ввод данных графа</h2>
 
         <div class="file-buttons">
-            <button class="btn-file" onclick="saveToJSON()">💾 Сохранить в JSON</button>
+            <button type="button" class="btn-file" onclick="exportGraphToJSON()">💾 Сохранить в JSON</button>
             <label class="btn-file btn-file-upload">
                 📂 Загрузить из JSON
-                <input type="file" id="jsonFileInput" accept=".json" class="file-input" onchange="loadFromJSON(event)">
+                <input type="file" id="jsonFileInput" accept=".json" class="file-input" onchange="importGraphFromJSON(event)">
             </label>
         </div>
 
-        <form action="/vertex_cover/solve" method="post" id="mainForm">
-            <input type="hidden" name="edges" id="hiddenEdgesInput">
+        <form action="/vertex_cover/solve" method="post" id="graphForm">
+            <input type="hidden" name="edges" id="edgesInput" value="{{edges or ''}}">
 
             <div class="form-row">
                 <div class="form-group half">
-                    <label>Вершин в левой доле (L)</label>
+                    <label for="inputNLeft">Вершин в левой доле (L)</label>
                     <input type="number" name="n_left" id="inputNLeft" value="{{n_left or '5'}}" min="1" max="100" required>
+                    <div id="errorNLeft" class="error-msg-inline" style="display:none;"></div>
                 </div>
                 <div class="form-group half">
-                    <label>Вершин в правой доле (R)</label>
+                    <label for="inputNRight">Вершин в правой доле (R)</label>
                     <input type="number" name="n_right" id="inputNRight" value="{{n_right or '4'}}" min="1" max="100" required>
+                    <div id="errorNRight" class="error-msg-inline" style="display:none;"></div>
                 </div>
             </div>
 
@@ -110,149 +109,81 @@
                 <label>Список рёбер графа (Таблица связей)</label>
                 <div class="edges-container">
                     <div class="edges-list" id="edgesTableBody">
-                        
                         <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="1" min="1" required>
+                            <span class="matrix-label">L:</span>
+                            <input type="number" class="edge-from" placeholder="Доля L" value="1" min="1" required>
                             <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="6" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
+                            <span class="matrix-label">R:</span>
+                            <input type="number" class="edge-to" placeholder="Доля R" value="6" min="1" required>
+                            <button type="button" class="action-btn-danger" onclick="this.parentElement.remove();">❌</button>
                         </div>
-                        
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="2" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="6" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-                        
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="2" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="7" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-                        
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="3" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="8" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="3" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="9" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="4" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="7" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="5" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="6" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-
-                        <div class="edge-row">
-                            <span class="matrix-label">L</span>
-                            <input type="number" class="edge-from" value="5" min="1" required>
-                            <span class="example-arrow">→</span>
-                            <span class="matrix-label">R</span>
-                            <input type="number" class="edge-to" value="9" min="1" required>
-                            <button type="button" class="btn-remove-edge" onclick="this.closest('.edge-row').remove();">×</button>
-                        </div>
-                        
                     </div>
                 </div>
                 <div class="edges-footer">
-                    <button type="button" class="btn-add-edge" id="btnAddEdge">➕ Добавить ребро</button>
+                    <button type="button" class="btn-add-edge" onclick="addNewEdgeRow('', '')">➕ Добавить ребро</button>
                     <span class="small-text">Указывайте пары вершин: из левой доли (L) и соединённую с ней из правой (R).</span>
                 </div>
             </div>
 
             <div class="btn-group">
                 <button type="submit" class="btn-solve">Найти минимальное покрытие</button>
-                <button type="button" class="btn-reset" id="btnResetTable">Очистить</button>
+                <button type="button" class="btn-reset" onclick="clearAllEdges()">Очистить</button>
             </div>
         </form>
-        
+
         <div class="form-footer">
-            <button class="btn-generate" id="btnLoadExample">Загрузить пример</button>
+            <button type="button" class="btn-generate" onclick="loadDemoGraph()">Загрузить пример</button>
         </div>
     </div>
 
     <div class="result-card">
         <h2>📊 Результат расчета</h2>
 
-        % if result is not None and not error:
+        <div id="results-block" class="results-section" style="display: none;">
             <div class="result-box">
-                <div class="max-value">{{cover_size}}</div>
-                <div class="result-description">размер минимального вершинного покрытия (согласно теореме Кёнига равен мощности макс. паросочетания = {{matching_size}})</div>
+                <div class="max-value" id="cover-size-output">0</div>
+                <div class="result-description">
+                    размер минимального вершинного покрытия (согласно теореме Кёнига равен мощности макс. паросочетания = <span id="matching-size-output">0</span>)
+                </div>
 
                 <div><strong>Вершины, входящие в покрытие:</strong></div>
-                <div class="selected-list">
-                    % if cover_vertices:
-                        % for v in cover_vertices.split():
-                            <span class="tag">Вершина {{v}}</span>
-                        % end
-                    % else:
-                        <span class="tag">Граф без рёбер (пустое покрытие)</span>
-                    % end
-                </div>
+                <div class="selected-list" id="cover-vertices-output"></div>
 
                 <div class="result-info">
-                    <strong>ℹ Теорема Кёнига подтверждена:</strong> Выбранный набор из {{cover_size}} вершин является оптимальным (минимально возможным) и полностью блокирует абсолютно все рёбра.
+                    <strong>ℹ Теорема Кёнига подтверждена:</strong> Выбранный набор вершин является оптимальным (минимально возможным) и полностью блокирует абсолютно все рёбра.
                 </div>
             </div>
-        % elif error:
-            <div class="error-msg">
-                <strong>Ошибка обработки:</strong> {{error}}
-            </div>
-        % else:
-            <div class="result-placeholder">
-                <span class="result-icon">🕸️</span>
-                <p>Введите структуру долей и рёбер графа выше, затем нажмите «Найти минимальное покрытие» для запуска вычислений.</p>
-            </div>
-        % end
-    </div>
 
-    % if result is not None and not error and matching_html:
-    <div class="result-card">
-        <h2>Максимальное паросочетание (Пошаговые логи алгоритма Куна)</h2>
-        <div class="tree-container">
-            <pre>{{!matching_html}}</pre>
+            <div class="results-section">
+                <h3>🔮 Интерактивная визуализация итогового графа</h3>
+                <p class="graph-hint">
+                    Вершины можно перемещать мышкой. <span class="legend-left">Синие</span> — левая доля L, <span class="legend-right">Жёлтые</span> — правая доля R.
+                    Вершины минимального покрытия выделены жирной <span class="legend-cover">красной обводкой</span>.
+                </p>
+                <div id="network-graph" class="network-graph-box"></div>
+            </div>
+
+            <div class="results-section">
+                <h3>📜 Максимальное паросочетание (Пошаговый протокол)</h3>
+                <div class="tree-container">
+                    <pre id="logs-output"></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-placeholder" id="result-placeholder">
+            <span class="result-icon">🕸️</span>
+            <p>Введите структуру долей и рёбер графа выше, затем нажмите «Найти минимальное покрытие» для запуска вычислений.</p>
         </div>
     </div>
-    % end
 
     <div class="nav-links">
         <a href="/" class="nav-btn">🏠 Домой</a>
-        <button onclick="window.print();" class="nav-btn">🖨️ Печать</button>
+        <button type="button" onclick="window.print();" class="nav-btn">🖨️ Печать</button>
         <a href="#" onclick="window.history.back(); return false;" class="nav-btn">⬅️ Назад</a>
     </div>
 </div>
 
-<div id="serverEdgesData" data-edges="{{edges or ''}}" class="server-data"></div>
+<div id="serverEdgesData" data-edges="{{edges or ''}}" data-cover="{{cover_vertices or ''}}" class="server-data"></div>
 
-<script src="/static/js/vertex_cover.js"></script>
+<script src="/static/scripts/vertex_cover.js"></script>
