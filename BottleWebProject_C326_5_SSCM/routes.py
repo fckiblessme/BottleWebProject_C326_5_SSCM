@@ -9,7 +9,7 @@ from bottle import route, view, template, request
 from datetime import datetime
 import json
 from knapsack_solver import solve_knapsack_tree
-
+from handlers.tsp_form import handle_post
 
 def build_tree_string(weights_str, values_str, edges_str, selected_str):
     """Строит текстовое представление дерева с подсветкой выбранных вершин."""
@@ -79,16 +79,44 @@ def kos():
     return template('kos_form.tpl', title='Компоненты связности', year=2026)
 
 
-# --- ЗАДАЧА КОММИВОЯЖЁРА (Новый роут, чтобы ссылка из меню работала) ---
-@route('/tsp_form')
-def tsp_form():
-    return template('tsp_form', 
-                    title='Задача коммивояжёра', 
-                    year=datetime.now().year,
-                    error=None,
-                    result=None)
+# ЗАДАЧА КОММИВОЯЖЁРА
+@route('/tsp', method=['GET', 'POST'])
+def tsp_page():
 
+    if request.method == 'POST':
+        request.forms.encoding = 'utf-8'
+        return handle_post()
 
+    n = request.query.get('n')
+    n = int(n) if n else None
+
+    error = request.query.get('error')
+    result = request.query.get('result')
+    route_data = request.query.get('route')
+
+    matrix = None
+
+    if n:
+        matrix = []
+        for i in range(n):
+            row = []
+            for j in range(n):
+                if i == j:
+                    row.append(0)
+                else:
+                    val = request.query.get(f'm{i+1}{j+1}')
+                    row.append(int(val) if val else 0)
+            matrix.append(row)
+
+    return template(
+        'tsp',
+        n=n,
+        matrix=matrix,
+        error=error,
+        result=result,
+        route=route_data,
+        year=None
+    )
 # --- МИНИМАЛЬНОЕ ВЕРШИННОЕ ПОКРЫТИЕ ---
 @route('/vertex_cover')
 def vertex_cover():
