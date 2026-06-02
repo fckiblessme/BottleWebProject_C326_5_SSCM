@@ -35,7 +35,8 @@
                 <div style="display: flex; justify-content: flex-end; padding: 0; margin-top: 0; width: 100%;">
                     <nav class="nav">
                         <ul style="display: flex; list-style: none; margin: 0 !important; padding: 0 !important; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
-                            <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/tsp_form" id="nav-tsp">Задача коммивояжёра</a></li>
+                            <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/tsp" id="nav-tsp">Задача коммивояжёра</a></li>
+
                             <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/vertex_cover" id="nav-vc">Вершинное покрытие</a></li>
                             <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/kos" id="nav-kos">Компоненты связности</a></li>
                             <li style="margin-bottom: 0 !important; margin-right: 0 !important;"><a href="/knapsack_tree" id="nav-ks">Рюкзак на дереве</a></li>

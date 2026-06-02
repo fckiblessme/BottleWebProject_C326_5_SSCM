@@ -4,6 +4,7 @@ from bottle import route, post, template, request, view
 
 # Импорты алгоритмов
 from knapsack_solver import solve_knapsack_tree
+from handlers.tsp_form import handle_post
 from vertex_cover_form import solve_vertex_cover_algorithm
 
 
@@ -75,12 +76,44 @@ def kos():
     return template('kos_form.tpl', title='Компоненты связности', year=datetime.now().year)
 
 
-# --- ЗАДАЧА КОММИВОЯЖЁРА ---
-@route('/tsp_form')
-def tsp_form():
-    return template('tsp_form.tpl', title='Задача коммивояжёра', year=datetime.now().year, error=None, result=None)
 
+# ЗАДАЧА КОММИВОЯЖЁРА
+@route('/tsp', method=['GET', 'POST'])
+def tsp_page():
+    if request.method == 'POST':
+        request.forms.encoding = 'utf-8'
+        return handle_post()
 
+    n = request.query.get('n')
+    n = int(n) if n else None
+
+    error = request.query.get('error')
+    result = request.query.get('result')
+    route_data = request.query.get('route')
+
+    matrix = None
+
+    if n:
+        matrix = []
+        for i in range(n):
+            row = []
+            for j in range(n):
+                if i == j:
+                    row.append(0)
+                else:
+                    val = request.query.get(f'm{i+1}{j+1}')
+                    row.append(int(val) if val else 0)
+            matrix.append(row)
+
+    return template(
+        'tsp',
+        n=n,
+        matrix=matrix,
+        error=error,
+        result=result,
+        route=route_data,
+        year=None
+    )
 # --- МИНИМАЛЬНОЕ ВЕРШИННОЕ ПОКРЫТИЕ ---
 
 @route('/vertex_cover')

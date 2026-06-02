@@ -1261,7 +1261,7 @@ body {
         background: var(--bg-light);
     }
 
-/* ============ ПРИМЕР TSP ============ */
+/* Пример TSP */
 
 .example-layout {
     display: flex;
@@ -1393,7 +1393,99 @@ body {
         color: var(--text-darker);
     }
 
+
+.btn-confirm {
+    background: var(--medium-bg);
+    color: var(--bg-light);
+}
+
+    .btn-confirm:hover {
+        background: var(--dark-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px var(--shadow);
+    }
+
+.highlight-pair {
+    background-color: #fff3cd !important;
+    border-color: #ffc107 !important;
+}
+
+/* Картинка в примере TSP  */
+
+.example-image {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.example-graph-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow);
+    background: var(--white);
+    padding: 10px;
+}
+
+.image-caption {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-dark);
+    font-style: italic;
+}
+/*Стили для графа*/
+.graph-svg {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+/*Стили для результата*/
+.tsp-paths-list {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid #ccc;
+    padding-left: 0;
+}
+
+.tsp-path-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.tsp-path-route {
+    flex: 1;
+    font-size: 16px;
+    color: var(--text-darker);
+    word-break: break-all;
+    padding-right: 14px;
+}
+
+.tsp-path-separator {
+    display: none;
+}
+
+.tsp-path-calc {
+    flex: 1;
+    font-size: 16px;
+    color: var(--text-darker);
+    text-align: left;
+    padding-left: 14px;
+    white-space: nowrap;
+}
+
+.tsp-paths-info {
+    margin-top: 12px;
+    color: #888;
+    font-size: 14px;
+}
+
 /* Страница О нас */
+
 .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));

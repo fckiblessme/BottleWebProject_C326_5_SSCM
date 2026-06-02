@@ -11,7 +11,7 @@
     <h2>Доступные методы и алгоритмы</h2>
     
     <div class="disciplines-grid">
-        <a href="/tsp_form" class="discipline-card">
+        <a href="/tsp" class="discipline-card">
             <div class="card-icon">🚗</div>
             <h3>Задача коммивояжёра</h3>
             <p>Поиск кратчайшего гамильтонова цикла в полном графе. Реализация точного решения методами перебора и оптимизации маршрутов.</p>
