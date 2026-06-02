@@ -120,5 +120,69 @@ function drawTSPGraph(matrix, bestRoute) {
     networkInstance = new vis.Network(graphContainer, data, options);
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    var errorBlock = document.getElementById('errorBlock');
+    var resultPlaceholder = document.querySelector('.result-placeholder');
+    var form = document.getElementById('inputForm');
+
+
+    if (errorBlock && errorBlock.style.display !== 'none' && errorBlock.innerHTML.trim() !== '') {
+        setTimeout(function () {
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    }
+
+    else if (resultPlaceholder && resultPlaceholder.innerHTML.trim() !== '') {
+        var text = resultPlaceholder.innerHTML;
+        var hasRealResult =
+            text.indexOf('tsp-paths-list') !== -1 ||
+            text.indexOf('tsp-path-row') !== -1;
+
+        if (hasRealResult) {
+            var resultCard = document.querySelector('.result-card');
+            if (resultCard) {
+                setTimeout(function () {
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
+        }
+    }
+
+
+    const serverData = document.getElementById("serverTspData");
+
+    if (!serverData) {
+        return;
+    }
+
+    const routeRaw = serverData.dataset.route;
+
+    if (!routeRaw) {
+        return;
+    }
+
+    const bestRoute = JSON.parse(routeRaw.replace(/'/g, '"'));
+
+    const matrix = [];
+
+    const rows = document.querySelectorAll(".matrix-table tbody tr");
+
+    rows.forEach(row => {
+        const currentRow = [];
+        const inputs = row.querySelectorAll("input");
+
+        inputs.forEach(input => {
+            currentRow.push(parseInt(input.value) || 0);
+        });
+
+        matrix.push(currentRow);
+    });
+
+    drawTSPGraph(matrix, bestRoute);
+});
+
 
 
