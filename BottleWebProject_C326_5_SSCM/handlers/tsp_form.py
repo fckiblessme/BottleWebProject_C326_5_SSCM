@@ -19,3 +19,26 @@ def checking_n(n):
     return True, None
 
 
+def checking_cell(value, i, j):
+    if not value or value.strip() == "":
+        return False, f"Ячейка ({i}, {j}) не заполнена. Заполните все ячейки матрицы"
+
+    stripped = value.strip()
+    if stripped[0] == '-':
+        return False, f"Ячейка ({i}, {j}) содержит отрицательное значение. Введите положительное число"
+
+    if not stripped.isdigit():
+        try:
+            float_val = float(stripped)
+            return False, f"Ячейка ({i}, {j}) содержит дробное число. Введите целое число"
+        except ValueError:
+            return False, f"Ячейка ({i}, {j}) содержит недопустимые символы. Введите целое положительное число"
+
+    try:
+        int_val = int(stripped)
+        if int_val <= 0:
+            return False, f"Ячейка ({i}, {j}) должна содержать положительное число больше нуля"
+    except ValueError:
+        return False, f"Ячейка ({i}, {j}) содержит недопустимое значение"
+
+    return True, None
