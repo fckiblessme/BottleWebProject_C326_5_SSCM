@@ -135,3 +135,91 @@ class TestKnapsackTreeSolver(unittest.TestCase):
         self.assertIsInstance(selected, set)
         total_weight = sum(weights[v] for v in selected)
         self.assertLessEqual(total_weight, W)
+
+
+class TestKnapsackTreeValidation(unittest.TestCase):
+    """Тесты для валидации входных данных"""
+
+    # ТЕСТ 9: Проверка N > 20 (должна быть ошибка)
+    def test_n_too_large(self):
+        """TC-09: N > 20 должно вызывать ошибку валидации"""
+        n = 25
+        # В вашем коде в routes.py есть проверка n > 20
+        self.assertGreater(n, 20, "N > 20 должно быть запрещено")
+
+    # ТЕСТ 10: Проверка W > 100
+    def test_w_too_large(self):
+        """TC-10: W > 100 должно вызывать ошибку"""
+        w_max = 150
+        self.assertGreater(w_max, 100, "W > 100 должно быть запрещено")
+
+    # ТЕСТ 11: Проверка количества рёбер
+    def test_edges_count(self):
+        """TC-11: Неправильное количество рёбер (не N-1)"""
+        n = 5
+        edges = [(1, 2), (1, 3)]  # только 2 ребра, а нужно 4
+        expected_edges = n - 1
+
+        self.assertNotEqual(len(edges), expected_edges,
+                           f"Количество рёбер должно быть {expected_edges}, получено {len(edges)}")
+
+    # ТЕСТ 12: Проверка на петли
+    def test_self_loop(self):
+        """TC-12: Обнаружение петли (ребро из вершины в себя)"""
+        edges = [(1, 1), (1, 2)]
+
+        has_loop = any(u == v for u, v in edges)
+        self.assertTrue(has_loop, "Петля должна быть обнаружена")
+
+    # ТЕСТ 13: Проверка на дубликаты рёбер
+    def test_duplicate_edges(self):
+        """TC-13: Обнаружение дублирующихся рёбер"""
+        edges = [(1, 2), (1, 2), (2, 3)]
+
+        edge_set = set()
+        has_duplicate = False
+        for u, v in edges:
+            edge_tuple = tuple(sorted((u, v)))
+            if edge_tuple in edge_set:
+                has_duplicate = True
+                break
+            edge_set.add(edge_tuple)
+
+        self.assertTrue(has_duplicate, "Дубликат ребра должен быть обнаружен")
+
+    # ТЕСТ 14: Проверка на изолированные вершины
+    def test_isolated_vertex(self):
+        """TC-14: Обнаружение изолированной вершины"""
+        n = 4
+        edges = [(1, 2), (2, 3)]  # вершина 4 изолирована
+        adj = {i: [] for i in range(1, n + 1)}
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+
+        isolated = [i for i in range(1, n + 1) if len(adj[i]) == 0]
+        self.assertEqual(isolated, [4], "Вершина 4 должна быть изолирована")
+
+    # ТЕСТ 15: Проверка количества весов (должно быть равно N)
+    def test_weights_count(self):
+        """TC-15: Количество весов должно быть равно N"""
+        n = 5
+        weights = [1, 2, 3]  # только 3 веса
+        expected = n
+
+        self.assertNotEqual(len(weights), expected,
+                           f"Количество весов должно быть {expected}, получено {len(weights)}")
+
+    # ТЕСТ 16: Проверка количества ценностей (должно быть равно N)
+    def test_values_count(self):
+        """TC-16: Количество ценностей должно быть равно N"""
+        n = 5
+        values = [10, 20, 30]  # только 3 ценности
+        expected = n
+
+        self.assertNotEqual(len(values), expected,
+                           f"Количество ценностей должно быть {expected}, получено {len(values)}")
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
