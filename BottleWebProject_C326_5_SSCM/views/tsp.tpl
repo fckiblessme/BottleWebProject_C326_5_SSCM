@@ -3,45 +3,45 @@
 <script src="/static/scripts/tsp.js"></script>
 
 <div class="theory">
-    <h2>📖 Теория метода и основные определения</h2>
-    
-    <div class="theory-block" style="margin-bottom: 20px;">
+    <div class="theory-header">
+        <h2>📖 Теория метода и основные определения</h2>
+        <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
+    </div>
+
+    <div class="theory-block">
         <p><strong>Гамильтонов цикл</strong> — это замкнутый маршрут, проходящий через каждую вершину графа ровно один раз и возвращающийся в исходную вершину.</p>
-        
         <p><strong>Задача коммивояжёра (TSP)</strong> — задача поиска гамильтонова цикла минимального веса в полном взвешенном графе. Коммивояжёр должен посетить все города по одному разу и вернуться в исходный, затратив минимальное расстояние.</p>
-        
         <p><strong>Вес цикла</strong> — сумма весов всех рёбер, входящих в гамильтонов цикл.</p>
-        
         <p><strong>Полный перебор</strong> — метод решения, при котором перебираются все возможные перестановки вершин (с фиксацией первой вершины для уменьшения количества вариантов) и выбирается перестановка с минимальным суммарным весом.</p>
     </div>
-    
+
     <h3>💡 Метод решения</h3>
-    <p style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
-        Для графа из <strong>N</strong> вершин количество возможных гамильтоновых циклов равно <strong>(N-1)! / 2</strong> (с учётом симметрии и фиксации начальной вершины). 
-        <br>Алгоритм перебирает все перестановки вершин (кроме первой), вычисляет вес каждого цикла и запоминает минимальный.
-    </p>
+    <div class="theory-block">
+        <p>Для графа из <strong>N</strong> вершин количество возможных гамильтоновых циклов равно <strong>(N-1)! / 2</strong> (с учётом симметрии и фиксации начальной вершины).</p>
+        <p>Алгоритм перебирает все перестановки вершин (кроме первой), вычисляет вес каждого цикла и запоминает минимальный.</p>
+    </div>
 
     <h3>🎛️ Пошаговый алгоритм решения</h3>
-    <ol class="theory-list" style="margin-bottom: 20px; padding-left: 20px;">
+    <ol class="theory-list">
         <li><strong>Фиксация начальной вершины:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Фиксируем первую вершину (обычно вершину 1), чтобы избежать дублирования циклов, отличающихся только точкой отсчёта.</li>
             </ul>
         </li>
         <li><strong>Генерация всех перестановок:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Для оставшихся N-1 вершин генерируем все возможные перестановки.</li>
                 <li>Для N=4 это 3! = 6 перестановок.</li>
             </ul>
         </li>
         <li><strong>Вычисление веса цикла:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Для каждой перестановки вычисляем сумму весов рёбер: от первой вершины ко второй, от второй к третьей, ... и от последней обратно к первой.</li>
                 <li>Вес берётся из матрицы расстояний.</li>
             </ul>
         </li>
         <li><strong>Выбор оптимального маршрута:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Сравниваем вес текущего цикла с лучшим найденным.</li>
                 <li>Если вес меньше — запоминаем новый маршрут и его вес.</li>
             </ul>
@@ -49,11 +49,10 @@
     </ol>
 
     <h3>📐 Сложность алгоритма</h3>
-    <p style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
-        <strong>O(N!)</strong> — факториальная сложность. При N=12 количество перестановок составляет около 39 916 800, что является пределом для полного перебора.
-    </p>
-
-    <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
+    <div class="theory-block">
+        <p><strong>O(N!)</strong> — факториальная сложность. При N=12 количество перестановок составляет около 39 916 800, что является пределом для полного перебора.</p>
+    </div>
+        <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
 </div>
 
 <div class="example">
@@ -193,9 +192,9 @@
                                 % if i == j:
                                 <td><input type="text" name="m{{i}}{{j}}" value="0" disabled class="matrix-cell"></td>
                                 % elif i < j:
-                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
                                 % else:
-                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}"  class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
                                 % end
                             % end
                         </tr>
