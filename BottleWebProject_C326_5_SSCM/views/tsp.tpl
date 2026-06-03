@@ -1,6 +1,6 @@
 % rebase('layout.tpl', title='Задача коммивояжёра')
-
-
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="/static/scripts/tsp.js"></script>
 
 <div class="theory">
     <h2>📖 Теория метода и основные определения</h2>
@@ -148,80 +148,132 @@
     </div>
 </div>
 
-    <div class="form-card" id="inputForm">
-        <h2>Ввод данных графа</h2>
-
-        <form action="/tsp/solve" method="post">
-            <div class="form-group">
-                <label>Количество городов (N ≤ 12)</label>
-                <div class="input-row-flex">
-                    <input type="number" name="n" value="4" min="2" max="12" required>
-                    <button type="submit" name="create" value="1" class="btn-generate">Создать</button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Матрица расстояний</label>
-                <div class="matrix-wrapper">
-                    <table class="matrix-table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>1</th>
-                                <th>2</th>
-                                <th>3</th>
-                                <th>4</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="matrix-label">1</td>
-                                <td><input type="number" name="m11" value="0" disabled class="matrix-cell"></td>
-                                <td><input type="number" name="m12" value="10" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m13" value="15" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m14" value="20" step="1" min="1" class="matrix-cell"></td>
-                            </tr>
-                            <tr>
-                                <td class="matrix-label">2</td>
-                                <td><input type="number" name="m21" value="10" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m22" value="0" disabled class="matrix-cell"></td>
-                                <td><input type="number" name="m23" value="35" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m24" value="25" step="1" min="1" class="matrix-cell"></td>
-                            </tr>
-                            <tr>
-                                <td class="matrix-label">3</td>
-                                <td><input type="number" name="m31" value="15" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m32" value="35" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m33" value="0" disabled class="matrix-cell"></td>
-                                <td><input type="number" name="m34" value="30" step="1" min="1" class="matrix-cell"></td>
-                            </tr>
-                            <tr>
-                                <td class="matrix-label">4</td>
-                                <td><input type="number" name="m41" value="20" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m42" value="25" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m43" value="30" step="1" min="1" class="matrix-cell"></td>
-                                <td><input type="number" name="m44" value="0" disabled class="matrix-cell"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                    <div class="button-row">
-                        <button type="submit" name="random" value="1" class="btn-random">Случайные значения</button>
-                        <button type="submit" name="submit" value="1" class="btn-confirm">Подтвердить ввод</button>
-                    </div>
-            </div>
-        </form>
+<div class="form-card" id="inputForm">
+    <h2>Ввод данных графа</h2>
+    % if error:
+    <div class="error-msg" id="errorBlock">
+        <strong>⚠️ Ошибка:</strong> {{error}}
     </div>
+    % else:
+    <div class="error-msg" id="errorBlock" style="display: none;">
+        <strong>⚠️ Ошибка:</strong> <span id="errorText"></span>
+    </div>
+    % end
 
-   <div class="result-card">
+    <form action="/tsp" method="post" accept-charset="UTF-8">
+        <div class="form-group">
+            <label>Количество вершин (N ≤ 12)</label>
+            <div class="input-row-flex">
+                <input type="text" name="n" value="{{n if n else '4'}}" required>
+                <button type="submit" name="create" value="1" class="btn-generate">Создать</button>
+            </div>
+        </div>
+    </form>
+
+    % if n:
+ 
+    <form action="/tsp" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="n" value="{{n}}">
+        <div class="form-group">
+            <label>Матрица расстояний</label>
+            <div class="matrix-wrapper">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            % for i in range(1, n+1):
+                            <th>{{i}}</th>
+                            % end
+                        </tr>
+                    </thead>
+                    <tbody>
+                        % for i in range(1, n+1):
+                        <tr>
+                            <td class="matrix-label">{{i}}</td>
+                            % for j in range(1, n+1):
+                                % if i == j:
+                                <td><input type="text" name="m{{i}}{{j}}" value="0" disabled class="matrix-cell"></td>
+                                % elif i < j:
+                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                % else:
+<td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                % end
+                            % end
+                        </tr>
+                        % end
+                    </tbody>
+                </table>
+            </div>
+            <div class="button-row">
+                <button type="submit" name="random" value="1" class="btn-random" formnovalidate>Случайные значения</button>
+                <button type="submit" name="submit" value="1" class="btn-confirm">Подтвердить ввод</button>
+            </div>
+        </div>
+    </form>
+    % end
+</div>
+<div class="result-card">
     <h2>Результат</h2>
+    % if result:
+    <div class="result-placeholder">
+        % if result == 'created':
+        <div style="font-size: 40px;">✅</div>
+        <p>Матрица создана</p>
+        % else:
+        
+
+        <div style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
+            <div style="font-size: 18px; color: var(--text-darker); margin-bottom: 8px;">
+                Минимальный вес: <strong>{{best_distance}}</strong>
+            </div>
+            <div style="font-size: 18px; color: var(--text-darker); margin-bottom: 8px;">
+                Оптимальный маршрут: <strong>{{best_route_str}}</strong>
+            </div>
+            <div style="font-size: 18px; color: var(--text-darker);">
+                Вычисление: {{!best_calc}}
+            </div>
+        </div>
+        
+ 
+        <div id="network-graph" style="width:100%; height:600px; border:1px solid #ddd; margin-bottom:20px;"></div>
+        
+
+        <details style="margin-bottom: 15px;">
+            <summary style="cursor: pointer; font-weight: bold; font-size: 16px; padding: 8px 0; user-select: none;">
+                Все возможные маршруты
+            </summary>
+            <div style="padding-top: 10px;">
+                {{!result}}
+            </div>
+        </details>
+        
+        % end
+        <div id="serverTspData" data-route="{{route if route else ''}}" style="display:none;"></div>
+    </div>
+    
+
+% if result and result != 'created':
+<div style="display: flex; justify-content: flex-end; margin-top: 20px; align-items: center; gap: 15px;">
+    <div id="saveSuccessMsg" style="display: none; background: #d4edda; color: #155724; padding: 8px 15px; border-radius: 5px; font-size: 14px;">
+        Результат успешно сохранён
+    </div>
+    <form onsubmit="event.preventDefault(); saveResultToFile();" style="margin: 0;" accept-charset="UTF-8">
+    <input type="hidden" name="matrix_data" value="{{matrix_data}}">
+    <input type="hidden" name="route_data" value="{{route}}">
+    <input type="hidden" name="best_distance_data" value="{{best_distance}}">
+    <button type="submit" class="btn-confirm">Сохранить в файл</button>
+</form>
+</div>
+% else:
+<div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+    <button type="button" class="btn-confirm" disabled>Сохранить в файл</button>
+</div>
+% end
+    
+    % else:
     <div class="result-placeholder">
         <div style="font-size: 40px;">🗺️</div>
         <p>Результат появится после решения задачи</p>
     </div>
-    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-        <button type="button" class="btn-confirm">Сохранить в файл</button>
-    </div>
-</div>
-</div>
+    % end
 </div>

@@ -33,8 +33,10 @@
     <Compile Include="routes.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="handlers\" />
     <Folder Include="static\" />
     <Folder Include="static\content\" />
+    <Folder Include="static\content\data\" />
     <Folder Include="static\fonts\" />
     <Folder Include="static\images\" />
     <Folder Include="static\scripts\" />
@@ -42,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
+    <Content Include="static\content\data\tsp_results.json" />
     <Content Include="static\content\site.css" />
     <Content Include="static\content\style.css" />
     <Content Include="static\fonts\glyphicons-halflings-regular.eot" />
