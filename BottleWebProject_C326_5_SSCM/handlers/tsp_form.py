@@ -101,70 +101,89 @@ def get_random_matrix(n):
 max_display_paths = 50
 
 
+
 def solve_tsp(matrix):
     """Решает задачу коммивояжёра методом полного перебора"""
     # Количество вершин
     n = len(matrix)
-    # Список вершин для перестановок
+    # Список вершин для перестановок (кроме начальной)
     vertices = list(range(1, n))
 
     # Минимальное найденное расстояние
-    best_distance = float("inf")
-    # Лучший найденный маршрут
-    best_route = None
+    best_distance = 999999
+    # Список лучших маршрутов (может быть несколько с одинаковым весом)
+    best_routes = []
 
     # Список всех маршрутов для отображения 
     all_paths = []
     # Счётчик всех перебранных маршрутов
     total_paths = 0
 
-    # Перебир всех перестановок
-    for idx, path in enumerate(itertools.permutations(vertices)):
-        # Увеличение счётчика
+    # Перебор всех перестановок
+    for idx, p in enumerate(itertools.permutations(vertices)):
         total_paths += 1
 
-        # Полный маршрут
-        full_path = (0,) + path + (0,)
-
-        # Вес текущего маршрута
-        distance = 0
+        # Текущий вес маршрута
+        curW = 0
+        # Текущая вершина (начало с вершины 0)
+        curV = 0
         # Слагаемые для отображения вычислений
         steps = []
 
-        # Счёт расстояния по рёбрам маршрута
-        for i in range(len(full_path) - 1):
-            # Вес ребра между текущей и следующей вершиной
-            w = matrix[full_path[i]][full_path[i+1]]
-            # Прибавление к общему весу
-            distance += w
+        # Проход по всем вершинам в перестановке
+        for nextV in p:
+            # Добавление веса ребра от текущей вершины к следующей
+            w = matrix[curV][nextV]
+            curW += w
             steps.append(str(w))
+            # Перемещение в следующую вершину
+            curV = nextV
 
-        # Формирование строки для отображения
+        # Добавление веса ребра от последней вершины обратно к начальной
+        w = matrix[curV][0]
+        curW += w
+        steps.append(str(w))
+
+        # Формирование строки с маршрутом для отображения
+        full_path = (0,) + p + (0,)
         path_str = " → ".join(str(v+1) for v in full_path)
-        calc_str = " + ".join(steps) + f" = <strong>{distance}</strong>"
+        calc_str = " + ".join(steps) + f" = <strong>{curW}</strong>"
 
-        # Если маршрут короче минимального
-        if distance < best_distance:
-            best_distance = distance
-            best_route = full_path
+        # Проверка, является ли маршрут самым коротким
+        if curW < best_distance:
+            # Сохранение нового маршрута
+            best_distance = curW
+            best_routes = [full_path]
+        # Если вес равен текущему минимум, то добавление маршрута в список
+        elif curW == best_distance:
+            best_routes.append(full_path)
 
-        # Добавление в список для отображения
+        # Сохранение маршрута для отображения 
         if idx < max_display_paths:
             all_paths.append((path_str, calc_str))
 
-    # Приведение лучшего маршрута к нумерации с 1
-    best_route = [v + 1 for v in best_route]
+    # Перевод нумерации вершин с 0 на 1 для всех оптимальных маршрутов
+    best_routes_display = []
+    for route in best_routes:
+        best_routes_display.append([v + 1 for v in route])
 
-    # Формирование расшифровки вычисления для оптимального маршрута
+    # Формирование строк с маршрутами для отображения
+    best_route_str = ""
+    for route in best_routes_display:
+        if best_route_str:
+            best_route_str += "  и  "
+        best_route_str += " → ".join(str(v) for v in route)
+
+    # Формирование расшифровки вычисления для первого оптимального маршрута
+    first_best_route = best_routes_display[0]
     best_steps = []
-    for i in range(len(best_route) - 1):
-        w = matrix[best_route[i]-1][best_route[i+1]-1]
+    for i in range(len(first_best_route) - 1):
+        w = matrix[first_best_route[i]-1][first_best_route[i+1]-1]
         best_steps.append(str(w))
     best_calc = " + ".join(best_steps) + f" = <strong>{best_distance}</strong>"
 
     # Формирование HTML со списком всех маршрутов
     result_html = ''
-
     result_html += '<div class="tsp-paths-list">'
 
     for path_str, calc_str in all_paths:
@@ -176,15 +195,36 @@ def solve_tsp(matrix):
 
     result_html += '</div>'
 
-    # Если маршрутов больше лимит
+    # Проверка на превышение лимита отображаемых маршрутов
     if total_paths > max_display_paths:
-        result_html += (
-            '<div class="tsp-paths-info">'
-        )
+        result_html += '<div class="tsp-paths-info">'
         result_html += f'Показано первых {max_display_paths} маршрутов из {total_paths}'
         result_html += '</div>'
 
-    return result_html, best_route, best_distance, best_calc
+    # Возвращаем первый маршрут как основной (для обратной совместимости)
+    best_route = best_routes_display[0]
+    
+    return result_html, best_route, best_distance, best_calc, best_route_str, best_routes_display
+
+
+def render_tsp_result(n, matrix):
+    """Решает TSP для переданной матрицы и возвращает заполненный шаблон"""
+    # Решение TSP
+    result, route, best_distance, best_calc, best_route_str, best_routes = solve_tsp(matrix)
+
+    # Возвращение заполненного шаблона
+    return template('tsp',
+        year=datetime.now().year,
+        n=n,
+        matrix=matrix,
+        error=None,
+        result=result,
+        route=str(best_routes),  # Отправляем список всех оптимальных маршрутов
+        best_distance=best_distance,
+        best_calc=best_calc,
+        best_route_str=best_route_str,
+        matrix_data=json.dumps(matrix)
+    )
 
 # Путь к файлу с результатами
 tsp_result_file = 'static/content/data/tsp_results.json'
@@ -236,26 +276,6 @@ def save_tsp_result(matrix, best_route, best_distance):
         return False
 
 
-def render_tsp_result(n, matrix):
-    """Решает TSP для переданной матрицы и возвращает заполненный шаблон"""
-    # Решение TSP
-    result, route, best_distance, best_calc = solve_tsp(matrix)
-    # Формирование строки маршрута
-    best_route_str = " → ".join(str(v) for v in route)
-
-    # Возвращение заполненного шаблона
-    return template('tsp',
-        year=datetime.now().year,
-        n=n,
-        matrix=matrix,
-        error=None,
-        result=result,
-        route=str(route),
-        best_distance=best_distance,
-        best_calc=best_calc,
-        best_route_str=best_route_str,
-        matrix_data=json.dumps(matrix)
-    )
 
 def handle_post():
     """Главный обработчик всех POST-запросов к странице TSP"""
