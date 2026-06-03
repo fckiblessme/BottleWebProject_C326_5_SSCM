@@ -7,7 +7,7 @@ import math
 
 
 # Импорты алгоритмов
-from knapsack_solver import solve_knapsack_tree
+from handlers.knapsack_solver import solve_knapsack_tree
 from handlers.tsp_form import handle_post
 from handlers.vertex_cover_form import solve_vertex_cover_algorithm
 

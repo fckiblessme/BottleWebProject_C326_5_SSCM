@@ -5,7 +5,7 @@ import os
 # Добавляем путь к корневой директории проекта
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from BottleWebProject_C326_5_SSCM.knapsack_solver import solve_knapsack_tree
+from BottleWebProject_C326_5_SSCM.handlers.knapsack_solver import solve_knapsack_tree
 
 
 class TestKnapsackTreeSolver(unittest.TestCase):
