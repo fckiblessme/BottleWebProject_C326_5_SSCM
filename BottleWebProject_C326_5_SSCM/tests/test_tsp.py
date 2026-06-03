@@ -112,6 +112,32 @@ class TestTSPSolver(unittest.TestCase):
         # Проверка, что все 6 перестановок сохранены как оптимальные
         self.assertEqual(len(best_routes), 6)
 
+class TestTSPValidation(unittest.TestCase):
+    """Тесты валидации входных данных"""
+
+    # ТЕСТ 6: N меньше 2
+    def test_n_too_small(self):
+        """TC-06: N < 2"""
+        # Проверка пустого значения, 0 и 1
+        for n in ['', '0', '1']:
+            ok, error = checking_n(n)
+            self.assertFalse(ok)
+
+    # ТЕСТ 7: N больше 12
+    def test_n_too_large(self):
+        """TC-07: N > 12"""
+        # Проверка значений 13 и 20
+        for n in ['13', '20']:
+            ok, error = checking_n(n)
+            self.assertFalse(ok)
+
+    # ТЕСТ 8: Корректные N
+    def test_n_valid(self):
+        """TC-08: N от 2 до 12"""
+        # Проверка граничных и среднего значений
+        for n in ['2', '5', '12']:
+            ok, error = checking_n(n)
+            self.assertTrue(ok)
 
 
 if __name__ == '__main__':
