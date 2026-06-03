@@ -92,7 +92,7 @@ def get_random_matrix(n):
         # Только над диагональю
         for j in range(i+1, n):
             # Заполнение матрицы
-            v = random.randint(1, 100)
+            v = random.randint(1, 99)
             matrix[i][j] = v
             matrix[j][i] = v
     return matrix
@@ -174,7 +174,7 @@ def solve_tsp(matrix):
             best_route_str += "  и  "
         best_route_str += " → ".join(str(v) for v in route)
 
-    # Формирование расшифровки вычисления для первого оптимального маршрута
+    # Формирование расшифровки вычисления
     first_best_route = best_routes_display[0]
     best_steps = []
     for i in range(len(first_best_route) - 1):
@@ -209,7 +209,7 @@ def solve_tsp(matrix):
 
 def render_tsp_result(n, matrix):
     """Решает TSP для переданной матрицы и возвращает заполненный шаблон"""
-    # Решение TSP
+    # Решение TSP 
     result, route, best_distance, best_calc, best_route_str, best_routes = solve_tsp(matrix)
 
     # Возвращение заполненного шаблона
@@ -219,7 +219,7 @@ def render_tsp_result(n, matrix):
         matrix=matrix,
         error=None,
         result=result,
-        route=str(best_routes),  # Отправляем список всех оптимальных маршрутов
+        route=str(route),  
         best_distance=best_distance,
         best_calc=best_calc,
         best_route_str=best_route_str,
@@ -296,8 +296,16 @@ def handle_post():
             # Преобразование веса в число
             best_distance = int(best_distance_str)
 
+            # Проверка, является ли маршрут списком списков (несколько оптимальных маршрутов)
+            if isinstance(route, list) and len(route) > 0 and isinstance(route[0], list):
+                # Сохранение первого маршрута для совместимости
+                save_route = route[0]
+            else:
+                # Сохранение одиночного маршрута
+                save_route = route
+            
             # Сохранение в файл
-            success = save_tsp_result(matrix, route, best_distance)
+            success = save_tsp_result(matrix, save_route, best_distance)
 
             if success:
                 return json.dumps({"success": True})
@@ -335,7 +343,7 @@ def handle_post():
 
     # Кнопка "Случайные значения" 
     if request.forms.get('random'):
-        # Генерирация случайной матрицы
+        # Генерация случайной матрицы
         matrix = get_random_matrix(n)
         return render_tsp_result(n, matrix)
 
