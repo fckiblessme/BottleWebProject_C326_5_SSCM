@@ -165,7 +165,7 @@
             <label>Количество вершин (N ≤ 12)</label>
             <div class="input-row-flex">
                 <input type="text" name="n" value="{{n if n else '4'}}" required>
-                <button type="submit" name="create" value="1" class="btn-generate">Создать</button>
+                <button type="submit" name="create" value="1" class="btn-generate-tsp">Создать</button>
             </div>
         </div>
     </form>
@@ -204,10 +204,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="button-row">
-                <button type="submit" name="random" value="1" class="btn-random" formnovalidate>Случайные значения</button>
-                <button type="submit" name="submit" value="1" class="btn-confirm">Подтвердить ввод</button>
-            </div>
+            <div class="tsp-button-row">
+    <button type="submit" name="random" value="1" class="btn-random-tsp" formnovalidate>Случайные значения</button>
+    <button type="submit" name="submit" value="1" class="btn-confirm-tsp">Подтвердить ввод</button>
+</div>
         </div>
     </form>
     % end
@@ -261,12 +261,12 @@
     <input type="hidden" name="matrix_data" value="{{matrix_data}}">
     <input type="hidden" name="route_data" value="{{route}}">
     <input type="hidden" name="best_distance_data" value="{{best_distance}}">
-    <button type="submit" class="btn-confirm">Сохранить в файл</button>
+    <button type="submit" class="btn-save-tsp">Сохранить в файл</button>
 </form>
 </div>
 % else:
 <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-    <button type="button" class="btn-confirm" disabled>Сохранить в файл</button>
+    <button type="submit" class="btn-save-tsp">Сохранить в файл</button>
 </div>
 % end
     
