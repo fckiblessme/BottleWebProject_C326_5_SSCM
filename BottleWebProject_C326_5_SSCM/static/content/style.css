@@ -1442,6 +1442,123 @@ body {
     padding: 10px;
     box-shadow: 0 2px 8px var(--shadow);
 }
+
+/* Стили кнопок для страницы TSP */
+
+/* Кнопка "Создать" */
+.btn-generate-tsp {
+    width: auto !important;
+    min-width: 160px !important;
+    padding: 12px 32px !important;
+    background: var(--accent) !important;
+    color: var(--text-darker) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: background 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-generate-tsp:hover {
+        background: #b8a98e !important;
+    }
+
+/* Кнопка "Случайные значения" */
+.btn-random-tsp {
+    min-width: 200px !important;
+    padding: 12px 32px !important;
+    background: var(--accent) !important;
+    color: var(--text-darker) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: background 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-random-tsp:hover {
+        background: #b8a98e !important;
+    }
+
+/* Кнопка "Подтвердить ввод" */
+.btn-confirm-tsp {
+    min-width: 200px !important;
+    padding: 12px 32px !important;
+    background: var(--medium-bg) !important;
+    color: var(--bg-light) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-confirm-tsp:hover {
+        background: var(--dark-bg) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 10px var(--shadow) !important;
+    }
+
+/* Кнопка "Сохранить в файл" */
+.btn-save-tsp {
+    min-width: 220px !important;
+    padding: 12px 36px !important;
+    background: var(--medium-bg) !important;
+    color: var(--bg-light) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-save-tsp:hover {
+        background: var(--dark-bg) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 10px var(--shadow) !important;
+    }
+
+/* Контейнер для кнопок TSP */
+.tsp-button-row {
+    display: flex !important;
+    gap: 15px !important;
+    margin-top: 20px !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+}
+
+
+@media (max-width: 768px) {
+    .btn-generate-tsp,
+    .btn-random-tsp,
+    .btn-confirm-tsp,
+    .btn-save-tsp {
+        width: 100% !important;
+        min-width: auto !important;
+    }
+
+    .tsp-button-row {
+        flex-direction: column !important;
+    }
+}
+
 /*Стили для результата*/
 .tsp-paths-list {
     display: flex;

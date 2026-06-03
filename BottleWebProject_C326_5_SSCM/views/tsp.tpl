@@ -3,45 +3,45 @@
 <script src="/static/scripts/tsp.js"></script>
 
 <div class="theory">
-    <h2>📖 Теория метода и основные определения</h2>
-    
-    <div class="theory-block" style="margin-bottom: 20px;">
+    <div class="theory-header">
+        <h2>📖 Теория метода и основные определения</h2>
+        <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
+    </div>
+
+    <div class="theory-block">
         <p><strong>Гамильтонов цикл</strong> — это замкнутый маршрут, проходящий через каждую вершину графа ровно один раз и возвращающийся в исходную вершину.</p>
-        
         <p><strong>Задача коммивояжёра (TSP)</strong> — задача поиска гамильтонова цикла минимального веса в полном взвешенном графе. Коммивояжёр должен посетить все города по одному разу и вернуться в исходный, затратив минимальное расстояние.</p>
-        
         <p><strong>Вес цикла</strong> — сумма весов всех рёбер, входящих в гамильтонов цикл.</p>
-        
         <p><strong>Полный перебор</strong> — метод решения, при котором перебираются все возможные перестановки вершин (с фиксацией первой вершины для уменьшения количества вариантов) и выбирается перестановка с минимальным суммарным весом.</p>
     </div>
-    
+
     <h3>💡 Метод решения</h3>
-    <p style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
-        Для графа из <strong>N</strong> вершин количество возможных гамильтоновых циклов равно <strong>(N-1)! / 2</strong> (с учётом симметрии и фиксации начальной вершины). 
-        <br>Алгоритм перебирает все перестановки вершин (кроме первой), вычисляет вес каждого цикла и запоминает минимальный.
-    </p>
+    <div class="theory-block">
+        <p>Для графа из <strong>N</strong> вершин количество возможных гамильтоновых циклов равно <strong>(N-1)! / 2</strong> (с учётом симметрии и фиксации начальной вершины).</p>
+        <p>Алгоритм перебирает все перестановки вершин (кроме первой), вычисляет вес каждого цикла и запоминает минимальный.</p>
+    </div>
 
     <h3>🎛️ Пошаговый алгоритм решения</h3>
-    <ol class="theory-list" style="margin-bottom: 20px; padding-left: 20px;">
+    <ol class="theory-list">
         <li><strong>Фиксация начальной вершины:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Фиксируем первую вершину (обычно вершину 1), чтобы избежать дублирования циклов, отличающихся только точкой отсчёта.</li>
             </ul>
         </li>
         <li><strong>Генерация всех перестановок:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Для оставшихся N-1 вершин генерируем все возможные перестановки.</li>
                 <li>Для N=4 это 3! = 6 перестановок.</li>
             </ul>
         </li>
         <li><strong>Вычисление веса цикла:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Для каждой перестановки вычисляем сумму весов рёбер: от первой вершины ко второй, от второй к третьей, ... и от последней обратно к первой.</li>
                 <li>Вес берётся из матрицы расстояний.</li>
             </ul>
         </li>
         <li><strong>Выбор оптимального маршрута:</strong>
-            <ul style="margin: 5px 0 10px 20px; list-style-type: circle;">
+            <ul>
                 <li>Сравниваем вес текущего цикла с лучшим найденным.</li>
                 <li>Если вес меньше — запоминаем новый маршрут и его вес.</li>
             </ul>
@@ -49,11 +49,10 @@
     </ol>
 
     <h3>📐 Сложность алгоритма</h3>
-    <p style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
-        <strong>O(N!)</strong> — факториальная сложность. При N=12 количество перестановок составляет около 39 916 800, что является пределом для полного перебора.
-    </p>
-
-    <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
+    <div class="theory-block">
+        <p><strong>O(N!)</strong> — факториальная сложность. При N=12 количество перестановок составляет около 39 916 800, что является пределом для полного перебора.</p>
+    </div>
+        <a href="#inputForm" class="anchor-link">Перейти к форме ввода →</a>
 </div>
 
 <div class="example">
@@ -165,13 +164,12 @@
             <label>Количество вершин (N ≤ 12)</label>
             <div class="input-row-flex">
                 <input type="text" name="n" value="{{n if n else '4'}}" required>
-                <button type="submit" name="create" value="1" class="btn-generate">Создать</button>
+                <button type="submit" name="create" value="1" class="btn-generate-tsp">Создать</button>
             </div>
         </div>
     </form>
 
     % if n:
- 
     <form action="/tsp" method="post" accept-charset="UTF-8">
         <input type="hidden" name="n" value="{{n}}">
         <div class="form-group">
@@ -194,9 +192,9 @@
                                 % if i == j:
                                 <td><input type="text" name="m{{i}}{{j}}" value="0" disabled class="matrix-cell"></td>
                                 % elif i < j:
-                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
                                 % else:
-<td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}"  class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
                                 % end
                             % end
                         </tr>
@@ -204,24 +202,20 @@
                     </tbody>
                 </table>
             </div>
-            <div class="button-row">
-                <button type="submit" name="random" value="1" class="btn-random" formnovalidate>Случайные значения</button>
-                <button type="submit" name="submit" value="1" class="btn-confirm">Подтвердить ввод</button>
+            <div class="tsp-button-row">
+                <button type="submit" name="random" value="1" class="btn-random-tsp" formnovalidate>Случайные значения</button>
+                <button type="submit" name="submit" value="1" class="btn-confirm-tsp">Подтвердить ввод</button>
             </div>
         </div>
     </form>
     % end
 </div>
+
 <div class="result-card">
     <h2>Результат</h2>
+    
     % if result:
     <div class="result-placeholder">
-        % if result == 'created':
-        <div style="font-size: 40px;">✅</div>
-        <p>Матрица создана</p>
-        % else:
-        
-
         <div style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
             <div style="font-size: 18px; color: var(--text-darker); margin-bottom: 8px;">
                 Минимальный вес: <strong>{{best_distance}}</strong>
@@ -234,10 +228,8 @@
             </div>
         </div>
         
- 
         <div id="network-graph" style="width:100%; height:600px; border:1px solid #ddd; margin-bottom:20px;"></div>
         
-
         <details style="margin-bottom: 15px;">
             <summary style="cursor: pointer; font-weight: bold; font-size: 16px; padding: 8px 0; user-select: none;">
                 Все возможные маршруты
@@ -247,28 +239,20 @@
             </div>
         </details>
         
-        % end
         <div id="serverTspData" data-route="{{route if route else ''}}" style="display:none;"></div>
+        
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px; align-items: center; gap: 15px;">
+            <div id="saveSuccessMsg" style="display: none; background: #d4edda; color: #155724; padding: 8px 15px; border-radius: 5px; font-size: 14px;">
+                Результат успешно сохранён
+            </div>
+            <form onsubmit="event.preventDefault(); saveResultToFile();" style="margin: 0;" accept-charset="UTF-8">
+                <input type="hidden" name="matrix_data" value="{{matrix_data}}">
+                <input type="hidden" name="route_data" value="{{route}}">
+                <input type="hidden" name="best_distance_data" value="{{best_distance}}">
+                <button type="submit" class="btn-save-tsp">Сохранить в файл</button>
+            </form>
+        </div>
     </div>
-    
-
-% if result and result != 'created':
-<div style="display: flex; justify-content: flex-end; margin-top: 20px; align-items: center; gap: 15px;">
-    <div id="saveSuccessMsg" style="display: none; background: #d4edda; color: #155724; padding: 8px 15px; border-radius: 5px; font-size: 14px;">
-        Результат успешно сохранён
-    </div>
-    <form onsubmit="event.preventDefault(); saveResultToFile();" style="margin: 0;" accept-charset="UTF-8">
-    <input type="hidden" name="matrix_data" value="{{matrix_data}}">
-    <input type="hidden" name="route_data" value="{{route}}">
-    <input type="hidden" name="best_distance_data" value="{{best_distance}}">
-    <button type="submit" class="btn-confirm">Сохранить в файл</button>
-</form>
-</div>
-% else:
-<div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-    <button type="button" class="btn-confirm" disabled>Сохранить в файл</button>
-</div>
-% end
     
     % else:
     <div class="result-placeholder">
