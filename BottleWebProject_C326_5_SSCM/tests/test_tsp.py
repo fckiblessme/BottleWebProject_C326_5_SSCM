@@ -178,6 +178,39 @@ class TestTSPValidation(unittest.TestCase):
             ok, error = checking_cell(v, 1, 2)
             self.assertTrue(ok)
 
+class TestTSPRandomMatrix(unittest.TestCase):
+    """Тесты генерации случайной матрицы"""
+
+    # ТЕСТ 15: Размер матрицы
+    def test_matrix_size(self):
+        """TC-15: Матрица имеет размер N×N"""
+        # Проверка для разных размеров
+        for n in [2, 5, 8]:
+            m = get_random_matrix(n)
+            # Проверка количества строк
+            self.assertEqual(len(m), n)
+            # Проверка количества столбцов в каждой строке
+            for row in m:
+                self.assertEqual(len(row), n)
+
+    # ТЕСТ 16: Симметричность матрицы
+    def test_matrix_symmetry(self):
+        """TC-16: Матрица симметрична"""
+        m = get_random_matrix(5)
+        # Проверка симметричности над диагональю
+        for i in range(5):
+            for j in range(i + 1, 5):
+                self.assertEqual(m[i][j], m[j][i])
+
+    # ТЕСТ 17: Диапазон значений
+    def test_matrix_values(self):
+        """TC-17: Значения от 1 до 99"""
+        m = get_random_matrix(5)
+        # Проверка диапазона для всех рёбер
+        for i in range(5):
+            for j in range(i + 1, 5):
+                self.assertGreaterEqual(m[i][j], 1)
+                self.assertLessEqual(m[i][j], 99)
 
 
 if __name__ == '__main__':
