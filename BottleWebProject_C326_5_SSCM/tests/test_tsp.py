@@ -140,5 +140,45 @@ class TestTSPValidation(unittest.TestCase):
             self.assertTrue(ok)
 
 
+    # ТЕСТ 9: Пустая ячейка
+    def test_cell_empty(self):
+        """TC-09: Пустая ячейка матрицы"""
+        ok, error = checking_cell('', 1, 2)
+        self.assertFalse(ok)
+
+    # ТЕСТ 10: Отрицательное значение
+    def test_cell_negative(self):
+        """TC-10: Отрицательное значение ячейки матрицы"""
+        ok, error = checking_cell('-5', 1, 2)
+        self.assertFalse(ok)
+
+    # ТЕСТ 11: Дробное значение
+    def test_cell_float(self):
+        """TC-11: Дробное значение"""
+        ok, error = checking_cell('5.5', 1, 2)
+        self.assertFalse(ok)
+
+    # ТЕСТ 12: Текстовое значение
+    def test_cell_text(self):
+        """TC-12: Недопустимые символы"""
+        ok, error = checking_cell('abc', 1, 2)
+        self.assertFalse(ok)
+
+    # ТЕСТ 13: Нулевое значение
+    def test_cell_zero(self):
+        """TC-13: Ноль"""
+        ok, error = checking_cell('0', 1, 2)
+        self.assertFalse(ok)
+
+    # ТЕСТ 14: Корректная ячейка
+    def test_cell_valid(self):
+        """TC-14: Корректные значения"""
+        # Проверка минимального, среднего и большого значений
+        for v in ['1', '50', '999']:
+            ok, error = checking_cell(v, 1, 2)
+            self.assertTrue(ok)
+
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
