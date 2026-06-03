@@ -5,7 +5,7 @@ from bottle import route, post, template, request, view
 # Импорты алгоритмов
 from knapsack_solver import solve_knapsack_tree
 from handlers.tsp_form import handle_post
-from vertex_cover_form import solve_vertex_cover_algorithm
+from handlers.vertex_cover_form import solve_vertex_cover_algorithm
 
 
 def build_tree_string(weights_str, values_str, edges_str, selected_str):
@@ -187,7 +187,6 @@ def solve_vertex_cover():
         U = sorted(list(U_set.union(set(range(1, n_left + 1)))))
         V = sorted(list(V_set.union(set(range(n_left + 1, n_left + n_right + 1)))))
         
-        # Безопасный вызов самого алгоритма
         matching_size, cover_size, Cover_list, matching_html = solve_vertex_cover_algorithm(U, V, edges)
         cover_vertices = " ".join(map(str, Cover_list)) if Cover_list else "Покрытие пустое"
 
@@ -195,7 +194,7 @@ def solve_vertex_cover():
         error = str(e)
         matching_html = f"Вычисления прерваны ошибкой: {error}"
     
-    # Возвращаем чистый JSON для фронтенда
+    # Возвращаем чистый JSON 
     return {
         "success": error is None,
         "error": error,
