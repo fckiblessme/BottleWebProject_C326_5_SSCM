@@ -59,7 +59,6 @@ function clearAllEdges() {
     addNewEdgeRow('', '');
 }
 
-// Экспорт графа в JSON-файл
 function exportGraphToJSON() {
     const nLeft = parseInt(document.getElementById('inputNLeft').value) || 5;
     const nRight = parseInt(document.getElementById('inputNRight').value) || 4;
@@ -76,18 +75,30 @@ function exportGraphToJSON() {
         }
     }
 
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+    const currentDateTime = new Date().toLocaleString('ru-RU');
+
+    // Создаем структуру JSON-объекта
+    const jsonObject = {
+        created_at: currentDateTime, 
         n_left: nLeft,
         n_right: nRight,
         edges: edges
-    }, null, 4));
+    };
+
+    // Превращаем объект в форматированную строку текста
+    const jsonString = JSON.stringify(jsonObject, null, 4);
+
+    const blob = new Blob([jsonString], { type: "application/json;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
 
     const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("href", url);
     downloadAnchor.setAttribute("download", "bipartite_graph.json");
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
+    
     downloadAnchor.remove();
+    URL.revokeObjectURL(url);
 }
 
 // Импорт структуры из JSON-файла 
@@ -137,7 +148,6 @@ function importGraphFromJSON(event) {
             data.edges.forEach((edge, index) => {
                 let fromVal, toVal;
 
-                // Разбор формата ребра
                 if (Array.isArray(edge) && edge.length === 2) {
                     fromVal = edge[0];
                     toVal = edge[1];
@@ -148,7 +158,6 @@ function importGraphFromJSON(event) {
                     throw new Error(`Неверный формат ребра на позиции ${index + 1}. Ожидается [from, to] или {from, to}.`);
                 }
 
-                // Проверка, что типы данных строго цифры
                 if (typeof fromVal !== 'number' || typeof toVal !== 'number' || !Number.isInteger(fromVal) || !Number.isInteger(toVal)) {
                     throw new Error(`Ошибка в ребре №${index + 1}: Номера вершин должны быть строго целыми числами.`);
                 }
@@ -156,17 +165,14 @@ function importGraphFromJSON(event) {
                 const u = fromVal;
                 const v = toVal;
 
-                // Проверка границ левой доли L (от 1 до nLeft)
                 if (u < 1 || u > nLeft) {
                     throw new Error(`Ошибка в ребре №${index + 1}: Вершина левой доли L (${u}) должна быть в диапазоне от 1 до ${nLeft}.`);
                 }
 
-                // Проверка границ правой доли R (от nLeft + 1 до общего максимума)
                 if (v <= nLeft || v > maxVertexIdx) {
                     throw new Error(`Ошибка в ребре №${index + 1}: Вершина правой доли R (${v}) должна быть в диапазоне от ${nLeft + 1} до ${maxVertexIdx}.`);
                 }
 
-                // Проверка на петли
                 if (u === v) {
                     throw new Error(`Ошибка в ребре №${index + 1}: Обнаружена петля (${u} → ${v}). В двудольном графе петли запрещены.`);
                 }
@@ -180,6 +186,11 @@ function importGraphFromJSON(event) {
             }
       
             drawGraph(nLeft, rawEdgesText, '');
+
+
+            if (data.created_at) {
+                console.log(`Граф успешно загружен. Файл был создан: ${data.created_at}`);
+            }
 
         } catch (error) {
             alert('Ошибка при импорте JSON файла графа:\n' + error.message);
@@ -222,7 +233,6 @@ function drawGraph(nLeftMax, edgesRaw, coverRaw) {
         }
     });
 
-    // Преобразуем уникальные вершины в объекты Vis.js
     const nodesArray = Array.from(nodesSet).map(nodeId => {
         const isLeft = nodeId <= nLeftMax;
         const inCover = coverSet.has(nodeId);
@@ -272,7 +282,6 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener('submit', function (e) {
             e.preventDefault(); 
 
-            // Считываем текущую мощностей долей
             const nLeft = parseInt(document.getElementById('inputNLeft').value) || 0;
             const nRight = parseInt(document.getElementById('inputNRight').value) || 0;
             const maxVertexIdx = nLeft + nRight;
@@ -284,7 +293,6 @@ document.addEventListener("DOMContentLoaded", function () {
             let validEdgesCount = 0;
             const uniqueEdgesCheck = new Set();
 
-            // Валидация структуры двудольного графа перед отправкой
             for (let i = 0; i < fromInputs.length; i++) {
                 const fromValRaw = fromInputs[i].value.trim();
                 const toValRaw = toInputs[i].value.trim();
@@ -293,25 +301,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     const fromVal = parseInt(fromValRaw);
                     const toVal = parseInt(toValRaw);
 
-                    // Проверка на выход левой вершины за границы L-доли
                     if (fromVal < 1 || fromVal > nLeft) {
                         alert(`Ошибка в строке ${i + 1}: Вершина левой доли L (${fromVal}) должна быть в диапазоне от 1 до ${nLeft}.`);
                         return;
                     }
 
-                    // Проверка на выход правой вершины за границы R-доли
                     if (toVal <= nLeft || toVal > maxVertexIdx) {
                         alert(`Ошибка в строке ${i + 1}: Вершина правой доли R (${toVal}) должна быть в диапазоне от ${nLeft + 1} до ${maxVertexIdx}.`);
                         return;
                     }
 
-                    // Проверка на петли
                     if (fromVal === toVal) {
                         alert(`Ошибка в строке ${i + 1}: Обнаружена петля (${fromVal} → ${toVal}). В двудольном графе петли невозможны.`);
                         return;
                     }
 
-                    // Формируем ключ для фильтрации дубликатов рёбер
                     const edgeKey = `${fromVal}-${toVal}`;
                     if (uniqueEdgesCheck.has(edgeKey)) {
                         alert(`Ошибка в строке ${i + 1}: Ребро ${fromVal} → ${toVal} продублировано. Пожалуйста, удалите лишние строки.`);
@@ -324,7 +328,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
             
-            // Защита от пустого списка рёбер
             if (validEdgesCount === 0) {
                 alert("Ошибка расчета: Список рёбер графа пуст! Пожалуйста, добавьте хотя бы одно корректное связь-ребро.");
                 return;

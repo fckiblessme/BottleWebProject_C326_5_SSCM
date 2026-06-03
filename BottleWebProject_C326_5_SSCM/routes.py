@@ -20,7 +20,7 @@ def build_tree_string(weights_str, values_str, edges_str, selected_str):
 
         n = len(weights)
 
-        # Строим список смежности (безопасно парсим переносы строк и пробелы)
+        # Строим список смежности 
         adj = {i + 1: [] for i in range(n)}
         
         # Разбиваем и по строкам, и по пробелам, чтобы получить чистые числа рёбер
