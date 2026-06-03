@@ -171,7 +171,6 @@
     </form>
 
     % if n:
- 
     <form action="/tsp" method="post" accept-charset="UTF-8">
         <input type="hidden" name="n" value="{{n}}">
         <div class="form-group">
@@ -196,7 +195,7 @@
                                 % elif i < j:
                                 <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
                                 % else:
-<td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
+                                <td><input type="text" name="m{{i}}{{j}}" id="m{{i}}{{j}}" value="{{matrix[i-1][j-1] if matrix else 0}}" step="1" min="1" class="matrix-cell" oninput="syncMatrix({{i}}, {{j}})" onfocus="highlightPair({{i}}, {{j}})" onblur="unhighlightPair({{i}}, {{j}})"></td>
                                 % end
                             % end
                         </tr>
@@ -205,23 +204,19 @@
                 </table>
             </div>
             <div class="tsp-button-row">
-    <button type="submit" name="random" value="1" class="btn-random-tsp" formnovalidate>Случайные значения</button>
-    <button type="submit" name="submit" value="1" class="btn-confirm-tsp">Подтвердить ввод</button>
-</div>
+                <button type="submit" name="random" value="1" class="btn-random-tsp" formnovalidate>Случайные значения</button>
+                <button type="submit" name="submit" value="1" class="btn-confirm-tsp">Подтвердить ввод</button>
+            </div>
         </div>
     </form>
     % end
 </div>
+
 <div class="result-card">
     <h2>Результат</h2>
+    
     % if result:
     <div class="result-placeholder">
-        % if result == 'created':
-        <div style="font-size: 40px;">✅</div>
-        <p>Матрица создана</p>
-        % else:
-        
-
         <div style="background: #faf9f6; padding: 15px; border-left: 4px solid var(--accent); border-radius: 8px; margin-bottom: 20px;">
             <div style="font-size: 18px; color: var(--text-darker); margin-bottom: 8px;">
                 Минимальный вес: <strong>{{best_distance}}</strong>
@@ -234,10 +229,8 @@
             </div>
         </div>
         
- 
         <div id="network-graph" style="width:100%; height:600px; border:1px solid #ddd; margin-bottom:20px;"></div>
         
-
         <details style="margin-bottom: 15px;">
             <summary style="cursor: pointer; font-weight: bold; font-size: 16px; padding: 8px 0; user-select: none;">
                 Все возможные маршруты
@@ -247,28 +240,20 @@
             </div>
         </details>
         
-        % end
         <div id="serverTspData" data-route="{{route if route else ''}}" style="display:none;"></div>
+        
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px; align-items: center; gap: 15px;">
+            <div id="saveSuccessMsg" style="display: none; background: #d4edda; color: #155724; padding: 8px 15px; border-radius: 5px; font-size: 14px;">
+                Результат успешно сохранён
+            </div>
+            <form onsubmit="event.preventDefault(); saveResultToFile();" style="margin: 0;" accept-charset="UTF-8">
+                <input type="hidden" name="matrix_data" value="{{matrix_data}}">
+                <input type="hidden" name="route_data" value="{{route}}">
+                <input type="hidden" name="best_distance_data" value="{{best_distance}}">
+                <button type="submit" class="btn-save-tsp">Сохранить в файл</button>
+            </form>
+        </div>
     </div>
-    
-
-% if result and result != 'created':
-<div style="display: flex; justify-content: flex-end; margin-top: 20px; align-items: center; gap: 15px;">
-    <div id="saveSuccessMsg" style="display: none; background: #d4edda; color: #155724; padding: 8px 15px; border-radius: 5px; font-size: 14px;">
-        Результат успешно сохранён
-    </div>
-    <form onsubmit="event.preventDefault(); saveResultToFile();" style="margin: 0;" accept-charset="UTF-8">
-    <input type="hidden" name="matrix_data" value="{{matrix_data}}">
-    <input type="hidden" name="route_data" value="{{route}}">
-    <input type="hidden" name="best_distance_data" value="{{best_distance}}">
-    <button type="submit" class="btn-save-tsp">Сохранить в файл</button>
-</form>
-</div>
-% else:
-<div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-    <button type="submit" class="btn-save-tsp">Сохранить в файл</button>
-</div>
-% end
     
     % else:
     <div class="result-placeholder">
