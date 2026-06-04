@@ -11,7 +11,7 @@ driver = webdriver.Chrome(service=service)
 
 # Открытие главной страницы и переход на TSP
 driver.get("http://127.0.0.1:8080")
-time.sleep(1)
+time.sleep(2)
 
 tsp_card = driver.find_element(By.XPATH, "//a[@href='/tsp']")
 tsp_card.click()
@@ -55,19 +55,19 @@ for i in range(10):
 
 print("Матрица заполнена значениями")
 
-# 5. Нажатие "Подтвердить ввод"
+# Нажатие "Подтвердить ввод"
 submit_btn = driver.find_element(By.XPATH, "//button[@name='submit']")
 submit_btn.click()
 time.sleep(3)
 
 print("Кнопка 'Подтвердить ввод' нажата")
 
-# 6. Скролл до результатов
+# Скролл до результатов
 result_card = driver.find_element(By.CLASS_NAME, "result-card")
 driver.execute_script("arguments[0].scrollIntoView();", result_card)
 time.sleep(2)
 
-# 7. Открытие "Все возможные маршруты"
+# Открытие "Все возможные маршруты"
 routes_summary = driver.find_element(By.XPATH, "//summary[contains(text(), 'Все возможные маршруты')]")
 driver.execute_script("arguments[0].scrollIntoView();", routes_summary)
 time.sleep(1)
@@ -76,7 +76,7 @@ time.sleep(1)
 
 print("Список 'Все возможные маршруты' открыт")
 
-# 8. Нажатие "Сохранить в файл"
+# Нажатие "Сохранить в файл"
 save_btn = driver.find_element(By.XPATH, "//button[contains(@class, 'btn-save-tsp')]")
 driver.execute_script("arguments[0].scrollIntoView();", save_btn)
 time.sleep(0.5)
