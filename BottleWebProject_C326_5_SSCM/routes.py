@@ -1,4 +1,5 @@
 
+from handlers.kos_form import kosaraju, safe_json, g_from_form, validate_G, generate_solution_text
 from bottle import route, template
 
 @route('/')
@@ -74,9 +75,104 @@ def home():
 def about():
     return template('about.tpl', title='О нас', year=2026)
 
+
+
+# --- ЗАДАЧА КОСАРАЙЮ ---
 @route('/kos')
 def kos():
-    return template('kos_form.tpl', title='Компоненты связности', year=2026)
+    return template('kos.tpl', title='Компоненты сильной связности', 
+        year=datetime.now().year,
+        result=False,
+        error=None,
+        count=None,
+        components=[],
+        n=None,
+        G=None,
+        solution_text=None)
+
+@route('/kos/decision', method='POST')
+def kos_decision():
+    #Получение размера графа из формы
+    n = int(request.forms.get('n', 0))
+    #Получение текстового представления графа
+    g_text = request.forms.get('G', '').strip()
+
+    try:
+        #Преобразование текста в матрицу смежности
+        G = g_from_form(g_text, n)
+    
+    #При ошибке возврат страницу с сообщением об ошибке
+    except ValueError as e:
+        return template('kos.tpl', 
+            title='Компоненты сильной связности',
+            year=datetime.now().year,
+            n=n,
+            result=False,
+            error=str(e),
+            count=None,
+            components=[],
+            G=g_text
+        )
+    
+    #Проверка корректности матрицы смежности
+    valid, error_msg = validate_G(G, n)
+
+    #Если матрица некорректна
+    if not valid:
+        return template('kos.tpl', 
+            title='Компоненты сильной связности',
+            year=datetime.now().year,
+            n=n,
+            result=False,
+            error=error_msg,
+            count=None,
+            components=[],
+            G=g_text
+        )
+    
+
+    try:
+        #Выполнение алгоритма, получение количества и списка компонентов
+        count, components = kosaraju(G, n)
+
+        #Генерация текстового описания решения
+        solution_text = generate_solution_text(G, n, components)
+        
+        #Сохранение результатов 
+        safe_json(n, G, count, components)
+        
+        #Возврат страницы с успешным результатом
+        return template('kos.tpl',
+            title='Компоненты сильной связности',
+            year=datetime.now().year,
+            n=n,
+            result=True,
+            error=None,
+            count=count,
+            components=components,
+            G=G,
+            solution_text=solution_text
+        )
+
+    #Возврат страницы с ошибкой при ошибке в вычислении алгоритма
+    except Exception as e:
+        return template('kos.tpl',
+            title='Компоненты сильной связности',
+            year=datetime.now().year,
+            n=n,
+            result=False,
+            error=f"Ошибка при вычислении: {str(e)}",
+            count=None,
+            components=[],
+            G=g_text
+        )
+
+
+
+
+
+
+
 
 
 # --- ЗАДАЧА КОММИВОЯЖЁРА (Новый роут, чтобы ссылка из меню работала) ---
