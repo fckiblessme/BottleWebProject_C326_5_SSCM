@@ -17,6 +17,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+.btn-file,
+.btn-solve,
+.btn-reset {
+    flex: 0 0 auto;
+}
 
 body {
     font-family: 'Segoe UI', Roboto, Tahoma, Geneva, Verdana, sans-serif;
@@ -517,9 +522,9 @@ body {
     padding: 18px 22px;
     border-radius: 12px;
     border: 2px solid var(--accent);
-    max-height: 340px;
-    overflow-y: auto;
     margin-bottom: 15px;
+    max-height: none;
+    overflow: visible;
 }
 
 .edges-list {
@@ -713,7 +718,7 @@ body {
 }
 
 .btn-file {
-    flex: 1;
+
     padding: 14px;
     background: #faf9f6;
     color: var(--text-darker);
@@ -1210,8 +1215,10 @@ body {
     }
 
 .matrix-wrapper {
-    overflow-x: auto;
-    margin: 15px 0;
+    max-height: none !important;
+    max-width: none !important;
+    overflow: visible !important;
+    display: inline-block;
 }
 
 .matrix-table {
@@ -1314,6 +1321,7 @@ body {
     color: var(--bg-light);
     font-weight: 600;
 }
+
 
 .example-paths {
     margin: 10px 0;
@@ -1442,6 +1450,123 @@ body {
     padding: 10px;
     box-shadow: 0 2px 8px var(--shadow);
 }
+
+/* Стили кнопок для страницы TSP */
+
+/* Кнопка "Создать" */
+.btn-generate-tsp {
+    width: auto !important;
+    min-width: 160px !important;
+    padding: 12px 32px !important;
+    background: var(--accent) !important;
+    color: var(--text-darker) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: background 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-generate-tsp:hover {
+        background: #b8a98e !important;
+    }
+
+/* Кнопка "Случайные значения" */
+.btn-random-tsp {
+    min-width: 200px !important;
+    padding: 12px 32px !important;
+    background: var(--accent) !important;
+    color: var(--text-darker) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: background 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-random-tsp:hover {
+        background: #b8a98e !important;
+    }
+
+/* Кнопка "Подтвердить ввод" */
+.btn-confirm-tsp {
+    min-width: 200px !important;
+    padding: 12px 32px !important;
+    background: var(--medium-bg) !important;
+    color: var(--bg-light) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-confirm-tsp:hover {
+        background: var(--dark-bg) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 10px var(--shadow) !important;
+    }
+
+/* Кнопка "Сохранить в файл" */
+.btn-save-tsp {
+    min-width: 220px !important;
+    padding: 12px 36px !important;
+    background: var(--medium-bg) !important;
+    color: var(--bg-light) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+    .btn-save-tsp:hover {
+        background: var(--dark-bg) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 10px var(--shadow) !important;
+    }
+
+/* Контейнер для кнопок TSP */
+.tsp-button-row {
+    display: flex !important;
+    gap: 15px !important;
+    margin-top: 20px !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+}
+
+
+@media (max-width: 768px) {
+    .btn-generate-tsp,
+    .btn-random-tsp,
+    .btn-confirm-tsp,
+    .btn-save-tsp {
+        width: 100% !important;
+        min-width: auto !important;
+    }
+
+    .tsp-button-row {
+        flex-direction: column !important;
+    }
+}
+
 /*Стили для результата*/
 .tsp-paths-list {
     display: flex;
@@ -1760,6 +1885,101 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+.example-content {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.example-text {
+
+}
+
+.example-image {
+    text-align: right;
+}
+
+    .example-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+    }
+
+.matrix-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.matrix-cell {
+    width: 100%;
+    min-width: 40px;
+}
+
+/* ============ ВИЗУАЛИЗАЦИЯ ГРАФА ============ */
+
+.graph-visualization {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid var(--accent);
+}
+
+    .graph-visualization h3 {
+        color: var(--text-darker);
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+
+.graph-container {
+    text-align: center;
+    background: #FAF7F0;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    overflow-x: auto;
+}
+
+    .graph-container svg {
+        max-width: 100%;
+        height: auto;
+    }
+
+.graph-ascii {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+details summary {
+    cursor: pointer;
+    color: var(--medium-bg);
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+    details summary:hover {
+        color: var(--text-darker);
+    }
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 2px solid #41444B;
 }
 
 .error-msg-inline {
