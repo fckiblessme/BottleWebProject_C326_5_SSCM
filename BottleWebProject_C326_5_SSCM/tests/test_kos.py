@@ -43,7 +43,7 @@ class TestKosaraju(unittest.TestCase):
         self.assertEqual(count, 2)
 
     #ТЕСТ 4
-    def test_chain_graph(self):
+    def test_g_1(self):
         """Цепочка 1-2-3 - все вершины в разных компонентах (нет обратных путей)"""
         G = [
             [0, 1, 0],
@@ -56,18 +56,20 @@ class TestKosaraju(unittest.TestCase):
         self.assertEqual(count, 3)
 
     #ТЕСТ 5
-    def test_cycle_graph(self):
+    def test_g_2(self):
         """Цикл 1-2-3-1 - все вершины в одной компоненте"""
         G = [
-            [0, 1, 0],
-            [0, 0, 1],
-            [1, 0, 0]
+            [0, 1, 0, 1],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 1, 0, 0]
         ]
 
-        count, components = kosaraju(G, 3)
+        count, components = kosaraju(G, 4)
 
-        self.assertEqual(count, 1)
-        self.assertEqual(len(components[0]), 3)
+        self.assertEqual(count, 2)
+        self.assertEqual(components, [[1],[2, 4, 3]])
+
 
     #ТЕСТ 6
     def test_two_components(self):
@@ -84,7 +86,7 @@ class TestKosaraju(unittest.TestCase):
         self.assertEqual(count, 2)
 
     #ТЕСТ 7
-    def test_complete_graph(self):
+    def test_g(self):
         """Полносвязный ориентированный граф"""
         G = [
             [0,1,1],
@@ -128,8 +130,9 @@ class TestKosaraju(unittest.TestCase):
         """Цикл из максимального количества вершин(14)"""
         n = 14
         G = [[0] * n for _ in range(n)]
-        for i in range(n):
-            G[i][(i+1) % n] = 1
+        for u in range(n):
+            v = (u + 1) % n 
+            G[u][v] = 1 
         count, components = kosaraju(G, n)
         self.assertEqual(count, 1)
     
@@ -148,27 +151,29 @@ class TestKosaraju(unittest.TestCase):
             all_vertexes.extend(component)
         self.assertEqual(sorted(all_vertexes), [1, 2, 3, 4])
 
+
+
     
 
 class TestParseMatrix(unittest.TestCase): 
     """Тесты преобразования текста в матрицу смежности"""
 
     #ТЕСТ 12
-    def test_parse_simple_matrix(self):
+    def test_simple_matrix(self):
         """Обычная матрица 3х3"""
         text = "0 1 0\n1 0 1\n0 0 0"
         G = g_from_form(text, 3)
         self.assertEqual(G, [[0,1,0], [1,0,1], [0,0,0]])
 
     #ТЕСТ 13
-    def test_parse_with_extra_spaces(self):
+    def test_matrix_with_spaces(self):
             """Матрица с лишними пробелами"""
             text = "  0   1  0  \n  1  0  1  \n  0  0  0  "
             G = g_from_form(text, 3)
             self.assertEqual(G, [[0,1,0], [1,0,1], [0,0,0]])
 
     #ТЕСТ 14
-    def test_parse_negative_numbers(self):
+    def test_negative_numbers(self):
         """Отрицательные числа"""
         text = "0 -1 0\n1 0 1\n0 0 0"
         with self.assertRaises(ValueError):
@@ -199,7 +204,7 @@ class TestValidateMatrix(unittest.TestCase):
 
     #ТЕСТ 17
     def test_invalid_value(self):
-        """Элементы матрицы быть только 0 или 1"""
+        """Элементы матрицы могут быть только 0 или 1"""
         G = [
             [0,2],
             [0,0]

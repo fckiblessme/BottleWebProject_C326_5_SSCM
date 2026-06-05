@@ -103,66 +103,57 @@
         <button class="btn-generate" id="btnLoadExample">Случайные значения</button>
     </div>
     
+
     <!-- Карточка с результатами вычислений -->
-    <div class="result-card">
-        <h2>Результат расчёта</h2>
+<div class="result-card">
+    <h2>Результат расчёта</h2>
 
-        <!-- Проверка, есть ли результат -->
-        % if result:
-            <!-- Блок с успешным результатом -->
+    % if result:
+        <!-- Блок с количеством компонент -->
+        <div class="result-success">
+            <p><strong>Найдено компонент сильной связности: {{count}}</strong></p>
+        </div>
+
+        <!-- Легенда с цветами -->
+        % if components:
             <div class="result-success">
-                <p><strong>Найдено компонент сильной связности: {{count}}</strong></p>
-            </div>
+                % colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
+                % color_names = ['красный', 'бирюзовый', 'синий', 'зелёный', 'жёлтый', 'фиолетовый']
 
-         % if result and components:
-            <div class="result-success">
-                    % colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
-                    % color_names = ['красный', 'бирюзовый', 'синий', 'зелёный', 'жёлтый', 'фиолетовый']
-
-         % for idx, component in enumerate(components):
-            <div class="legend-item">
-                <span class="legend-color"
-                      style="background-color: {{colors[idx % len(colors)]}};">
-                </span>
-
-                <span>
-                    Компонента {{idx + 1}}
-                    ({{color_names[idx % len(color_names)]}})
-                    — вершины: {{', '.join(map(str, component))}}
-                </span>
-            </div>
-         % end
-
-    </div>
-        % end
-            
-            <!-- Визуализация графа -->
-            <div class="graph-visualization">
-                <h3>Интерактивная визуализация графа</h3>
-                    <!-- Контейнер для отрисовки графа -->
-                    <div id="kos-graph" style="height: 500px; border: 1px solid var(--accent); background: #FAF7F0; border-radius: 12px;"></div>
-            </div>
-
-            <!-- Письменное решение -->
-            <div class="result-success">
-                <h2></h2>
-                <h3>Письменное решение</h3>
-                <pre>{{solution_text}}</pre>
-            </div>
-
-        <!-- Если есть ошибка -->
-        % elif error:
-            <div class="error-msg">
-                <strong>Ошибка:</strong> {{error}}
-            </div>
-
-        <!-- Если нет ни результата, ни ошибки (начальное состояние) -->
-        % else:
-            <div class="result-placeholder">
-                <p>Введите матрицу смежности выше, затем нажмите «Найти компоненты» для запуска вычислений.</p>
+                % for idx, component in enumerate(components):
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: {{colors[idx % len(colors)]}};"></span>
+                        <span>
+                            Компонента {{idx + 1}} ({{color_names[idx % len(color_names)]}}) — вершины: {{', '.join(map(str, component))}}
+                        </span>
+                    </div>
+                % end
             </div>
         % end
-    </div>
+
+        <!-- Визуализация графа -->
+        <div class="graph-visualization">
+            <h3>Интерактивная визуализация графа</h3>
+            <div id="kos-graph" style="height: 500px; border: 1px solid var(--accent); background: #FAF7F0; border-radius: 12px;"></div>
+        </div>
+
+        <!-- Письменное решение -->
+        <div class="result-success">
+            <h3>Письменное решение</h3>
+            <pre>{{solution_text}}</pre>
+        </div>
+
+    % elif error:
+        <div class="error-msg">
+            <strong>Ошибка:</strong> {{error}}
+        </div>
+
+    % else:
+        <div class="result-placeholder">
+            <p>Введите матрицу смежности выше, затем нажмите «Найти компоненты» для запуска вычислений.</p>
+        </div>
+    % end
+</div>
 
     <div class="nav-links">
         <a href="/" class="nav-btn">Домой</a>

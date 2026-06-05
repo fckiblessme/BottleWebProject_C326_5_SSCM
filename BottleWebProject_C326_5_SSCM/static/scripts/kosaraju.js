@@ -105,8 +105,8 @@ if (closeSuccessBtn) closeSuccessBtn.onclick = closeMessage;
 // Генерация случайного графа
 generateBtn.onclick = async () => {
     const n = parseInt(vertexCountInput.value);
-    if (isNaN(n) || n < 1 || n > 50) {
-        showMessage('error', 'Введите корректное количество вершин (1-50)');
+    if (isNaN(n) || n < 1 || n > 15) {
+        showMessage('error', 'Введите корректное количество вершин (1-15)');
         return;
     }
 

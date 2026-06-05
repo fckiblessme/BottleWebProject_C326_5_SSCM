@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
 from handlers.kos_form import kosaraju, safe_json, g_from_form, validate_G, generate_solution_text
 from bottle import route, template
@@ -7,10 +7,9 @@ from bottle import route, template
 def index():
     return template('index.tpl', title='Главная', year=2026)
 
-from bottle import route, view, template, request
-=======
+
 from bottle import route, view, template, request, post
->>>>>>> d2a0b1d36627ae25857e967f5f634851353428eb
+
 from datetime import datetime
 import json
 import os
@@ -264,7 +263,7 @@ def about():
 # --- ЗАДАЧА КОСАРАЙЮ ---
 @route('/kos')
 def kos():
-<<<<<<< HEAD
+
     return template('kos.tpl', title='Компоненты сильной связности', 
         year=datetime.now().year,
         result=False,
@@ -352,15 +351,8 @@ def kos_decision():
             G=g_text
         )
 
+    return template('kos.tpl', title='Компоненты связности', year=datetime.now().year)
 
-
-
-
-
-
-=======
-    return template('kos_form.tpl', title='Компоненты связности', year=datetime.now().year)
->>>>>>> d2a0b1d36627ae25857e967f5f634851353428eb
 
 
 
